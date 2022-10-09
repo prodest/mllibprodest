@@ -1,0 +1,1101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>src.mllibprodest.validators.test API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.mllibprodest.validators.test</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># ---------------------------------------------------------------------------------------------------------
+# Classes e funções para realização de testes.
+#
+# Obs.: Não tem nada a ver com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html)
+# ---------------------------------------------------------------------------------------------------------
+import logging
+import hashlib
+import time
+import os
+from pathlib import Path
+from shutil import copytree, rmtree
+from ..utils import make_log
+
+
+class Test:
+    &#34;&#34;&#34;
+    Classe para realização de testes para validação da implementação das interfaces da lib. Obs.: Não tem nada a ver
+    com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html).
+    &#34;&#34;&#34;
+    def __init__(self):
+        make_log(&#34;log_tests.log&#34;)
+
+        h = hashlib.md5()
+        h.update(str(time.time()).encode())
+        self._test_id = h.hexdigest()
+
+        msg = f&#34;------------------&gt; Instanciando o teste com o ID: {self._test_id} &lt;------------------&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}&#34;)
+
+        pasta_corrente = Path.cwd().name
+
+        if pasta_corrente == &#34;worker_pub&#34;:
+            if Path.exists(Path(&#34;pub.py&#34;)):
+                self.__nome_pasta_worker = &#34;worker_pub&#34;
+                self._nome_script = &#34;pub.py&#34;
+                self._nome_mytest = &#34;mytest_pub.py&#34;
+            else:
+                msg = &#34;O arquivo &#39;pub.py&#39; não foi encontrado na pasta &#39;worker_pub&#39;. Por favor, crie o script &#34; \
+                      &#34;&#39;pub.py&#39; dentro da pasta &#39;worker_pub&#39; e construa uma classe chamada &#39;ModeloCLF&#39; que &#34; \
+                      &#34;implementa a interface &#39;ModelPublicationInterfaceCLF&#39;. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        elif pasta_corrente == &#34;worker_retrain&#34;:
+            if Path.exists(Path(&#34;retrain.py&#34;)):
+                self.__nome_pasta_worker = &#34;worker_retrain&#34;
+                self._nome_script = &#34;retrain.py&#34;
+                self._nome_mytest = &#34;mytest_retrain.py&#34;
+            else:
+                msg = &#34;O arquivo &#39;retrain.py&#39; não foi encontrado na pasta &#39;worker_retrain&#39;. Por favor, crie o script &#34; \
+                      &#34;&#39;retrain.py&#39; dentro da pasta &#39;worker_retrain&#39; e construa uma classe chamada &#39;ModeloRETRAIN&#39; &#34; \
+                      &#34;que implementa a interface &#39;ModelPublicationInterfaceRETRAIN&#39;. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:
+            msg = &#34;Não foi possível encontrar a pasta &#39;worker_pub&#39; ou &#39;worker_retrain&#39;. Verifique se estas pastas &#34; \
+                  &#34;existem ou se você está rodando os testes na pasta correta. Teste abortado!&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        msg = f&#34;O script &#39;{self._nome_script}&#39; foi encontrado!&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}&#34;)
+
+        if Path.exists(Path(&#34;requirements.txt&#34;)):
+            arq = None
+
+            try:
+                arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
+            except PermissionError:
+                msg = f&#34;Não foi possível ler o arquivo &#39;requirements.txt&#39; dentro da pasta &#34; \
+                      f&#34;&#39;{self.__nome_pasta_worker}&#39;. Permissão de leitura negada. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+
+            reqs = arq.readlines()
+            arq.close()
+            vazio = True
+
+            for r in reqs:
+                linha = r.rstrip(&#39;\n&#39;)
+
+                if len(linha) &gt;= 1:
+                    vazio = False
+                    break
+
+            if not vazio:
+                msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; e não &#34; \
+                      f&#34;está vazio!&#34;
+                logging.info(msg)
+                print(f&#34;\n\n{msg}&#34;)
+            else:
+                msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; mas está &#34; \
+                      f&#34;vazio. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:
+            msg = f&#34;O arquivo &#39;requirements.txt&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. Por favor,&#34; \
+                  f&#34; gere este arquivo com a lista de pacotes que foram utilizados na construção do script &#34; \
+                  f&#34;&#39;{self._nome_script}&#39;. Teste abortado!&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        # Howto para informar como passar uma função personalizada para realização dos testes
+        self._howto_msg = f&#34;1. Edite o script &#39;{self._nome_mytest}&#39; (está na pasta &#39;{self.__nome_pasta_worker}&#39;)&#34; \
+                          f&#34; para implementar a função &#39;test()&#39;;\n2. Crie os testes adicionais que você julgar &#34; \
+                          f&#34;necessários para testar o código do worker.\n   REGRAS: Esta função não deve receber &#34; \
+                          f&#34;parâmetros e retornar nada. Todos os dados para rodá-la devem ser obtidos de dentro &#34; \
+                          f&#34;dela.\n   A responsabilidade de criar os testes personalizados e verificar se passaram &#34; \
+                          f&#34;é do desenvolvedor do modelo.&#34;
+
+        # Artefatos obrigatórios que devem ter os tipos de valores de retorno testados
+        self.mandatory_artifacts = {
+            &#39;TrainingParams.pkl&#39;: dict,
+            &#39;TrainingDatasetsNames.pkl&#39;: dict,
+            &#39;BaselineMetrics.pkl&#39;: dict
+        }
+
+        # Métodos que devem ter os tipos de valores de retorno testados
+        self.methods_to_test = {
+            &#39;ModeloCLF&#39;: {
+                &#39;ModeloCLF.get_model_info&#39;: dict
+            },
+            &#39;ModeloRETRAIN&#39;: {
+                &#39;ModeloRETRAIN.get_model_name&#39;: str,
+                &#39;ModeloRETRAIN.get_model_provider_name&#39;: str,
+                &#39;ModeloRETRAIN.get_experiment_name&#39;: str,
+                &#39;ModeloRETRAIN.get_dataset_provider_name&#39;: str
+            }
+        }
+        self.__validation_function = None
+
+        if Path.exists(Path(self._nome_mytest)):
+            try:
+                if self._nome_mytest == &#34;mytest_pub.py&#34;:
+                    from mytest_pub import test
+                    self.__validation_function = test
+                elif self._nome_mytest == &#34;mytest_retrain.py&#34;:
+                    from mytest_retrain import test
+                    self.__validation_function = test
+            except ImportError:
+                msg = &#34;AVISO: A função para realização do teste personalizado pelo usuário não foi encontrada.&#34; \
+                      &#34;\n       Caso deseje criar um teste personalizado, faça o seguinte:\n&#34;
+                logging.info(msg + self._howto_msg)
+                print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+        else:
+            msg = f&#34;AVISO: O arquivo &#39;{self._nome_mytest}&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. &#34; \
+                  f&#34;Caso deseje criar um teste personalizado, crie\n       um arquivo chamado &#39;{self._nome_mytest}&#39; &#34; \
+                  f&#34;e faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+    def __validate_methods(self, model, class_name: str) -&gt; bool:
+        &#34;&#34;&#34;
+        Valida os métodos definidos no construtor da classe através do atributo &#39;self.methods_to_test&#39;.
+
+            @param model: Modelo de onde os métodos serão chamados.
+            @param class_name: Nome da classe que possui os métodos que serão validados.
+            @return: True, se todos os métodos foram validados. False, caso algum método não tenha sido validado.
+        &#34;&#34;&#34;
+        validado = True
+
+        for method_name, return_type in self.methods_to_test[class_name].items():
+            nome_metodo_aux = method_name.split(&#34;.&#34;)[1]
+            msg = f&#34;Testando o método &#39;{nome_metodo_aux}&#39;...&#34;
+            logging.info(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+
+            retorno = None
+
+            try:
+                if method_name == &#34;ModeloCLF.get_model_info&#34;:
+                    retorno = model.get_model_info()
+                elif method_name == &#34;ModeloRETRAIN.get_model_name&#34;:
+                    retorno = model.get_model_name()
+                elif method_name == &#34;ModeloRETRAIN.get_model_provider_name&#34;:
+                    retorno = model.get_model_provider_name()
+                elif method_name == &#34;ModeloRETRAIN.get_experiment_name&#34;:
+                    retorno = model.get_experiment_name()
+                elif method_name == &#34;ModeloRETRAIN.get_dataset_provider_name&#34;:
+                    retorno = model.get_dataset_provider_name()
+            except AttributeError as e:
+                msg = f&#34;A chamada ao método &#39;{nome_metodo_aux}&#39; falhou: {str(e)}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            tipo_retorno = type(retorno)
+
+            if tipo_retorno is return_type:
+                msg = f&#34;Tipo de retorno da chamada ao método &#39;{nome_metodo_aux}&#39; OK: {retorno}&#34;
+                logging.info(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+            else:
+                validado = False
+                msg = f&#34;O método &#39;{nome_metodo_aux}&#39; deve retornar o tipo &#39;{return_type.__name__}&#39;, porém retornou &#34; \
+                      f&#34;&#39;{tipo_retorno.__name__}&#39;.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+
+        return validado
+
+    def __validate_mandatory_artifacts(self, model) -&gt; bool:
+        &#34;&#34;&#34;
+        Valida se os artefatos obrigatórios definidos para o modelo foram implementados pelo usuário.
+
+            @param model: Modelo de onde será chamada a função utilitária &#39;convert_artifact_to_object&#39;.
+            @return: True, se todos os artefatos obrigatórios foram encontrados. False, caso algum artefato obrigatório
+                     não tenha sido encontrado.
+        &#34;&#34;&#34;
+        validado = True
+
+        for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.mandatory_artifacts.items():
+            msg = f&#34;Procurando pelo artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;...&#34;
+            logging.info(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+
+            artefato_lido = model.convert_artifact_to_object(file_name=nome_artefato_obrigatorio)
+            tipo_artefato_lido = type(artefato_lido)
+
+            if tipo_artefato_lido is tipo_artefato_obrigatorio:
+                if len(artefato_lido) &gt; 0:
+                    msg = f&#34;Conteúdo do artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;: &#39;{artefato_lido}&#39;&#34;
+                    logging.info(msg)
+                    print(f&#34;\n\n{msg}\n&#34;)
+                else:
+                    validado = False
+                    msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ter o tamanho maior que 0 (zero).&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}\n&#34;)
+            else:
+                validado = False
+                msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ser do tipo &#34; \
+                      f&#34;&#39;{tipo_artefato_obrigatorio.__name__}&#39;, porém é do tipo: &#39;{tipo_artefato_lido.__name__}&#39;.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+
+        return validado
+
+    def __validate_pub(self):
+        &#34;&#34;&#34;
+        Valida o script pub.py.
+        &#34;&#34;&#34;
+        modelo_teste = None
+        msg = &#34;Importando a classe &#39;ModeloCLF&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        try:
+            from pub import ModeloCLF
+        except ImportError:
+            msg = &#34;A definição da classe &#39;ModeloCLF&#39; não foi encontrada no arquivo &#39;pub.py&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+        msg = &#34;Instanciando um objeto da classe &#39;ModeloCLF&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if callable(ModeloCLF) and type(ModeloCLF).__name__ == &#39;ABCMeta&#39;:
+            try:
+                modelo_teste = ModeloCLF()
+            except TypeError as e:
+                msg = f&#34;Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            msg = &#34;AVISO: Os métodos &#39;predict&#39; e &#39;evaluate&#39; não serão testados porque necessitam de dados que são &#34; \
+                  &#34;específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+            if not self.__validate_methods(modelo_teste, &#34;ModeloCLF&#34;):
+                exit(1)
+        else:
+            msg = f&#34;O tipo do &#39;ModeloCLF&#39; está incorreto: &#39;{type(ModeloCLF).__name__}&#39;. &#39;ModeloCLF&#39; deve ser uma &#34; \
+                  f&#34;classe que herda os métodos da interface &#39;ModelPublicationInterfaceCLF&#39; e possua as &#34; \
+                  f&#34;implementações para os métodos abstratos dela.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+    def __validate_retrain(self):
+        &#34;&#34;&#34;
+        Valida o script retrain.py.
+        &#34;&#34;&#34;
+        modelo_teste = None
+        msg = &#34;Importando a classe &#39;ModeloRETRAIN&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        try:
+            from retrain import ModeloRETRAIN
+        except ImportError:
+            msg = &#34;A definição da classe &#39;ModeloRETRAIN&#39; não foi encontrada no arquivo &#39;retrain.py&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+        msg = &#34;Instanciando um objeto da classe &#39;ModeloRETRAIN&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if callable(ModeloRETRAIN) and type(ModeloRETRAIN).__name__ == &#39;ABCMeta&#39;:
+            try:
+                modelo_teste = ModeloRETRAIN()
+            except TypeError as e:
+                msg = f&#34;Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            msg = &#34;AVISO: Os métodos &#39;evaluate&#39; e &#39;retrain&#39; não serão testados porque necessitam de dados que são &#34; \
+                  &#34;específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+            if not self.__validate_methods(modelo_teste, &#34;ModeloRETRAIN&#34;):
+                exit(1)
+
+            # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
+            model_name = modelo_teste.get_model_name()
+            provider_name = modelo_teste.get_model_provider_name()
+
+            try:
+                modelo_teste.load_model(model_name=model_name, provider=provider_name)
+            except AttributeError as e:
+                msg = f&#34;A chamada ao método &#39;load_model&#39; falhou: {str(e)}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            if not self.__validate_mandatory_artifacts(modelo_teste):
+                exit(1)
+        else:
+            msg = f&#34;O tipo do &#39;ModeloRETRAIN&#39; está incorreto: &#39;{type(ModeloRETRAIN).__name__}&#39;. &#39;ModeloRETRAIN&#39; deve &#34; \
+                  f&#34;ser uma classe que herda os métodos da interface &#39;ModelPublicationInterfaceRETRAIN&#39; e possua as &#34; \
+                  f&#34;implementações para os métodos abstratos dela.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+    def __validate_params_returns(self):
+        &#34;&#34;&#34;
+        Valida alguns parâmetros e valores de retorno solicitados pelas interfaces que foram implementados. Porém, não
+        é escopo desta função validar os dados que estão sendo utilizados pelas funções implementadas.
+        &#34;&#34;&#34;
+        msg = f&#34;=&gt; INICIO: Test ID={self._test_id}. Teste padrão da lib.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if self._nome_script == &#34;pub.py&#34;:
+            self.__validate_pub()
+        elif self._nome_script == &#34;retrain.py&#34;:
+            self.__validate_retrain()
+
+        msg = f&#34;=&gt; FIM: Test ID={self._test_id}. Teste padrão da lib.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+    def __run_validation_function(self):
+        &#34;&#34;&#34;
+        Executa a função de validação criada e personalizada pelo usuário.
+        &#34;&#34;&#34;
+        msg = f&#34;=&gt; INICIO: Test ID={self._test_id}. Testes personalizados pelo usuário. Dados da função utilizada: &#34; \
+              f&#34;{str(self.__validation_function)}.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        type_validation_function = type(self.__validation_function).__name__
+
+        if type_validation_function != &#39;function&#39;:
+            msg = f&#34;O parâmetro &#39;validation_function&#39; deve receber uma função mas recebeu &#34; \
+                  f&#34;&#39;{type_validation_function}&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        self.__validation_function()
+
+        msg = f&#34;=&gt; FIM: Test ID={self._test_id}. Testes personalizados pelo usuário.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+    def validate(self, mlruns_path: str = &#34;&#34;):
+        &#34;&#34;&#34;
+        Valida a implementação das interfaces da lib através das chamadas de funções específicas para este fim. Além do
+        conjunto de testes padrões executados pela lib, se os arquivos &#39;mytest_pub.py&#39; e &#39;mytest_retrain.py&#39; existirem
+        nas pastas de cada worker respectivamente, a função &#39;test()&#39; será procurada e, caso exista, será carregada e
+        utilizada para rodar os testes personalizados pelo usuário.
+
+            @param mlruns_path: Caminho completo da pasta &#39;mlruns&#39;. Esta pasta é criada na pasta local onde o servidor
+                                do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
+                                mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
+                                o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
+                                endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+        &#34;&#34;&#34;
+        # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
+        # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
+        if os.getenv(&#34;MLFLOW_TRACKING_URI&#34;) is None and os.getenv(&#34;MLFLOW_S3_ENDPOINT_URL&#34;) is None:
+            if mlruns_path != &#34;&#34;:
+                if &#34;mlruns&#34; in str(Path(mlruns_path)):
+                    caminho_mlruns = str(Path(mlruns_path))
+                else:
+                    caminho_mlruns = str(Path(mlruns_path) / &#34;mlruns&#34;)
+
+                try:
+                    copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
+                except FileNotFoundError:
+                    msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+                except PermissionError:
+                    msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
+                          f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+
+                os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
+
+                # Roda os testes padrões da lib
+                self.__validate_params_returns()
+
+                # Se foi criada uma função para o teste, utiliza
+                if self.__validation_function is not None:
+                    self.__run_validation_function()
+
+                # Atualiza a pasta &#39;mlruns&#39;
+                try:
+                    copytree(&#34;mlruns&#34;, caminho_mlruns, dirs_exist_ok=True)
+                except PermissionError:
+                    msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
+                          f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+
+                # Limpa os arquivos criados na execução dos testes
+                for path in Path(&#34;temp_area&#34;).glob(&#34;**/*&#34;):
+                    if path.is_file():
+                        path.unlink()
+                    elif path.is_dir():
+                        rmtree(path)
+
+                rmtree(&#34;mlruns&#34;, ignore_errors=True)
+            else:
+                msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
+                      &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
+                      &#34;o modelo, foi iniciado. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
+            self.__validate_params_returns()
+
+            if self.__validation_function is not None:
+                self.__run_validation_function()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.mllibprodest.validators.test.Test"><code class="flex name class">
+<span>class <span class="ident">Test</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Classe para realização de testes para validação da implementação das interfaces da lib. Obs.: Não tem nada a ver
+com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittest.html">https://docs.python.org/3/library/unittest.html</a>).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Test:
+    &#34;&#34;&#34;
+    Classe para realização de testes para validação da implementação das interfaces da lib. Obs.: Não tem nada a ver
+    com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html).
+    &#34;&#34;&#34;
+    def __init__(self):
+        make_log(&#34;log_tests.log&#34;)
+
+        h = hashlib.md5()
+        h.update(str(time.time()).encode())
+        self._test_id = h.hexdigest()
+
+        msg = f&#34;------------------&gt; Instanciando o teste com o ID: {self._test_id} &lt;------------------&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}&#34;)
+
+        pasta_corrente = Path.cwd().name
+
+        if pasta_corrente == &#34;worker_pub&#34;:
+            if Path.exists(Path(&#34;pub.py&#34;)):
+                self.__nome_pasta_worker = &#34;worker_pub&#34;
+                self._nome_script = &#34;pub.py&#34;
+                self._nome_mytest = &#34;mytest_pub.py&#34;
+            else:
+                msg = &#34;O arquivo &#39;pub.py&#39; não foi encontrado na pasta &#39;worker_pub&#39;. Por favor, crie o script &#34; \
+                      &#34;&#39;pub.py&#39; dentro da pasta &#39;worker_pub&#39; e construa uma classe chamada &#39;ModeloCLF&#39; que &#34; \
+                      &#34;implementa a interface &#39;ModelPublicationInterfaceCLF&#39;. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        elif pasta_corrente == &#34;worker_retrain&#34;:
+            if Path.exists(Path(&#34;retrain.py&#34;)):
+                self.__nome_pasta_worker = &#34;worker_retrain&#34;
+                self._nome_script = &#34;retrain.py&#34;
+                self._nome_mytest = &#34;mytest_retrain.py&#34;
+            else:
+                msg = &#34;O arquivo &#39;retrain.py&#39; não foi encontrado na pasta &#39;worker_retrain&#39;. Por favor, crie o script &#34; \
+                      &#34;&#39;retrain.py&#39; dentro da pasta &#39;worker_retrain&#39; e construa uma classe chamada &#39;ModeloRETRAIN&#39; &#34; \
+                      &#34;que implementa a interface &#39;ModelPublicationInterfaceRETRAIN&#39;. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:
+            msg = &#34;Não foi possível encontrar a pasta &#39;worker_pub&#39; ou &#39;worker_retrain&#39;. Verifique se estas pastas &#34; \
+                  &#34;existem ou se você está rodando os testes na pasta correta. Teste abortado!&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        msg = f&#34;O script &#39;{self._nome_script}&#39; foi encontrado!&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}&#34;)
+
+        if Path.exists(Path(&#34;requirements.txt&#34;)):
+            arq = None
+
+            try:
+                arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
+            except PermissionError:
+                msg = f&#34;Não foi possível ler o arquivo &#39;requirements.txt&#39; dentro da pasta &#34; \
+                      f&#34;&#39;{self.__nome_pasta_worker}&#39;. Permissão de leitura negada. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+
+            reqs = arq.readlines()
+            arq.close()
+            vazio = True
+
+            for r in reqs:
+                linha = r.rstrip(&#39;\n&#39;)
+
+                if len(linha) &gt;= 1:
+                    vazio = False
+                    break
+
+            if not vazio:
+                msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; e não &#34; \
+                      f&#34;está vazio!&#34;
+                logging.info(msg)
+                print(f&#34;\n\n{msg}&#34;)
+            else:
+                msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; mas está &#34; \
+                      f&#34;vazio. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:
+            msg = f&#34;O arquivo &#39;requirements.txt&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. Por favor,&#34; \
+                  f&#34; gere este arquivo com a lista de pacotes que foram utilizados na construção do script &#34; \
+                  f&#34;&#39;{self._nome_script}&#39;. Teste abortado!&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        # Howto para informar como passar uma função personalizada para realização dos testes
+        self._howto_msg = f&#34;1. Edite o script &#39;{self._nome_mytest}&#39; (está na pasta &#39;{self.__nome_pasta_worker}&#39;)&#34; \
+                          f&#34; para implementar a função &#39;test()&#39;;\n2. Crie os testes adicionais que você julgar &#34; \
+                          f&#34;necessários para testar o código do worker.\n   REGRAS: Esta função não deve receber &#34; \
+                          f&#34;parâmetros e retornar nada. Todos os dados para rodá-la devem ser obtidos de dentro &#34; \
+                          f&#34;dela.\n   A responsabilidade de criar os testes personalizados e verificar se passaram &#34; \
+                          f&#34;é do desenvolvedor do modelo.&#34;
+
+        # Artefatos obrigatórios que devem ter os tipos de valores de retorno testados
+        self.mandatory_artifacts = {
+            &#39;TrainingParams.pkl&#39;: dict,
+            &#39;TrainingDatasetsNames.pkl&#39;: dict,
+            &#39;BaselineMetrics.pkl&#39;: dict
+        }
+
+        # Métodos que devem ter os tipos de valores de retorno testados
+        self.methods_to_test = {
+            &#39;ModeloCLF&#39;: {
+                &#39;ModeloCLF.get_model_info&#39;: dict
+            },
+            &#39;ModeloRETRAIN&#39;: {
+                &#39;ModeloRETRAIN.get_model_name&#39;: str,
+                &#39;ModeloRETRAIN.get_model_provider_name&#39;: str,
+                &#39;ModeloRETRAIN.get_experiment_name&#39;: str,
+                &#39;ModeloRETRAIN.get_dataset_provider_name&#39;: str
+            }
+        }
+        self.__validation_function = None
+
+        if Path.exists(Path(self._nome_mytest)):
+            try:
+                if self._nome_mytest == &#34;mytest_pub.py&#34;:
+                    from mytest_pub import test
+                    self.__validation_function = test
+                elif self._nome_mytest == &#34;mytest_retrain.py&#34;:
+                    from mytest_retrain import test
+                    self.__validation_function = test
+            except ImportError:
+                msg = &#34;AVISO: A função para realização do teste personalizado pelo usuário não foi encontrada.&#34; \
+                      &#34;\n       Caso deseje criar um teste personalizado, faça o seguinte:\n&#34;
+                logging.info(msg + self._howto_msg)
+                print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+        else:
+            msg = f&#34;AVISO: O arquivo &#39;{self._nome_mytest}&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. &#34; \
+                  f&#34;Caso deseje criar um teste personalizado, crie\n       um arquivo chamado &#39;{self._nome_mytest}&#39; &#34; \
+                  f&#34;e faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+    def __validate_methods(self, model, class_name: str) -&gt; bool:
+        &#34;&#34;&#34;
+        Valida os métodos definidos no construtor da classe através do atributo &#39;self.methods_to_test&#39;.
+
+            @param model: Modelo de onde os métodos serão chamados.
+            @param class_name: Nome da classe que possui os métodos que serão validados.
+            @return: True, se todos os métodos foram validados. False, caso algum método não tenha sido validado.
+        &#34;&#34;&#34;
+        validado = True
+
+        for method_name, return_type in self.methods_to_test[class_name].items():
+            nome_metodo_aux = method_name.split(&#34;.&#34;)[1]
+            msg = f&#34;Testando o método &#39;{nome_metodo_aux}&#39;...&#34;
+            logging.info(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+
+            retorno = None
+
+            try:
+                if method_name == &#34;ModeloCLF.get_model_info&#34;:
+                    retorno = model.get_model_info()
+                elif method_name == &#34;ModeloRETRAIN.get_model_name&#34;:
+                    retorno = model.get_model_name()
+                elif method_name == &#34;ModeloRETRAIN.get_model_provider_name&#34;:
+                    retorno = model.get_model_provider_name()
+                elif method_name == &#34;ModeloRETRAIN.get_experiment_name&#34;:
+                    retorno = model.get_experiment_name()
+                elif method_name == &#34;ModeloRETRAIN.get_dataset_provider_name&#34;:
+                    retorno = model.get_dataset_provider_name()
+            except AttributeError as e:
+                msg = f&#34;A chamada ao método &#39;{nome_metodo_aux}&#39; falhou: {str(e)}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            tipo_retorno = type(retorno)
+
+            if tipo_retorno is return_type:
+                msg = f&#34;Tipo de retorno da chamada ao método &#39;{nome_metodo_aux}&#39; OK: {retorno}&#34;
+                logging.info(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+            else:
+                validado = False
+                msg = f&#34;O método &#39;{nome_metodo_aux}&#39; deve retornar o tipo &#39;{return_type.__name__}&#39;, porém retornou &#34; \
+                      f&#34;&#39;{tipo_retorno.__name__}&#39;.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+
+        return validado
+
+    def __validate_mandatory_artifacts(self, model) -&gt; bool:
+        &#34;&#34;&#34;
+        Valida se os artefatos obrigatórios definidos para o modelo foram implementados pelo usuário.
+
+            @param model: Modelo de onde será chamada a função utilitária &#39;convert_artifact_to_object&#39;.
+            @return: True, se todos os artefatos obrigatórios foram encontrados. False, caso algum artefato obrigatório
+                     não tenha sido encontrado.
+        &#34;&#34;&#34;
+        validado = True
+
+        for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.mandatory_artifacts.items():
+            msg = f&#34;Procurando pelo artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;...&#34;
+            logging.info(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+
+            artefato_lido = model.convert_artifact_to_object(file_name=nome_artefato_obrigatorio)
+            tipo_artefato_lido = type(artefato_lido)
+
+            if tipo_artefato_lido is tipo_artefato_obrigatorio:
+                if len(artefato_lido) &gt; 0:
+                    msg = f&#34;Conteúdo do artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;: &#39;{artefato_lido}&#39;&#34;
+                    logging.info(msg)
+                    print(f&#34;\n\n{msg}\n&#34;)
+                else:
+                    validado = False
+                    msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ter o tamanho maior que 0 (zero).&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}\n&#34;)
+            else:
+                validado = False
+                msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ser do tipo &#34; \
+                      f&#34;&#39;{tipo_artefato_obrigatorio.__name__}&#39;, porém é do tipo: &#39;{tipo_artefato_lido.__name__}&#39;.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+
+        return validado
+
+    def __validate_pub(self):
+        &#34;&#34;&#34;
+        Valida o script pub.py.
+        &#34;&#34;&#34;
+        modelo_teste = None
+        msg = &#34;Importando a classe &#39;ModeloCLF&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        try:
+            from pub import ModeloCLF
+        except ImportError:
+            msg = &#34;A definição da classe &#39;ModeloCLF&#39; não foi encontrada no arquivo &#39;pub.py&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+        msg = &#34;Instanciando um objeto da classe &#39;ModeloCLF&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if callable(ModeloCLF) and type(ModeloCLF).__name__ == &#39;ABCMeta&#39;:
+            try:
+                modelo_teste = ModeloCLF()
+            except TypeError as e:
+                msg = f&#34;Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            msg = &#34;AVISO: Os métodos &#39;predict&#39; e &#39;evaluate&#39; não serão testados porque necessitam de dados que são &#34; \
+                  &#34;específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+            if not self.__validate_methods(modelo_teste, &#34;ModeloCLF&#34;):
+                exit(1)
+        else:
+            msg = f&#34;O tipo do &#39;ModeloCLF&#39; está incorreto: &#39;{type(ModeloCLF).__name__}&#39;. &#39;ModeloCLF&#39; deve ser uma &#34; \
+                  f&#34;classe que herda os métodos da interface &#39;ModelPublicationInterfaceCLF&#39; e possua as &#34; \
+                  f&#34;implementações para os métodos abstratos dela.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+    def __validate_retrain(self):
+        &#34;&#34;&#34;
+        Valida o script retrain.py.
+        &#34;&#34;&#34;
+        modelo_teste = None
+        msg = &#34;Importando a classe &#39;ModeloRETRAIN&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        try:
+            from retrain import ModeloRETRAIN
+        except ImportError:
+            msg = &#34;A definição da classe &#39;ModeloRETRAIN&#39; não foi encontrada no arquivo &#39;retrain.py&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+        msg = &#34;Instanciando um objeto da classe &#39;ModeloRETRAIN&#39;...&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if callable(ModeloRETRAIN) and type(ModeloRETRAIN).__name__ == &#39;ABCMeta&#39;:
+            try:
+                modelo_teste = ModeloRETRAIN()
+            except TypeError as e:
+                msg = f&#34;Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            msg = &#34;AVISO: Os métodos &#39;evaluate&#39; e &#39;retrain&#39; não serão testados porque necessitam de dados que são &#34; \
+                  &#34;específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
+            logging.info(msg + self._howto_msg)
+            print(f&#34;\n\n{msg + self._howto_msg}\n&#34;)
+
+            if not self.__validate_methods(modelo_teste, &#34;ModeloRETRAIN&#34;):
+                exit(1)
+
+            # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
+            model_name = modelo_teste.get_model_name()
+            provider_name = modelo_teste.get_model_provider_name()
+
+            try:
+                modelo_teste.load_model(model_name=model_name, provider=provider_name)
+            except AttributeError as e:
+                msg = f&#34;A chamada ao método &#39;load_model&#39; falhou: {str(e)}.&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}\n&#34;)
+                exit(1)
+
+            if not self.__validate_mandatory_artifacts(modelo_teste):
+                exit(1)
+        else:
+            msg = f&#34;O tipo do &#39;ModeloRETRAIN&#39; está incorreto: &#39;{type(ModeloRETRAIN).__name__}&#39;. &#39;ModeloRETRAIN&#39; deve &#34; \
+                  f&#34;ser uma classe que herda os métodos da interface &#39;ModelPublicationInterfaceRETRAIN&#39; e possua as &#34; \
+                  f&#34;implementações para os métodos abstratos dela.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}\n&#34;)
+            exit(1)
+
+    def __validate_params_returns(self):
+        &#34;&#34;&#34;
+        Valida alguns parâmetros e valores de retorno solicitados pelas interfaces que foram implementados. Porém, não
+        é escopo desta função validar os dados que estão sendo utilizados pelas funções implementadas.
+        &#34;&#34;&#34;
+        msg = f&#34;=&gt; INICIO: Test ID={self._test_id}. Teste padrão da lib.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        if self._nome_script == &#34;pub.py&#34;:
+            self.__validate_pub()
+        elif self._nome_script == &#34;retrain.py&#34;:
+            self.__validate_retrain()
+
+        msg = f&#34;=&gt; FIM: Test ID={self._test_id}. Teste padrão da lib.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+    def __run_validation_function(self):
+        &#34;&#34;&#34;
+        Executa a função de validação criada e personalizada pelo usuário.
+        &#34;&#34;&#34;
+        msg = f&#34;=&gt; INICIO: Test ID={self._test_id}. Testes personalizados pelo usuário. Dados da função utilizada: &#34; \
+              f&#34;{str(self.__validation_function)}.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+        type_validation_function = type(self.__validation_function).__name__
+
+        if type_validation_function != &#39;function&#39;:
+            msg = f&#34;O parâmetro &#39;validation_function&#39; deve receber uma função mas recebeu &#34; \
+                  f&#34;&#39;{type_validation_function}&#39;.&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+
+        self.__validation_function()
+
+        msg = f&#34;=&gt; FIM: Test ID={self._test_id}. Testes personalizados pelo usuário.&#34;
+        logging.info(msg)
+        print(f&#34;\n\n{msg}\n&#34;)
+
+    def validate(self, mlruns_path: str = &#34;&#34;):
+        &#34;&#34;&#34;
+        Valida a implementação das interfaces da lib através das chamadas de funções específicas para este fim. Além do
+        conjunto de testes padrões executados pela lib, se os arquivos &#39;mytest_pub.py&#39; e &#39;mytest_retrain.py&#39; existirem
+        nas pastas de cada worker respectivamente, a função &#39;test()&#39; será procurada e, caso exista, será carregada e
+        utilizada para rodar os testes personalizados pelo usuário.
+
+            @param mlruns_path: Caminho completo da pasta &#39;mlruns&#39;. Esta pasta é criada na pasta local onde o servidor
+                                do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
+                                mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
+                                o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
+                                endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+        &#34;&#34;&#34;
+        # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
+        # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
+        if os.getenv(&#34;MLFLOW_TRACKING_URI&#34;) is None and os.getenv(&#34;MLFLOW_S3_ENDPOINT_URL&#34;) is None:
+            if mlruns_path != &#34;&#34;:
+                if &#34;mlruns&#34; in str(Path(mlruns_path)):
+                    caminho_mlruns = str(Path(mlruns_path))
+                else:
+                    caminho_mlruns = str(Path(mlruns_path) / &#34;mlruns&#34;)
+
+                try:
+                    copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
+                except FileNotFoundError:
+                    msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+                except PermissionError:
+                    msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
+                          f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+
+                os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
+
+                # Roda os testes padrões da lib
+                self.__validate_params_returns()
+
+                # Se foi criada uma função para o teste, utiliza
+                if self.__validation_function is not None:
+                    self.__run_validation_function()
+
+                # Atualiza a pasta &#39;mlruns&#39;
+                try:
+                    copytree(&#34;mlruns&#34;, caminho_mlruns, dirs_exist_ok=True)
+                except PermissionError:
+                    msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
+                          f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
+                    logging.error(msg)
+                    print(f&#34;\n\n{msg}&#34;)
+                    exit(1)
+
+                # Limpa os arquivos criados na execução dos testes
+                for path in Path(&#34;temp_area&#34;).glob(&#34;**/*&#34;):
+                    if path.is_file():
+                        path.unlink()
+                    elif path.is_dir():
+                        rmtree(path)
+
+                rmtree(&#34;mlruns&#34;, ignore_errors=True)
+            else:
+                msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
+                      &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
+                      &#34;o modelo, foi iniciado. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+        else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
+            self.__validate_params_returns()
+
+            if self.__validation_function is not None:
+                self.__run_validation_function()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.mllibprodest.validators.test.Test.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self, mlruns_path: str = '')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Valida a implementação das interfaces da lib através das chamadas de funções específicas para este fim. Além do
+conjunto de testes padrões executados pela lib, se os arquivos 'mytest_pub.py' e 'mytest_retrain.py' existirem
+nas pastas de cada worker respectivamente, a função 'test()' será procurada e, caso exista, será carregada e
+utilizada para rodar os testes personalizados pelo usuário.</p>
+<pre><code>@param mlruns_path: Caminho completo da pasta 'mlruns'. Esta pasta é criada na pasta local onde o servidor
+                    do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
+                    mantido, tenta utilizar as variáveis de ambiente 'MLFLOW_TRACKING_URI', para encontrar
+                    o endereço do servidor MLflow, e 'MLFLOW_S3_ENDPOINT_URL' para obter o endereço do
+                    endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self, mlruns_path: str = &#34;&#34;):
+    &#34;&#34;&#34;
+    Valida a implementação das interfaces da lib através das chamadas de funções específicas para este fim. Além do
+    conjunto de testes padrões executados pela lib, se os arquivos &#39;mytest_pub.py&#39; e &#39;mytest_retrain.py&#39; existirem
+    nas pastas de cada worker respectivamente, a função &#39;test()&#39; será procurada e, caso exista, será carregada e
+    utilizada para rodar os testes personalizados pelo usuário.
+
+        @param mlruns_path: Caminho completo da pasta &#39;mlruns&#39;. Esta pasta é criada na pasta local onde o servidor
+                            do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
+                            mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
+                            o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
+                            endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+    &#34;&#34;&#34;
+    # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
+    # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
+    if os.getenv(&#34;MLFLOW_TRACKING_URI&#34;) is None and os.getenv(&#34;MLFLOW_S3_ENDPOINT_URL&#34;) is None:
+        if mlruns_path != &#34;&#34;:
+            if &#34;mlruns&#34; in str(Path(mlruns_path)):
+                caminho_mlruns = str(Path(mlruns_path))
+            else:
+                caminho_mlruns = str(Path(mlruns_path) / &#34;mlruns&#34;)
+
+            try:
+                copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
+            except FileNotFoundError:
+                msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+            except PermissionError:
+                msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
+                      f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+
+            os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
+
+            # Roda os testes padrões da lib
+            self.__validate_params_returns()
+
+            # Se foi criada uma função para o teste, utiliza
+            if self.__validation_function is not None:
+                self.__run_validation_function()
+
+            # Atualiza a pasta &#39;mlruns&#39;
+            try:
+                copytree(&#34;mlruns&#34;, caminho_mlruns, dirs_exist_ok=True)
+            except PermissionError:
+                msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
+                      f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
+                logging.error(msg)
+                print(f&#34;\n\n{msg}&#34;)
+                exit(1)
+
+            # Limpa os arquivos criados na execução dos testes
+            for path in Path(&#34;temp_area&#34;).glob(&#34;**/*&#34;):
+                if path.is_file():
+                    path.unlink()
+                elif path.is_dir():
+                    rmtree(path)
+
+            rmtree(&#34;mlruns&#34;, ignore_errors=True)
+        else:
+            msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
+                  &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
+                  &#34;o modelo, foi iniciado. Teste abortado!&#34;
+            logging.error(msg)
+            print(f&#34;\n\n{msg}&#34;)
+            exit(1)
+    else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
+        self.__validate_params_returns()
+
+        if self.__validation_function is not None:
+            self.__run_validation_function()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.mllibprodest.validators" href="index.html">src.mllibprodest.validators</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.mllibprodest.validators.test.Test" href="#src.mllibprodest.validators.test.Test">Test</a></code></h4>
+<ul class="">
+<li><code><a title="src.mllibprodest.validators.test.Test.validate" href="#src.mllibprodest.validators.test.Test.validate">validate</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,6 +1,8 @@
 # Biblioteca de ML (*Machine Learning*) - Prodest 
 A finalidade desta biblioteca é prover interfaces e funções que dão suporte ao provisionamento de modelos de ML na Stack 
-de ML do Prodest. 
+de ML do Prodest.
+
+Acesse a [documentação da lib](https://prodest.github.io/mllibprodest)!
 
 *Workflow* básico para construção, disponibilização e publicação de modelos:
 

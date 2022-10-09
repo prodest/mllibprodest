@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mllibprodest"
-version = "1.5.0"
+version = "1.5.1"
 license = {text = "GPLv3"}
 authors = [
   { name="Instituto de Tecnologia da Informação e Comunicação do Espírito Santo (PRODEST)", email="prodest@prodest.es.gov.br" },
@@ -25,4 +25,4 @@ keywords = ['Prodest', 'ML', 'lib', 'stack']
 [project.urls]
 "Homepage" = "https://github.com/prodest/mllibprodest"
 "Bug Tracker" = "https://github.com/prodest/mllibprodest/issues"
-"Documentation" = "https://github.com/prodest/mllibprodest/blob/main/README.md"
+"Documentation" = "https://prodest.github.io/mllibprodest"
