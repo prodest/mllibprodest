@@ -9,7 +9,7 @@ Acesse a [documentação da lib](https://prodest.github.io/mllibprodest)!
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/workflow.png?raw=true)
 
 ## Pré-requisitos
-* **Python >= 3.8.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
+* **Python >= 3.9.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
 * **Git.** Instruções: [Linux](https://git-scm.com/download/linux) ou [Windows](https://git-scm.com/download/win).
 * **Venv.** Gerenciador de ambiente virtual Python adotado no tutorial. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment). 
 Ou qualquer outro gerenciador de ambiente Python que preferir.
@@ -111,7 +111,7 @@ Se você quiser testar um registro de experimento através do código acima, fa�
 - Instale os pacotes mlflow, sklearn, matplotlib e numpy;
 
 ```bash
-pip install mlflow sklearn matplotlib numpy
+pip install mlflow==2.3.2 scikit-learn==1.2.2 matplotlib==3.7.1 numpy==1.24.3
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
@@ -147,7 +147,7 @@ pelo experimento/execução '**Teste sklearn**' na seção **Experiments** (se o
 se o servidor foi iniciado de dentro da pasta correta);
 
 
-- Clique na execução do experimento que se encontra na coluna '**Created**' (destaque em verde);
+- Clique na execução do experimento que se encontra na coluna '**Run Name**' (destaque em verde);
 
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/experiments-mlflow.png?raw=true)
 - Verifique se os artefatos foram gravados;
@@ -182,7 +182,7 @@ mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 50
 ```
 - Acesse o MLflow ([http://localhost:5000](http://localhost:5000)) e clique no experimento que foi criado por você (se 
 o experimento não estiver listado, verifique se o servidor do MLflow foi iniciado de dentro da pasta correta);
-- Clique no link (que está na coluna **'Created'**) para a rodada do experimento que deseja registrar;
+- Clique no link (que está na coluna **'Run Name'**) para a rodada do experimento que deseja registrar;
 - Clique no botão **'Register Model'** e escolha a opção **'Create New Model'**;
 - Dê um nome para o modelo e clique em **'Register'**;
 - Na barra superior clique em **'Models'**;
