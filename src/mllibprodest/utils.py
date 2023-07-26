@@ -3,6 +3,8 @@
 # ----------------------------------------------------------------------------------------------------
 import minio
 import logging
+from pathlib import Path
+from os import makedirs
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -123,23 +125,32 @@ def validate_params(received_params: list, expected_params: dict) -> tuple:
         return False, erros_encontrados
 
 
-def make_log(path: str):
+def make_log(filename: str):
     """
     Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
     Depois de executar este método, para gravar os logs basta importar o pacote 'logging' e mandar salvar as
     mensagens de log com as funções: 'logging.error', 'logging.warning' ou 'logging.info', de acordo com o nível
     de criticidade da mensagem. Para mais opções, consulte a documentação do pacote 'logging'.
-        :param path: Caminho do arquivo de logs.
+        :param filename: Nome do arquivo de logs.
     """
+    # Se a pasta de logs não existir, cria
+    try:
+        makedirs("logs", exist_ok=True)
+    except PermissionError:
+        msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
+        raise PermissionError(msg)
+
+    log_file_path = str(Path("logs") / filename)
+
     # Configuração de parâmetros para geração de logs
     try:
-        logging.basicConfig(filename=path,
+        logging.basicConfig(filename=log_file_path,
                             format='%(asctime)s - %(levelname)s | %(funcName)s: %(message)s',
                             level=logging.INFO)
     except FileNotFoundError:
-        msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{path}'. Programa abortado!"
+        msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
         raise FileNotFoundError(msg)
     except PermissionError:
-        msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{path}'. Permissão de escrita/leitura " \
-              f"negada. Programa abortado!"
+        msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
+              f"escrita/leitura negada. Programa abortado!"
         raise PermissionError(msg)

@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------------------------------------
 import logging
 import pickle
+import configparser
 from typing import Union
 from pathlib import Path
 from .provider import Provider
@@ -18,15 +19,15 @@ class CommonMethods:
     Métodos comuns entre as interfaces dos modelos publicados.
     """
     @staticmethod
-    def make_log(path: str):
+    def make_log(filename: str):
         """
         Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
         Depois de executar este método, para gravar os logs basta importar o pacote 'logging' e mandar salvar as
         mensagens de log com as funções: 'logging.error', 'logging.warning' ou 'logging.info', de acordo com o nível
         de criticidade da mensagem. Para mais opções, consulte a documentação do pacote 'logging'.
-            :param path: Caminho do arquivo de logs.
+            :param filename: Nome do arquivo de logs.
         """
-        make_log(path)
+        make_log(filename)
 
     @staticmethod
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
@@ -93,14 +94,15 @@ class CommonMethods:
                                    artifacts_destination_path=artifacts_destination_path)
 
     @staticmethod
-    def convert_artifact_to_pickle(artifact: object, file_name: str, path: str = "temp_area"):
+    def convert_artifact_to_pickle(model_name: str, artifact: object, file_name: str, path: str = "temp_area"):
         """
         Converte um artefato para o formato pickle, para facilitar a persistência.
+            :param model_name: Nome do modelo em que o artefato será utilizado.
             :param artifact: Artefato que será convertido (str, list, dict, tuple, etc.).
             :param file_name: Nome do arquivo que será gerado (Dica: Use a extensão '.pkl').
             :param path: Caminho para gerar o artefato convertido.
         """
-        caminho_artefato = str(Path(path) / file_name)
+        caminho_artefato = str(Path(path) / model_name / file_name)
 
         try:
             arq = open(caminho_artefato, 'wb')
@@ -110,8 +112,8 @@ class CommonMethods:
             logging.error(msg)
             raise FileNotFoundError(msg)
         except PermissionError:
-            msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{path}'. Permissão de " \
-                  f"escrita negada. Programa abortado!"
+            msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{caminho_artefato}'. " \
+                  f"Permissão de escrita negada. Programa abortado!"
             logging.error(msg)
             raise PermissionError(msg)
 
@@ -126,14 +128,16 @@ class CommonMethods:
         arq.close()
 
     @staticmethod
-    def convert_artifact_to_object(file_name: str, path: str = "temp_area") -> Union[list, tuple, dict, object]:
+    def convert_artifact_to_object(model_name: str, file_name: str, path: str = "temp_area") -> \
+            Union[list, tuple, dict, object]:
         """
         Converte um artefato que está no formato pickle para o objeto de origem.
+            :param model_name: Nome do modelo ao qual o artefato pertence.
             :param file_name: Nome do arquivo que será lido e convertido.
             :param path: Caminho onde o arquivo a ser convertido se encontra.
             :return: Artefato convertido.
         """
-        caminho_artefato = str(Path(path) / file_name)
+        caminho_artefato = str(Path(path) / model_name / file_name)
 
         try:
             arq = open(caminho_artefato, 'rb')
@@ -143,8 +147,8 @@ class CommonMethods:
             logging.error(msg)
             raise FileNotFoundError(msg)
         except PermissionError:
-            msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{path}'. Permissão de " \
-                  f"leitura negada. Programa abortado!"
+            msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{caminho_artefato}'. " \
+                  f"Permissão de leitura negada. Programa abortado!"
             logging.error(msg)
             raise PermissionError(msg)
 
@@ -159,3 +163,73 @@ class CommonMethods:
         arq.close()
 
         return objeto
+
+    @staticmethod
+    def get_models_params() -> dict:
+        """
+        Obtém os parâmetros que serão utilizados para instanciar os modelos. Será buscado um arquivo com o nome
+        'params.conf' contendo o nome dos modelos como uma seção [MODEL_NAME] e os parâmetros: 'experiment_name',
+        'model_provider_name' e 'dataset_provider_name'.
+            :return: Dicionário contendo como chave o nome do modelo e como valor outro dicionário com os parâmetros.
+        """
+        make_log("get_models_params.log")
+        parametros_padroes = ["experiment_name", "model_provider_name", "dataset_provider_name"]
+        parametros_faltantes_por_secao = {}
+        faltou_parametro = False
+        conf = configparser.ConfigParser()
+
+        # Carrega os parâmetros
+        try:
+            nome_arq_params = conf.read("params.conf")
+        except configparser.MissingSectionHeaderError:
+            msg = "O arquivo com os parâmetros dos modelos ('params.conf') possui seções inválidas. Programa abortado!"
+            logging.error(msg)
+            raise RuntimeError(msg)
+        except configparser.DuplicateOptionError as e:
+            msg = f"Existem parâmetros duplicados. Programa abortado! Mensagem configParser: '{e}'."
+            logging.error(msg)
+            raise RuntimeError(msg)
+
+        if "params.conf" not in nome_arq_params:
+            msg = "Não foi possível encontrar o arquivo com os parâmetros dos modelos ('params.conf') ou não possui " \
+                  "permissão para leitura. Programa abortado!"
+            logging.error(msg)
+            raise RuntimeError(msg)
+
+        secoes = conf.sections()
+
+        if not secoes:
+            msg = "O arquivo com os parâmetros dos modelos ('params.conf') está vazio. Programa abortado!"
+            logging.error(msg)
+            raise RuntimeError(msg)
+
+        # Verifica se tem parâmetros padrões faltantes
+        for s in secoes:
+            parametros_faltantes = []
+
+            for p in parametros_padroes:
+                if p not in conf[s]:
+                    parametros_faltantes.append(p)
+
+            if parametros_faltantes:
+                faltou_parametro = True
+                parametros_faltantes_por_secao[s] = parametros_faltantes
+
+        if faltou_parametro:
+            msg = f"Um ou mais parâmetros no arquivo 'params.conf' não foram encontrados: " \
+                  f"{parametros_faltantes_por_secao}. Programa abortado!"
+            logging.error(msg)
+            raise RuntimeError(msg)
+
+        parametros_por_modelo = {}
+
+        # Obtém os parâmetros e gera o dicionário com os modelos e parâmetros
+        for s in secoes:
+            parametros_valor = {}
+
+            for p in parametros_padroes:
+                parametros_valor[p] = conf[s][p]
+
+            parametros_por_modelo[s] = parametros_valor
+
+        return parametros_por_modelo

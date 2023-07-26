@@ -21,13 +21,33 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
     """
     @classmethod
     def __subclasshook__(cls, subclass):
-        return (hasattr(subclass, 'predict') and
+        return (hasattr(subclass, 'get_model_name') and
+                callable(subclass.get_model_name) and
+                hasattr(subclass, 'get_model_provider_name') and
+                callable(subclass.get_model_provider_name) and
+                hasattr(subclass, 'predict') and
                 callable(subclass.predict) and
                 hasattr(subclass, 'evaluate') and
                 callable(subclass.evaluate) and
                 hasattr(subclass, 'get_model_info') and
                 callable(subclass.get_model_info) or
                 NotImplemented)
+
+    @abc.abstractmethod
+    def get_model_name(self) -> str:
+        """
+        Obtém o nome do modelo que está em produção.
+            :return: Nome do modelo que está em produção.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_provider_name(self) -> str:
+        """
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            :return: Nome do provider que proverá o modelo que está em produção.
+        """
+        raise NotImplementedError
 
     @abc.abstractmethod
     def predict(self, dataset: list) -> list:
@@ -83,16 +103,16 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_model_name(self) -> str:
         """
-        Obtém o nome do modelo que estará em produção.
-            :return: Nome do modelo que estará em produção.
+        Obtém o nome do modelo que está em produção.
+            :return: Nome do modelo que está em produção.
         """
         raise NotImplementedError
 
     @abc.abstractmethod
     def get_model_provider_name(self) -> str:
         """
-        Obtém o nome do provider que proverá o modelo que estará em produção.
-            :return: Nome do provider que proverá o modelo que estará em produção.
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            :return: Nome do provider que proverá o modelo que está em produção.
         """
         raise NotImplementedError
 
@@ -107,8 +127,8 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_dataset_provider_name(self) -> str:
         """
-        Obtém o nome do provider do dataset usado pelo modelo que estará em produção.
-            :return: Nome do provider do dataset usado pelo modelo que estará em produção.
+        Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+            :return: Nome do provider do dataset usado pelo modelo que está em produção.
         """
         raise NotImplementedError
 

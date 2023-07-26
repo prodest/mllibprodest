@@ -17,7 +17,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         :return: Modelo carregado.
     """
     artefatos_obrigatorios = ["TrainingParams.pkl", "TrainingDatasetsNames.pkl", "BaselineMetrics.pkl"]
-    caminho_artefatos = Path(artifacts_destination_path)
+    caminho_artefatos = Path(artifacts_destination_path) / model_name
 
     # Antes de carregar o modelo, faz uma limpeza em alguns artefatos antigos. Obs.: Isso é necessário para evitar que,
     # caso o usuário esqueça de salvar um artefato obrigatório, seja carregado um artefato antigo salvo localmente.
@@ -72,7 +72,7 @@ def load_production_params_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando os parâmetros de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     parametros = None
-    nome_arq = str(Path("temp_area") / "TrainingParams.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "TrainingParams.pkl")
     arq = None
     msg = ""
 
@@ -111,7 +111,7 @@ def load_production_datasets_names_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando os parâmetros de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     nomes_datasets = None
-    nome_arq = str(Path("temp_area") / "TrainingDatasetsNames.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "TrainingDatasetsNames.pkl")
     arq = None
     msg = ""
 
@@ -151,7 +151,7 @@ def load_production_baseline_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando o baseline de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     baseline = None
-    nome_arq = str(Path("temp_area") / "BaselineMetrics.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "BaselineMetrics.pkl")
     arq = None
     msg = ""
 

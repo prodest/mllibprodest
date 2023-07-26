@@ -219,7 +219,8 @@ class Test:
             logging.info(msg)
             print(f"\n\n{msg}\n")
 
-            artefato_lido = model.convert_artifact_to_object(file_name=nome_artefato_obrigatorio)
+            artefato_lido = model.convert_artifact_to_object(model_name=model.get_model_name(),
+                                                             file_name=nome_artefato_obrigatorio)
             tipo_artefato_lido = type(artefato_lido)
 
             if tipo_artefato_lido is tipo_artefato_obrigatorio:
@@ -245,7 +246,6 @@ class Test:
         """
         Valida o script pub.py.
         """
-        modelo_teste = None
         msg = "Importando a classe 'ModeloCLF'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
@@ -258,26 +258,40 @@ class Test:
             print(f"\n\n{msg}\n")
             exit(1)
 
-        msg = "Instanciando um objeto da classe 'ModeloCLF'..."
+        msg = "Instanciando um ou mais objetos da classe 'ModeloCLF'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
         if callable(ModeloCLF) and type(ModeloCLF).__name__ == 'ABCMeta':
             try:
-                modelo_teste = ModeloCLF()
-            except TypeError as e:
-                msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
+                models_params = ModeloCLF.get_models_params()
+            except RuntimeError as e:
+                msg = str(e)
                 logging.error(msg)
                 print(f"\n\n{msg}\n")
                 exit(1)
 
-            msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que são " \
-                  "específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
-            logging.info(msg + self._howto_msg)
-            print(f"\n\n{msg + self._howto_msg}\n")
+            # Testa todos os modelos que foram definidos no arquivo 'params.conf'
+            for model_name in models_params.keys():
+                msg = f"Testando o modelo: {model_name}"
+                logging.info(msg)
+                print(f"\n\n{msg}\n")
 
-            if not self.__validate_methods(modelo_teste, "ModeloCLF"):
-                exit(1)
+                try:
+                    modelo_teste = ModeloCLF(model_name, models_params[model_name]["model_provider_name"])
+                except TypeError as e:
+                    msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
+                    logging.error(msg)
+                    print(f"\n\n{msg}\n")
+                    exit(1)
+
+                msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
+                      "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
+                logging.info(msg + self._howto_msg)
+                print(f"\n\n{msg + self._howto_msg}\n")
+
+                if not self.__validate_methods(modelo_teste, "ModeloCLF"):
+                    exit(1)
         else:
             msg = f"O tipo do 'ModeloCLF' está incorreto: '{type(ModeloCLF).__name__}'. 'ModeloCLF' deve ser uma " \
                   f"classe que herda os métodos da interface 'ModelPublicationInterfaceCLF' e possua as " \
@@ -290,7 +304,6 @@ class Test:
         """
         Valida o script retrain.py.
         """
-        modelo_teste = None
         msg = "Importando a classe 'ModeloRETRAIN'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
@@ -303,41 +316,57 @@ class Test:
             print(f"\n\n{msg}\n")
             exit(1)
 
-        msg = "Instanciando um objeto da classe 'ModeloRETRAIN'..."
+        msg = "Instanciando um ou mais objetos da classe 'ModeloRETRAIN'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
         if callable(ModeloRETRAIN) and type(ModeloRETRAIN).__name__ == 'ABCMeta':
             try:
-                modelo_teste = ModeloRETRAIN()
-            except TypeError as e:
-                msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
+                models_params = ModeloRETRAIN.get_models_params()
+            except RuntimeError as e:
+                msg = str(e)
                 logging.error(msg)
                 print(f"\n\n{msg}\n")
                 exit(1)
 
-            msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que são " \
-                  "específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
-            logging.info(msg + self._howto_msg)
-            print(f"\n\n{msg + self._howto_msg}\n")
-
-            if not self.__validate_methods(modelo_teste, "ModeloRETRAIN"):
-                exit(1)
-
-            # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
-            model_name = modelo_teste.get_model_name()
-            provider_name = modelo_teste.get_model_provider_name()
-
-            try:
-                modelo_teste.load_model(model_name=model_name, provider=provider_name)
-            except AttributeError as e:
-                msg = f"A chamada ao método 'load_model' falhou: {str(e)}."
-                logging.error(msg)
+            # Testa todos os modelos que foram definidos no arquivo 'params.conf'
+            for model_name in models_params.keys():
+                msg = f"Testando o modelo: {model_name}"
+                logging.info(msg)
                 print(f"\n\n{msg}\n")
-                exit(1)
 
-            if not self.__validate_mandatory_artifacts(modelo_teste):
-                exit(1)
+                try:
+                    modelo_teste = ModeloRETRAIN(model_name, models_params[model_name]["model_provider_name"],
+                                                 models_params[model_name]["experiment_name"],
+                                                 models_params[model_name]["dataset_provider_name"])
+                except TypeError as e:
+                    msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
+                    logging.error(msg)
+                    print(f"\n\n{msg}\n")
+                    exit(1)
+
+                msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que " \
+                      "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
+                logging.info(msg + self._howto_msg)
+                print(f"\n\n{msg + self._howto_msg}\n")
+
+                if not self.__validate_methods(modelo_teste, "ModeloRETRAIN"):
+                    exit(1)
+
+                # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
+                model_test_name = modelo_teste.get_model_name()
+                provider_name = modelo_teste.get_model_provider_name()
+
+                try:
+                    modelo_teste.load_model(model_name=model_test_name, provider=provider_name)
+                except AttributeError as e:
+                    msg = f"A chamada ao método 'load_model' falhou: {str(e)}."
+                    logging.error(msg)
+                    print(f"\n\n{msg}\n")
+                    exit(1)
+
+                if not self.__validate_mandatory_artifacts(modelo_teste):
+                    exit(1)
         else:
             msg = f"O tipo do 'ModeloRETRAIN' está incorreto: '{type(ModeloRETRAIN).__name__}'. 'ModeloRETRAIN' deve " \
                   f"ser uma classe que herda os métodos da interface 'ModelPublicationInterfaceRETRAIN' e possua as " \
