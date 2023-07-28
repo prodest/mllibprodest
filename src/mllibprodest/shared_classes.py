@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------------------------------------
 import logging
 import pickle
-import configparser
 from typing import Union
 from pathlib import Path
 from .provider import Provider
@@ -163,73 +162,3 @@ class CommonMethods:
         arq.close()
 
         return objeto
-
-    @staticmethod
-    def get_models_params() -> dict:
-        """
-        Obtém os parâmetros que serão utilizados para instanciar os modelos. Será buscado um arquivo com o nome
-        'params.conf' contendo o nome dos modelos como uma seção [MODEL_NAME] e os parâmetros: 'experiment_name',
-        'model_provider_name' e 'dataset_provider_name'.
-            :return: Dicionário contendo como chave o nome do modelo e como valor outro dicionário com os parâmetros.
-        """
-        make_log("get_models_params.log")
-        parametros_padroes = ["experiment_name", "model_provider_name", "dataset_provider_name"]
-        parametros_faltantes_por_secao = {}
-        faltou_parametro = False
-        conf = configparser.ConfigParser()
-
-        # Carrega os parâmetros
-        try:
-            nome_arq_params = conf.read("params.conf")
-        except configparser.MissingSectionHeaderError:
-            msg = "O arquivo com os parâmetros dos modelos ('params.conf') possui seções inválidas. Programa abortado!"
-            logging.error(msg)
-            raise RuntimeError(msg)
-        except configparser.DuplicateOptionError as e:
-            msg = f"Existem parâmetros duplicados. Programa abortado! Mensagem configParser: '{e}'."
-            logging.error(msg)
-            raise RuntimeError(msg)
-
-        if "params.conf" not in nome_arq_params:
-            msg = "Não foi possível encontrar o arquivo com os parâmetros dos modelos ('params.conf') ou não possui " \
-                  "permissão para leitura. Programa abortado!"
-            logging.error(msg)
-            raise RuntimeError(msg)
-
-        secoes = conf.sections()
-
-        if not secoes:
-            msg = "O arquivo com os parâmetros dos modelos ('params.conf') está vazio. Programa abortado!"
-            logging.error(msg)
-            raise RuntimeError(msg)
-
-        # Verifica se tem parâmetros padrões faltantes
-        for s in secoes:
-            parametros_faltantes = []
-
-            for p in parametros_padroes:
-                if p not in conf[s]:
-                    parametros_faltantes.append(p)
-
-            if parametros_faltantes:
-                faltou_parametro = True
-                parametros_faltantes_por_secao[s] = parametros_faltantes
-
-        if faltou_parametro:
-            msg = f"Um ou mais parâmetros no arquivo 'params.conf' não foram encontrados: " \
-                  f"{parametros_faltantes_por_secao}. Programa abortado!"
-            logging.error(msg)
-            raise RuntimeError(msg)
-
-        parametros_por_modelo = {}
-
-        # Obtém os parâmetros e gera o dicionário com os modelos e parâmetros
-        for s in secoes:
-            parametros_valor = {}
-
-            for p in parametros_padroes:
-                parametros_valor[p] = conf[s][p]
-
-            parametros_por_modelo[s] = parametros_valor
-
-        return parametros_por_modelo
