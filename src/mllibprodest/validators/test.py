@@ -7,9 +7,11 @@ import logging
 import hashlib
 import time
 import os
+from sys import exc_info
 from pathlib import Path
 from shutil import copytree, rmtree
 from ..utils import make_log
+from ..initiators.model_initiator import InitModels
 
 
 class Test:
@@ -22,38 +24,20 @@ class Test:
 
         h = hashlib.md5()
         h.update(str(time.time()).encode())
-        self._test_id = h.hexdigest()
+        self.__test_id = h.hexdigest()
 
-        msg = f"------------------> Instanciando o teste com o ID: {self._test_id} <------------------"
+        msg = f"------------------> Instanciando o teste com o ID: {self.__test_id} <------------------"
         logging.info(msg)
         print(f"\n\n{msg}")
 
         pasta_corrente = Path.cwd().name
 
         if pasta_corrente == "worker_pub":
-            if Path.exists(Path("pub.py")):
-                self.__nome_pasta_worker = "worker_pub"
-                self._nome_script = "pub.py"
-                self._nome_mytest = "mytest_pub.py"
-            else:
-                msg = "O arquivo 'pub.py' não foi encontrado na pasta 'worker_pub'. Por favor, crie o script " \
-                      "'pub.py' dentro da pasta 'worker_pub' e construa uma classe chamada 'ModeloCLF' que " \
-                      "implementa a interface 'ModelPublicationInterfaceCLF'. Teste abortado!"
-                logging.error(msg)
-                print(f"\n\n{msg}")
-                exit(1)
+            self.__nome_pasta_worker = "worker_pub"
+            self.__nome_mytest = "mytest_pub.py"
         elif pasta_corrente == "worker_retrain":
-            if Path.exists(Path("retrain.py")):
-                self.__nome_pasta_worker = "worker_retrain"
-                self._nome_script = "retrain.py"
-                self._nome_mytest = "mytest_retrain.py"
-            else:
-                msg = "O arquivo 'retrain.py' não foi encontrado na pasta 'worker_retrain'. Por favor, crie o script " \
-                      "'retrain.py' dentro da pasta 'worker_retrain' e construa uma classe chamada 'ModeloRETRAIN' " \
-                      "que implementa a interface 'ModelPublicationInterfaceRETRAIN'. Teste abortado!"
-                logging.error(msg)
-                print(f"\n\n{msg}")
-                exit(1)
+            self.__nome_pasta_worker = "worker_retrain"
+            self.__nome_mytest = "mytest_retrain.py"
         else:
             msg = "Não foi possível encontrar a pasta 'worker_pub' ou 'worker_retrain'. Verifique se estas pastas " \
                   "existem ou se você está rodando os testes na pasta correta. Teste abortado!"
@@ -61,13 +45,7 @@ class Test:
             print(f"\n\n{msg}")
             exit(1)
 
-        msg = f"O script '{self._nome_script}' foi encontrado!"
-        logging.info(msg)
-        print(f"\n\n{msg}")
-
         if Path.exists(Path("requirements.txt")):
-            arq = None
-
             try:
                 arq = open("requirements.txt", "r")
             except PermissionError:
@@ -89,7 +67,7 @@ class Test:
                     break
 
             if not vazio:
-                msg = f"O arquivo 'requirements.txt' foi encontrado na pasta '{self.__nome_pasta_worker}' e não " \
+                msg = f"O arquivo 'requirements.txt' foi encontrado na pasta '{self.__nome_pasta_worker}' e NÃO " \
                       f"está vazio!"
                 logging.info(msg)
                 print(f"\n\n{msg}")
@@ -101,30 +79,32 @@ class Test:
                 exit(1)
         else:
             msg = f"O arquivo 'requirements.txt' não foi encontrado na pasta '{self.__nome_pasta_worker}'. Por favor," \
-                  f" gere este arquivo com a lista de pacotes que foram utilizados na construção do script " \
-                  f"'{self._nome_script}'. Teste abortado!"
+                  f" gere este arquivo com a lista de pacotes que foram utilizados na construção do(s) modelo(s). " \
+                  f"Teste abortado!"
             logging.error(msg)
             print(f"\n\n{msg}")
             exit(1)
 
         # Howto para informar como passar uma função personalizada para realização dos testes
-        self._howto_msg = f"1. Edite o script '{self._nome_mytest}' (está na pasta '{self.__nome_pasta_worker}')" \
-                          f" para implementar a função 'test()';\n2. Crie os testes adicionais que você julgar " \
-                          f"necessários para testar o código do worker.\n   REGRAS: Esta função não deve receber " \
-                          f"parâmetros e retornar nada. Todos os dados para rodá-la devem ser obtidos de dentro " \
-                          f"dela.\n   A responsabilidade de criar os testes personalizados e verificar se passaram " \
-                          f"é do desenvolvedor do modelo."
+        self.__howto_msg = f"1. Edite o script '{self.__nome_mytest}' (está na pasta '{self.__nome_pasta_worker}')" \
+                           f" para implementar a função 'test()';\n2. Crie os testes adicionais que você julgar " \
+                           f"necessários para testar o código do worker.\n   REGRAS: Esta função não deve receber " \
+                           f"parâmetros e retornar nada. Todos os dados para rodá-la devem ser obtidos de dentro " \
+                           f"dela.\n   A responsabilidade de criar os testes personalizados e verificar se passaram " \
+                           f"é do desenvolvedor do modelo."
 
         # Artefatos obrigatórios que devem ter os tipos de valores de retorno testados
-        self.mandatory_artifacts = {
+        self.__mandatory_artifacts = {
             'TrainingParams.pkl': dict,
             'TrainingDatasetsNames.pkl': dict,
             'BaselineMetrics.pkl': dict
         }
 
         # Métodos que devem ter os tipos de valores de retorno testados
-        self.methods_to_test = {
+        self.__methods_to_test = {
             'ModeloCLF': {
+                'ModeloCLF.get_model_name': str,
+                'ModeloCLF.get_model_provider_name': str,
                 'ModeloCLF.get_model_info': dict
             },
             'ModeloRETRAIN': {
@@ -134,38 +114,52 @@ class Test:
                 'ModeloRETRAIN.get_dataset_provider_name': str
             }
         }
+
+        msg = "Instanciando os modelos definidos no arquivo 'params.conf'..."
+        logging.info(msg)
+        print(f"\n\n{msg}")
+
+        try:
+            self.__modelos = InitModels.init_models()
+        except:
+            msg = str(exc_info()[1])
+            logging.error(msg)
+            print(f"\n\n{msg}")
+            exit(1)
+
+        # Instancia os scripts de testes personalizados
         self.__validation_function = None
 
-        if Path.exists(Path(self._nome_mytest)):
+        if Path.exists(Path(self.__nome_mytest)):
             try:
-                if self._nome_mytest == "mytest_pub.py":
+                if self.__nome_mytest == "mytest_pub.py":
                     from mytest_pub import test
                     self.__validation_function = test
-                elif self._nome_mytest == "mytest_retrain.py":
+                elif self.__nome_mytest == "mytest_retrain.py":
                     from mytest_retrain import test
                     self.__validation_function = test
             except ImportError:
                 msg = "AVISO: A função para realização do teste personalizado pelo usuário não foi encontrada." \
                       "\n       Caso deseje criar um teste personalizado, faça o seguinte:\n"
-                logging.info(msg + self._howto_msg)
-                print(f"\n\n{msg + self._howto_msg}\n")
+                logging.info(msg + self.__howto_msg)
+                print(f"\n\n{msg + self.__howto_msg}\n")
         else:
-            msg = f"AVISO: O arquivo '{self._nome_mytest}' não foi encontrado na pasta '{self.__nome_pasta_worker}'. " \
-                  f"Caso deseje criar um teste personalizado, crie\n       um arquivo chamado '{self._nome_mytest}' " \
-                  f"e faça o seguinte:\n"
-            logging.info(msg + self._howto_msg)
-            print(f"\n\n{msg + self._howto_msg}\n")
+            msg = f"AVISO: O arquivo '{self.__nome_mytest}' não foi encontrado na pasta '{self.__nome_pasta_worker}'" \
+                  f". Caso deseje criar um teste personalizado, crie\n       um arquivo chamado " \
+                  f"'{self.__nome_mytest}' e faça o seguinte:\n"
+            logging.info(msg + self.__howto_msg)
+            print(f"\n\n{msg + self.__howto_msg}\n")
 
     def __validate_methods(self, model, class_name: str) -> bool:
         """
-        Valida os métodos definidos no construtor da classe através do atributo 'self.methods_to_test'.
+        Valida os métodos definidos no construtor da classe através do atributo 'self.__methods_to_test'.
             :param model: Modelo de onde os métodos serão chamados.
             :param class_name: Nome da classe que possui os métodos que serão validados.
             :return: True, se todos os métodos foram validados. False, caso algum método não tenha sido validado.
         """
         validado = True
 
-        for method_name, return_type in self.methods_to_test[class_name].items():
+        for method_name, return_type in self.__methods_to_test[class_name].items():
             nome_metodo_aux = method_name.split(".")[1]
             msg = f"Testando o método '{nome_metodo_aux}'..."
             logging.info(msg)
@@ -174,7 +168,11 @@ class Test:
             retorno = None
 
             try:
-                if method_name == "ModeloCLF.get_model_info":
+                if method_name == "ModeloCLF.get_model_name":
+                    retorno = model.get_model_name()
+                elif method_name == "ModeloCLF.get_model_provider_name":
+                    retorno = model.get_model_provider_name()
+                elif method_name == "ModeloCLF.get_model_info":
                     retorno = model.get_model_info()
                 elif method_name == "ModeloRETRAIN.get_model_name":
                     retorno = model.get_model_name()
@@ -214,7 +212,7 @@ class Test:
         """
         validado = True
 
-        for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.mandatory_artifacts.items():
+        for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.__mandatory_artifacts.items():
             msg = f"Procurando pelo artefato obrigatório '{nome_artefato_obrigatorio}'..."
             logging.info(msg)
             print(f"\n\n{msg}\n")
@@ -244,152 +242,73 @@ class Test:
 
     def __validate_pub(self):
         """
-        Valida o script pub.py.
+        Valida os scripts para publicação do modelo utilizando a classe ModeloCLF.
         """
-        msg = "Importando a classe 'ModeloCLF'..."
+        msg = "Scripts para publicação do modelo utilizando a classe 'ModeloCLF'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
-        try:
-            from pub import ModeloCLF
-        except ImportError:
-            msg = "A definição da classe 'ModeloCLF' não foi encontrada no arquivo 'pub.py'."
-            logging.error(msg)
-            print(f"\n\n{msg}\n")
-            exit(1)
+        for nome_modelo, modelo in self.__modelos.items():
+            print(f"\nMODELO: {nome_modelo}\n")
 
-        msg = "Instanciando um ou mais objetos da classe 'ModeloCLF'..."
-        logging.info(msg)
-        print(f"\n\n{msg}\n")
-
-        if callable(ModeloCLF) and type(ModeloCLF).__name__ == 'ABCMeta':
-            try:
-                models_params = ModeloCLF.get_models_params()
-            except RuntimeError as e:
-                msg = str(e)
-                logging.error(msg)
-                print(f"\n\n{msg}\n")
+            if not self.__validate_methods(modelo, "ModeloCLF"):
                 exit(1)
 
-            # Testa todos os modelos que foram definidos no arquivo 'params.conf'
-            for model_name in models_params.keys():
-                msg = f"Testando o modelo: {model_name}"
-                logging.info(msg)
-                print(f"\n\n{msg}\n")
+        msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
+              "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
+        logging.info(msg + self.__howto_msg)
+        print(f"\n\n{msg + self.__howto_msg}\n")
 
-                try:
-                    modelo_teste = ModeloCLF(model_name, models_params[model_name]["model_provider_name"])
-                except TypeError as e:
-                    msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
-                    logging.error(msg)
-                    print(f"\n\n{msg}\n")
-                    exit(1)
-
-                msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
-                      "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
-                logging.info(msg + self._howto_msg)
-                print(f"\n\n{msg + self._howto_msg}\n")
-
-                if not self.__validate_methods(modelo_teste, "ModeloCLF"):
-                    exit(1)
-        else:
-            msg = f"O tipo do 'ModeloCLF' está incorreto: '{type(ModeloCLF).__name__}'. 'ModeloCLF' deve ser uma " \
-                  f"classe que herda os métodos da interface 'ModelPublicationInterfaceCLF' e possua as " \
-                  f"implementações para os métodos abstratos dela."
-            logging.error(msg)
-            print(f"\n\n{msg}\n")
-            exit(1)
 
     def __validate_retrain(self):
         """
-        Valida o script retrain.py.
+        Valida os scripts para publicação do modelo utilizando a classe ModeloRETRAIN.
         """
-        msg = "Importando a classe 'ModeloRETRAIN'..."
+        msg = "Scripts para publicação do modelo utilizando a classe 'ModeloRETRAIN'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
-        try:
-            from retrain import ModeloRETRAIN
-        except ImportError:
-            msg = "A definição da classe 'ModeloRETRAIN' não foi encontrada no arquivo 'retrain.py'."
-            logging.error(msg)
-            print(f"\n\n{msg}\n")
-            exit(1)
+        for nome_modelo, modelo in self.__modelos.items():
+            print(f"\nMODELO: {nome_modelo}\n")
 
-        msg = "Instanciando um ou mais objetos da classe 'ModeloRETRAIN'..."
-        logging.info(msg)
-        print(f"\n\n{msg}\n")
+            if not self.__validate_methods(modelo, "ModeloRETRAIN"):
+                exit(1)
 
-        if callable(ModeloRETRAIN) and type(ModeloRETRAIN).__name__ == 'ABCMeta':
+            # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
+            model_name = modelo.get_model_name()
+            provider_name = modelo.get_model_provider_name()
+
             try:
-                models_params = ModeloRETRAIN.get_models_params()
-            except RuntimeError as e:
-                msg = str(e)
+                modelo.load_model(model_name=model_name, provider=provider_name)
+            except AttributeError as e:
+                msg = f"A chamada ao método 'load_model' falhou: {str(e)}."
                 logging.error(msg)
                 print(f"\n\n{msg}\n")
                 exit(1)
 
-            # Testa todos os modelos que foram definidos no arquivo 'params.conf'
-            for model_name in models_params.keys():
-                msg = f"Testando o modelo: {model_name}"
-                logging.info(msg)
-                print(f"\n\n{msg}\n")
+            if not self.__validate_mandatory_artifacts(modelo):
+                exit(1)
 
-                try:
-                    modelo_teste = ModeloRETRAIN(model_name, models_params[model_name]["model_provider_name"],
-                                                 models_params[model_name]["experiment_name"],
-                                                 models_params[model_name]["dataset_provider_name"])
-                except TypeError as e:
-                    msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
-                    logging.error(msg)
-                    print(f"\n\n{msg}\n")
-                    exit(1)
-
-                msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que " \
-                      "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
-                logging.info(msg + self._howto_msg)
-                print(f"\n\n{msg + self._howto_msg}\n")
-
-                if not self.__validate_methods(modelo_teste, "ModeloRETRAIN"):
-                    exit(1)
-
-                # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
-                model_test_name = modelo_teste.get_model_name()
-                provider_name = modelo_teste.get_model_provider_name()
-
-                try:
-                    modelo_teste.load_model(model_name=model_test_name, provider=provider_name)
-                except AttributeError as e:
-                    msg = f"A chamada ao método 'load_model' falhou: {str(e)}."
-                    logging.error(msg)
-                    print(f"\n\n{msg}\n")
-                    exit(1)
-
-                if not self.__validate_mandatory_artifacts(modelo_teste):
-                    exit(1)
-        else:
-            msg = f"O tipo do 'ModeloRETRAIN' está incorreto: '{type(ModeloRETRAIN).__name__}'. 'ModeloRETRAIN' deve " \
-                  f"ser uma classe que herda os métodos da interface 'ModelPublicationInterfaceRETRAIN' e possua as " \
-                  f"implementações para os métodos abstratos dela."
-            logging.error(msg)
-            print(f"\n\n{msg}\n")
-            exit(1)
+        msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que " \
+              "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
+        logging.info(msg + self.__howto_msg)
+        print(f"\n\n{msg + self.__howto_msg}\n")
 
     def __validate_params_returns(self):
         """
         Valida alguns parâmetros e valores de retorno solicitados pelas interfaces que foram implementados. Porém, não
         é escopo desta função validar os dados que estão sendo utilizados pelas funções implementadas.
         """
-        msg = f"=> INICIO: Test ID={self._test_id}. Teste padrão da lib."
+        msg = f"=> INICIO: Test ID={self.__test_id}. Teste padrão da lib."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
-        if self._nome_script == "pub.py":
+        if self.__nome_pasta_worker == "worker_pub":
             self.__validate_pub()
-        elif self._nome_script == "retrain.py":
+        elif self.__nome_pasta_worker == "worker_retrain":
             self.__validate_retrain()
 
-        msg = f"=> FIM: Test ID={self._test_id}. Teste padrão da lib."
+        msg = f"=> FIM: Test ID={self.__test_id}. Teste padrão da lib."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
@@ -397,7 +316,7 @@ class Test:
         """
         Executa a função de validação criada e personalizada pelo usuário.
         """
-        msg = f"=> INICIO: Test ID={self._test_id}. Testes personalizados pelo usuário. Dados da função utilizada: " \
+        msg = f"=> INICIO: Test ID={self.__test_id}. Testes personalizados pelo usuário. Dados da função utilizada: " \
               f"{str(self.__validation_function)}."
         logging.info(msg)
         print(f"\n\n{msg}\n")
@@ -411,9 +330,9 @@ class Test:
             print(f"\n\n{msg}")
             exit(1)
 
-        self.__validation_function()
+        self.__validation_function(self.__modelos)
 
-        msg = f"=> FIM: Test ID={self._test_id}. Testes personalizados pelo usuário."
+        msg = f"=> FIM: Test ID={self.__test_id}. Testes personalizados pelo usuário."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
