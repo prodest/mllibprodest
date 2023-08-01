@@ -45,7 +45,7 @@ def get_file_s3(file_name: str, s3_server: str, access_key: str, secret_key: str
     except minio.error.S3Error as e:
         msg = f"Não foi possível obter o arquivo desejado. Mensagem do servidor S3: {e}"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     return obj_arquivo.read()
 
@@ -62,12 +62,12 @@ def get_file_local(file_path: str):
     except FileNotFoundError:
         msg = f"Não foi possível encontrar o arquivo no caminho '{file_path}'. Programa abortado!"
         logging.error(msg)
-        raise FileNotFoundError(msg)
+        raise FileNotFoundError(msg) from None
     except PermissionError:
         msg = f"Não foi possível ler o arquivo no caminho '{file_path}'. Permissão de leitura negada. Programa " \
               f"abortado!"
         logging.error(msg)
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     return bytes_arq
 
@@ -139,7 +139,7 @@ def make_log(filename: str):
         makedirs("logs", exist_ok=True)
     except PermissionError:
         msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     log_file_path = str(Path("logs") / filename)
 
@@ -150,11 +150,11 @@ def make_log(filename: str):
                             level=logging.INFO)
     except FileNotFoundError:
         msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
-        raise FileNotFoundError(msg)
+        raise FileNotFoundError(msg) from None
     except PermissionError:
         msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
               f"escrita/leitura negada. Programa abortado!"
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
 
 def get_models_params(path: str = "") -> dict:

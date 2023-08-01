@@ -109,12 +109,12 @@ class CommonMethods:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido. O caminho '{caminho_artefato}' está " \
                   f"incorreto. Programa abortado!"
             logging.error(msg)
-            raise FileNotFoundError(msg)
+            raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{caminho_artefato}'. " \
                   f"Permissão de escrita negada. Programa abortado!"
             logging.error(msg)
-            raise PermissionError(msg)
+            raise PermissionError(msg) from None
 
         try:
             pickle.dump(artifact, arq)
@@ -122,7 +122,7 @@ class CommonMethods:
             msg = f"Não foi possível gerar o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). Programa " \
                   f"abortado!"
             logging.error(msg)
-            raise TypeError(msg)
+            raise TypeError(msg) from None
 
         arq.close()
 
@@ -144,12 +144,12 @@ class CommonMethods:
             msg = f"Não foi possível converter o artefato '{file_name}'. O caminho '{caminho_artefato}' não foi " \
                   f"encontrado. Programa abortado!"
             logging.error(msg)
-            raise FileNotFoundError(msg)
+            raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{caminho_artefato}'. " \
                   f"Permissão de leitura negada. Programa abortado!"
             logging.error(msg)
-            raise PermissionError(msg)
+            raise PermissionError(msg) from None
 
         try:
             objeto = pickle.load(arq)

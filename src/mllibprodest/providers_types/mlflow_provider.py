@@ -33,7 +33,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         msg = f"Não foi possível criar a pasta de destino dos artefatos '{artifacts_destination_path}'. Permissão " \
               f"de escrita negada. Programa abortado!"
         logging.error(msg)
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     stage = 'Production'
 
@@ -43,11 +43,11 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
     except RestException:
         msg = f"O modelo '{model_name}' no estágio '{stage}' não foi encontrado. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f"Não foi possível carregar o modelo '{model_name}'. Mensagem do MLFlow: '{e}'. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no 'run_id' do modelo
     endereco_base_artefatos = f"runs:/{modelo.metadata.run_id}/"
@@ -58,7 +58,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         msg = f"Não foi possível carregar os artefatos no endereço '{endereco_base_artefatos}'. " \
               f"Mensagem do MLFlow: '{e}'. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     return modelo
 

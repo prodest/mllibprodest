@@ -42,7 +42,7 @@ class InitModels:
                     except TypeError as e:
                         msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
                         logging.error(msg)
-                        raise TypeError(msg)
+                        raise TypeError(msg) from None
                 else:
                     msg = f"O tipo do 'ModeloCLF' está incorreto: '{type(cls).__name__}'. 'ModeloCLF' deve ser uma " \
                           f"classe que herda os métodos da interface 'ModelPublicationInterfaceCLF' e possua as " \
@@ -61,7 +61,7 @@ class InitModels:
                     except TypeError as e:
                         msg = f"Faltou a implementação do(s) seguinte(s) método(s): {str(e)[65:]}."
                         logging.error(msg)
-                        raise TypeError(msg)
+                        raise TypeError(msg) from None
                 else:
                     msg = f"O tipo do 'ModeloRETRAIN' está incorreto: '{type(cls).__name__}'. 'ModeloRETRAIN' deve " \
                           f"ser uma classe que herda os métodos da interface 'ModelPublicationInterfaceRETRAIN' e " \
