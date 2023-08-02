@@ -7,6 +7,7 @@ Para gravar os logs basta salvar as mensagens de log com as funções: 'logging.
 pacote 'logging'. Ex. logging.error("Mensagem de erro"); logging.info("Mensagem informativa").
 """
 import logging  # Para gerar os logs (aconselhamos gerar os logs para facilitar o diagnóstico de problemas)
+from .utils import *  # Para importar todas as funções/rotinas definidas no script 'utils.py'
 from mllibprodest.interfaces import ModelPublicationInterfaceRETRAIN
 
 

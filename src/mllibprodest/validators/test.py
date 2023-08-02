@@ -7,7 +7,6 @@ import logging
 import hashlib
 import time
 import os
-from sys import exc_info
 from pathlib import Path
 from shutil import copytree, rmtree
 from ..utils import make_log
@@ -117,15 +116,10 @@ class Test:
 
         msg = "Instanciando os modelos definidos no arquivo 'params.conf'..."
         logging.info(msg)
-        print(f"\n\n{msg}")
+        print(f"\n\n{msg}\n")
 
-        try:
-            self.__modelos = InitModels.init_models()
-        except:
-            msg = str(exc_info()[1])
-            logging.error(msg)
-            print(f"\n\n{msg}")
-            exit(1)
+        # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
+        self.__modelos = InitModels.init_models()
 
         # Instancia os scripts de testes personalizados
         self.__validation_function = None
@@ -161,7 +155,7 @@ class Test:
 
         for method_name, return_type in self.__methods_to_test[class_name].items():
             nome_metodo_aux = method_name.split(".")[1]
-            msg = f"Testando o método '{nome_metodo_aux}'..."
+            msg = f"=> Testando o método '{nome_metodo_aux}'..."
             logging.info(msg)
             print(f"\n\n{msg}\n")
 
@@ -185,7 +179,7 @@ class Test:
             except AttributeError as e:
                 msg = f"A chamada ao método '{nome_metodo_aux}' falhou: {str(e)}."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"\n***ERRO***: {msg}\n")
                 exit(1)
 
             tipo_retorno = type(retorno)
@@ -193,13 +187,13 @@ class Test:
             if tipo_retorno is return_type:
                 msg = f"Tipo de retorno da chamada ao método '{nome_metodo_aux}' OK: {retorno}"
                 logging.info(msg)
-                print(f"\n\n{msg}\n")
+                print(f"   {msg}\n")
             else:
                 validado = False
                 msg = f"O método '{nome_metodo_aux}' deve retornar o tipo '{return_type.__name__}', porém retornou " \
                       f"'{tipo_retorno.__name__}'."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"***ERRO***: {msg}\n")
 
         return validado
 
@@ -213,9 +207,9 @@ class Test:
         validado = True
 
         for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.__mandatory_artifacts.items():
-            msg = f"Procurando pelo artefato obrigatório '{nome_artefato_obrigatorio}'..."
+            msg = f"=> Procurando pelo artefato obrigatório '{nome_artefato_obrigatorio}'..."
             logging.info(msg)
-            print(f"\n\n{msg}\n")
+            print(f"\n{msg}\n")
 
             artefato_lido = model.convert_artifact_to_object(model_name=model.get_model_name(),
                                                              file_name=nome_artefato_obrigatorio)
@@ -225,18 +219,18 @@ class Test:
                 if len(artefato_lido) > 0:
                     msg = f"Conteúdo do artefato obrigatório '{nome_artefato_obrigatorio}': '{artefato_lido}'"
                     logging.info(msg)
-                    print(f"\n\n{msg}\n")
+                    print(f"  {msg}\n")
                 else:
                     validado = False
                     msg = f"O artefato obrigatório '{nome_artefato_obrigatorio}' deve ter o tamanho maior que 0 (zero)."
                     logging.error(msg)
-                    print(f"\n\n{msg}\n")
+                    print(f"***ERRO***: {msg}\n")
             else:
                 validado = False
                 msg = f"O artefato obrigatório '{nome_artefato_obrigatorio}' deve ser do tipo " \
                       f"'{tipo_artefato_obrigatorio.__name__}', porém é do tipo: '{tipo_artefato_lido.__name__}'."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"***ERRO***: {msg}\n")
 
         return validado
 
@@ -252,6 +246,9 @@ class Test:
             print(f"\nMODELO: {nome_modelo}\n")
 
             if not self.__validate_methods(modelo, "ModeloCLF"):
+                msg = "Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima."
+                logging.error(msg)
+                print(f"\n\n{msg}\n")
                 exit(1)
 
         msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
@@ -272,6 +269,9 @@ class Test:
             print(f"\nMODELO: {nome_modelo}\n")
 
             if not self.__validate_methods(modelo, "ModeloRETRAIN"):
+                msg = "Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima."
+                logging.error(msg)
+                print(f"\n\n{msg}\n")
                 exit(1)
 
             # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
@@ -287,6 +287,9 @@ class Test:
                 exit(1)
 
             if not self.__validate_mandatory_artifacts(modelo):
+                msg = "Erro ao validar os artefatos obrigatórios. Verifique as mensagens de validação acima."
+                logging.error(msg)
+                print(f"\n\n{msg}\n")
                 exit(1)
 
         msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que " \
@@ -325,7 +328,8 @@ class Test:
 
         if type_validation_function != 'function':
             msg = f"O parâmetro 'validation_function' deve receber uma função mas recebeu " \
-                  f"'{type_validation_function}'."
+                  f"'{type_validation_function}'. Verifique a implementação da função 'test' no arquivo " \
+                  f"{self.__nome_mytest}."
             logging.error(msg)
             print(f"\n\n{msg}")
             exit(1)
