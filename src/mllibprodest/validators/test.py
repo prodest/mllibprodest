@@ -12,6 +12,12 @@ from shutil import copytree, rmtree
 from ..utils import make_log
 from ..initiators.model_initiator import InitModels
 
+# Códigos para impressão de mensagens coloridas no terminal
+BLUE = "\033[1;34m"
+RED = "\033[1;31m"
+GREEN = "\033[0;32m"
+BOLD = "\033[;1m"
+RESET = "\033[0;0m"
 
 class Test:
     """
@@ -27,7 +33,7 @@ class Test:
 
         msg = f"------------------> Instanciando o teste com o ID: {self.__test_id} <------------------"
         logging.info(msg)
-        print(f"\n\n{msg}")
+        print(f"\n\n      {BOLD}{BLUE}{msg}{RESET}")
 
         pasta_corrente = Path.cwd().name
 
@@ -42,6 +48,7 @@ class Test:
                   "existem ou se você está rodando os testes na pasta correta. Teste abortado!"
             logging.error(msg)
             print(f"\n\n{msg}")
+            print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
             exit(1)
 
         if Path.exists(Path("requirements.txt")):
@@ -52,6 +59,7 @@ class Test:
                       f"'{self.__nome_pasta_worker}'. Permissão de leitura negada. Teste abortado!"
                 logging.error(msg)
                 print(f"\n\n{msg}")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
             reqs = arq.readlines()
@@ -75,6 +83,7 @@ class Test:
                       f"vazio. Teste abortado!"
                 logging.error(msg)
                 print(f"\n\n{msg}")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
         else:
             msg = f"O arquivo 'requirements.txt' não foi encontrado na pasta '{self.__nome_pasta_worker}'. Por favor," \
@@ -82,15 +91,16 @@ class Test:
                   f"Teste abortado!"
             logging.error(msg)
             print(f"\n\n{msg}")
+            print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
             exit(1)
 
         # Howto para informar como passar uma função personalizada para realização dos testes
         self.__howto_msg = f"1. Edite o script '{self.__nome_mytest}' (está na pasta '{self.__nome_pasta_worker}')" \
                            f" para implementar a função 'test()';\n2. Crie os testes adicionais que você julgar " \
                            f"necessários para testar o código do worker.\n   REGRAS: Esta função não deve receber " \
-                           f"parâmetros e retornar nada. Todos os dados para rodá-la devem ser obtidos de dentro " \
-                           f"dela.\n   A responsabilidade de criar os testes personalizados e verificar se passaram " \
-                           f"é do desenvolvedor do modelo."
+                           f"parâmetros adicionais. Não pode retornar valores. Todos os dados para rodá-la devem ser " \
+                           f"obtidos de dentro dela.\n   A responsabilidade de criar os testes personalizados e " \
+                           f"verificar se passaram é do desenvolvedor do modelo."
 
         # Artefatos obrigatórios que devem ter os tipos de valores de retorno testados
         self.__mandatory_artifacts = {
@@ -114,7 +124,7 @@ class Test:
             }
         }
 
-        msg = "Instanciando os modelos definidos no arquivo 'params.conf'..."
+        msg = "=> Instanciando os modelos definidos no arquivo 'params.conf'..."
         logging.info(msg)
         print(f"\n\n{msg}\n")
 
@@ -179,7 +189,8 @@ class Test:
             except AttributeError as e:
                 msg = f"A chamada ao método '{nome_metodo_aux}' falhou: {str(e)}."
                 logging.error(msg)
-                print(f"\n***ERRO***: {msg}\n")
+                print(f"\n{RED}***ERRO***: {msg}{RESET}\n")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
             tipo_retorno = type(retorno)
@@ -193,7 +204,7 @@ class Test:
                 msg = f"O método '{nome_metodo_aux}' deve retornar o tipo '{return_type.__name__}', porém retornou " \
                       f"'{tipo_retorno.__name__}'."
                 logging.error(msg)
-                print(f"***ERRO***: {msg}\n")
+                print(f"{RED}***ERRO***: {msg}{RESET}\n")
 
         return validado
 
@@ -224,13 +235,13 @@ class Test:
                     validado = False
                     msg = f"O artefato obrigatório '{nome_artefato_obrigatorio}' deve ter o tamanho maior que 0 (zero)."
                     logging.error(msg)
-                    print(f"***ERRO***: {msg}\n")
+                    print(f"{RED}***ERRO***: {msg}{RESET}\n")
             else:
                 validado = False
                 msg = f"O artefato obrigatório '{nome_artefato_obrigatorio}' deve ser do tipo " \
                       f"'{tipo_artefato_obrigatorio.__name__}', porém é do tipo: '{tipo_artefato_lido.__name__}'."
                 logging.error(msg)
-                print(f"***ERRO***: {msg}\n")
+                print(f"{RED}***ERRO***: {msg}{RESET}\n")
 
         return validado
 
@@ -240,15 +251,16 @@ class Test:
         """
         msg = "Scripts para publicação do modelo utilizando a classe 'ModeloCLF'..."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n # {msg}")
 
         for nome_modelo, modelo in self.__modelos.items():
-            print(f"\nMODELO: {nome_modelo}\n")
+            print(f"\n{GREEN} ### MODELO: {nome_modelo} ### {RESET}\n")
 
             if not self.__validate_methods(modelo, "ModeloCLF"):
                 msg = "Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"\n\n{RED} *** {msg}{RESET}\n")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
         msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
@@ -263,15 +275,16 @@ class Test:
         """
         msg = "Scripts para publicação do modelo utilizando a classe 'ModeloRETRAIN'..."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n # {msg}")
 
         for nome_modelo, modelo in self.__modelos.items():
-            print(f"\nMODELO: {nome_modelo}\n")
+            print(f"\n{GREEN} ### MODELO: {nome_modelo} ### {RESET}\n")
 
             if not self.__validate_methods(modelo, "ModeloRETRAIN"):
                 msg = "Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"\n\n{RED} *** {msg}{RESET}\n")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
             # Testa o carregamento do modelo e verifica se os artefatos obrigatórios estão de acordo
@@ -284,12 +297,14 @@ class Test:
                 msg = f"A chamada ao método 'load_model' falhou: {str(e)}."
                 logging.error(msg)
                 print(f"\n\n{msg}\n")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
             if not self.__validate_mandatory_artifacts(modelo):
                 msg = "Erro ao validar os artefatos obrigatórios. Verifique as mensagens de validação acima."
                 logging.error(msg)
-                print(f"\n\n{msg}\n")
+                print(f"\n\n{RED} *** {msg}{RESET}\n")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
         msg = "AVISO: Os métodos 'evaluate' e 'retrain' não serão testados porque necessitam de dados que " \
@@ -304,7 +319,7 @@ class Test:
         """
         msg = f"=> INICIO: Test ID={self.__test_id}. Teste padrão da lib."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n{BOLD}{BLUE}{msg}{RESET}\n")
 
         if self.__nome_pasta_worker == "worker_pub":
             self.__validate_pub()
@@ -313,7 +328,7 @@ class Test:
 
         msg = f"=> FIM: Test ID={self.__test_id}. Teste padrão da lib."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n{BOLD}{BLUE}{msg}{RESET}\n")
 
     def __run_validation_function(self):
         """
@@ -322,23 +337,24 @@ class Test:
         msg = f"=> INICIO: Test ID={self.__test_id}. Testes personalizados pelo usuário. Dados da função utilizada: " \
               f"{str(self.__validation_function)}."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n{BOLD}{BLUE}{msg}{RESET}\n")
 
         type_validation_function = type(self.__validation_function).__name__
 
         if type_validation_function != 'function':
             msg = f"O parâmetro 'validation_function' deve receber uma função mas recebeu " \
                   f"'{type_validation_function}'. Verifique a implementação da função 'test' no arquivo " \
-                  f"{self.__nome_mytest}."
+                  f"'{self.__nome_mytest}'."
             logging.error(msg)
             print(f"\n\n{msg}")
+            print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
             exit(1)
 
         self.__validation_function(self.__modelos)
 
         msg = f"=> FIM: Test ID={self.__test_id}. Testes personalizados pelo usuário."
         logging.info(msg)
-        print(f"\n\n{msg}\n")
+        print(f"\n\n{BOLD}{BLUE}{msg}{RESET}\n")
 
     def validate(self, mlruns_path: str = ""):
         """
@@ -367,12 +383,14 @@ class Test:
                     msg = "O caminho para a pasta 'mlruns' está incorreto. Teste abortado!"
                     logging.error(msg)
                     print(f"\n\n{msg}")
+                    print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                     exit(1)
                 except PermissionError:
                     msg = f"Permissão de leitura na pasta de origem ('{caminho_mlruns}') ou gravação na pasta de " \
                           f"destino ('mlruns') negada. Teste abortado!"
                     logging.error(msg)
                     print(f"\n\n{msg}")
+                    print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                     exit(1)
 
                 os.environ["MLFLOW_TRACKING_URI"] = "http://localhost:5000"
@@ -392,6 +410,7 @@ class Test:
                           f"('{caminho_mlruns}') negada. Teste abortado!"
                     logging.error(msg)
                     print(f"\n\n{msg}")
+                    print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                     exit(1)
 
                 # Limpa os arquivos criados na execução dos testes
@@ -408,6 +427,7 @@ class Test:
                       "o modelo, foi iniciado. Teste abortado!"
                 logging.error(msg)
                 print(f"\n\n{msg}")
+                print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
         else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
             self.__validate_params_returns()
