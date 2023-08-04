@@ -194,7 +194,7 @@ possível carregar o modelo.
 
 ## 2. Organize o código de acordo com o *template*
 Uma vez que o modelo foi desenvolvido e testado, agora é o momento de iniciar as tratativas para publicá-lo na *stack* de ML do 
-Prodest. Porém, antes, é oporturno mostrar como o modelo será integrado à *stack*. Esta integração se dará através de 
+Prodest. Porém, antes, é oportuno mostrar como o modelo será integrado à *stack*. Esta integração se dará através de 
 componentes denominados *workers*, cuja codificação é de responsabilidade de quem está construindo o modelo. Na 
 ilustração abaixo é possível observar que os *workers* são acessados pelos componentes de apoio da *stack* para 
 permitir a publicação dos modelos. Caso seja necessário, uma mesma stack poderá publicar mais de um modelo, desde que 
@@ -277,7 +277,7 @@ instalados nos ambientes virtuais criados. Quando terminar a implementação, ba
 Outro ponto importante antes de implementar as interfaces é saber que: para publicar o modelo será necessário a criação 
 de três artefatos obrigatórios, inclusive seguindo o mesmo nome (*case sensitive*). Estes artefatos devem ser 
 dicionários (dict) salvos com o [Pickle](https://docs.python.org/3/library/pickle.html) (utilize a função 
-'convert_artifact_to_pickle' quando estiver implementando as intefaces):
+'convert_artifact_to_pickle' quando estiver implementando as interfaces):
 
 - **TrainingParams.pkl**: Deve conter os parâmetros que você escolheu utilizar no treinamento do modelo. Não há 
 necessidade de colocar os parâmetros nos quais você manteve os valores *default*. Você pode colocar outros parâmetros 
@@ -312,14 +312,27 @@ nomes dos parâmetros.
 
 **worker_pub**:
 
-- Abra o arquivo '**pub.py**', que se encontra na pasta '**worker_pub**', e implemente os métodos da interface 
+- Abra o arquivo '**pub1.py**', que se encontra na pasta '**worker_pub/models**', e implemente os métodos da interface 
 **ModelPublicationInterfaceCLF** através da classe **ModeloCLF**. Leia os comentários, eles te guiarão na implementação.
+ 
+
+- Abra o arquivo '**params.conf**', que se encontra na pasta '**worker_pub**', e informe os parâmetros dos modelos.
+Leia os comentários, eles te guiarão na configuração.
+
 
 **worker_retrain**:
 
-- Abra o arquivo '**retrain.py**', que se encontra na pasta '**worker_retrain**', e implemente os métodos da interface 
+- Abra o arquivo '**retrain1.py**', que se encontra na pasta '**worker_retrain/models**', e implemente os métodos da interface 
 **ModelPublicationInterfaceRETRAIN** através da classe **ModeloRETRAIN**. Leia os comentários, eles te guiarão na 
 implementação.
+
+
+- Abra o arquivo '**params.conf**', que se encontra na pasta '**worker_retrain**', e informe os parâmetros dos modelos.
+Leia os comentários, eles te guiarão na configuração.
+
+
+**NOTA**: É possível publicar um ou mais modelos utilizando uma mesma **Stack**. Para isso, basta fazer as devidas
+configurações nos arquivos '**params.conf**'.
 
 A lib disponibiliza vários métodos úteis que auxiliarão na implementação das interfaces. 
 Todos os métodos estão documentados via [docstrings](https://peps.python.org/pep-0257/) que, geralmente, são 
