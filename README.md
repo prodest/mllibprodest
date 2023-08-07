@@ -56,7 +56,7 @@ if os.environ.get('MLFLOW_TRACKING_URI') is None:
     mlflow.set_tracking_uri('sqlite:///teste_mlflow.db')
 
 # Configura o experimento (se não existir, cria)
-mlflow.set_experiment(experiment_name="Teste sklearn")
+mlflow.set_experiment(experiment_name="Teste_sklearn")
 
 # Inicia uma execução do experimento (um experimento pode possuir várias execuções)
 mlflow.start_run(run_name="t1", description="teste 1")
@@ -142,8 +142,8 @@ conseguirá rodar o código e já observar os resultados sem ter que parar o ser
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
 ```
 
-- Verifique se o experimento foi registrado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure 
-pelo experimento/execução '**Teste sklearn**' na seção **Experiments** (se o experimento não estiver listado, verifique 
+- Verifique se o experimento foi criado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure 
+pelo experimento/execução '**Teste_sklearn**' na seção **Experiments** (se o experimento não estiver listado, verifique 
 se o servidor foi iniciado de dentro da pasta correta);
 
 
@@ -197,8 +197,7 @@ Uma vez que o modelo foi desenvolvido e testado, agora é o momento de iniciar a
 Prodest. Porém, antes, é oportuno mostrar como o modelo será integrado à *stack*. Esta integração se dará através de 
 componentes denominados *workers*, cuja codificação é de responsabilidade de quem está construindo o modelo. Na 
 ilustração abaixo é possível observar que os *workers* são acessados pelos componentes de apoio da *stack* para 
-permitir a publicação dos modelos. Caso seja necessário, uma mesma stack poderá publicar mais de um modelo, desde que 
-sejam construídos *workers* dedicados para cada um deles.
+permitir a publicação dos modelos. Caso seja necessário, uma mesma stack poderá publicar mais de um modelo.
 
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/stack-ml.png?raw=true)
 
@@ -280,8 +279,8 @@ dicionários (dict) salvos com o [Pickle](https://docs.python.org/3/library/pick
 'convert_artifact_to_pickle' quando estiver implementando as interfaces):
 
 - **TrainingParams.pkl**: Deve conter os parâmetros que você escolheu utilizar no treinamento do modelo. Não há 
-necessidade de colocar os parâmetros nos quais você manteve os valores *default*. Você pode colocar outros parâmetros 
-criados por você necessários para que o modelo funcione. Coloque o nome 
+necessidade de colocar os parâmetros nos quais você manteve os valores *default*. Você pode colocar outros parâmetros, 
+criados por você, necessários para que o modelo funcione. Coloque o nome 
 do parâmetro como nome da chave e o valor do parâmetro como valor da chave. Ex. baseado no *DecisionTreeClassifier*: 
 {'criterion': 'entropy', 'max_depth': '20', 'random_state': '77', 'meu_parametro_personalizado': 'teste'}. 
 
@@ -332,7 +331,7 @@ Leia os comentários, eles te guiarão na configuração.
 
 
 **NOTA**: É possível publicar um ou mais modelos utilizando uma mesma **Stack**. Para isso, basta fazer as devidas
-configurações nos arquivos '**params.conf**'.
+configurações de cada um dos modelos nos arquivos '**params.conf**' constantes nas pastas **worker_pub** e **worker_retrain**.
 
 A lib disponibiliza vários métodos úteis que auxiliarão na implementação das interfaces. 
 Todos os métodos estão documentados via [docstrings](https://peps.python.org/pep-0257/) que, geralmente, são 
@@ -346,7 +345,7 @@ dos modelos publicados, salvas através dos artefatos obrigatórios.
 - **convert_artifact_to_pickle** - Conversão de um artefato para o formato pickle.
 - **convert_artifact_to_object** - Conversão de um artefato que está no formato pickle para o objeto de origem.
 
-Explore a documentação para saber das possibilidades de uso da lib.
+Explore a [documentação](https://prodest.github.io/mllibprodest) para saber das possibilidades de uso da lib.
 
 ### Teste o código produzido!
 O repositório da lib disponibiliza os scripts '**test_pub.py**' e '**test_retrain.py**' para realização de testes para 
