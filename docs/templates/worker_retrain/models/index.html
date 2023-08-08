@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>docs.templates.worker_retrain.test_retrain API documentation</title>
+<title>docs.templates.worker_retrain.models API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,49 +19,23 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>docs.templates.worker_retrain.test_retrain</code></h1>
+<h1 class="title">Module <code>docs.templates.worker_retrain.models</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python"># ----------------------------------------------------------------------------------------------------
-# Este teste verifica se a implementação das interfaces está atendendo à algumas premissas
-# necessárias para publicação do modelo.
-# ----------------------------------------------------------------------------------------------------
-import sys
-from mllibprodest.utils import validate_params
-from mllibprodest.validators.test import Test
-
-
-if __name__ == &#34;__main__&#34;:
-    &#34;&#34;&#34;
-    Se você estiver rodando o MLflow localmente, execute o script e informe o caminho completo da pasta &#39;mlruns&#39;
-    através do parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39;. A pasta &#39;mlruns&#39; é criada na pasta 
-    local onde o servidor do MLflow, utilizado para registrar o modelo, foi iniciado.
-
-    Uso: python test_retrain.py --mlruns_path=&#34;caminho completo para a pasta mlruns&#34;
-    &#34;&#34;&#34;
-    params = sys.argv
-    mlruns_path = &#34;&#34;
-
-    # Se recebeu algum parâmetro, verifica se é o esperado
-    if len(params) &gt; 1:
-        parametros_esperados = {&#39;--mlruns_path&#39;: str}
-        resultado, retorno = validate_params(params, parametros_esperados)
-
-        if resultado:
-            mlruns_path = retorno[&#39;--mlruns_path&#39;]
-        else:
-            print(f&#34;\nERRO: {retorno}&#34;)
-            exit(1)
-
-    validador = Test()
-    validador.validate(mlruns_path=mlruns_path)</code></pre>
-</details>
 </section>
 <section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="docs.templates.worker_retrain.models.retrain1" href="retrain1.html">docs.templates.worker_retrain.models.retrain1</a></code></dt>
+<dd>
+<div class="desc"><p>Para gravar os logs basta salvar as mensagens de log com as funções: 'logging.error', 'logging.warning' ou
+'logging.info', de acordo com o nível de …</p></div>
+</dd>
+<dt><code class="name"><a title="docs.templates.worker_retrain.models.utils" href="utils.html">docs.templates.worker_retrain.models.utils</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -78,7 +52,13 @@ if __name__ == &#34;__main__&#34;:
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="docs.templates.worker_retrain" href="index.html">docs.templates.worker_retrain</a></code></li>
+<li><code><a title="docs.templates.worker_retrain" href="../index.html">docs.templates.worker_retrain</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="docs.templates.worker_retrain.models.retrain1" href="retrain1.html">docs.templates.worker_retrain.models.retrain1</a></code></li>
+<li><code><a title="docs.templates.worker_retrain.models.utils" href="utils.html">docs.templates.worker_retrain.models.utils</a></code></li>
 </ul>
 </li>
 </ul>

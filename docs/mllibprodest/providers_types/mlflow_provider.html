@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>src.mllibprodest.providers_types.mlflow_provider API documentation</title>
+<title>docs.mllibprodest.providers_types.mlflow_provider API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.mllibprodest.providers_types.mlflow_provider</code></h1>
+<h1 class="title">Module <code>docs.mllibprodest.providers_types.mlflow_provider</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -46,7 +46,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         @return: Modelo carregado.
     &#34;&#34;&#34;
     artefatos_obrigatorios = [&#34;TrainingParams.pkl&#34;, &#34;TrainingDatasetsNames.pkl&#34;, &#34;BaselineMetrics.pkl&#34;]
-    caminho_artefatos = Path(artifacts_destination_path)
+    caminho_artefatos = Path(artifacts_destination_path) / model_name
 
     # Antes de carregar o modelo, faz uma limpeza em alguns artefatos antigos. Obs.: Isso é necessário para evitar que,
     # caso o usuário esqueça de salvar um artefato obrigatório, seja carregado um artefato antigo salvo localmente.
@@ -62,7 +62,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
               f&#34;de escrita negada. Programa abortado!&#34;
         logging.error(msg)
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     stage = &#39;Production&#39;
 
@@ -72,11 +72,11 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
     except RestException:
         msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no &#39;run_id&#39; do modelo
     endereco_base_artefatos = f&#34;runs:/{modelo.metadata.run_id}/&#34;
@@ -87,7 +87,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
               f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     return modelo
 
@@ -102,7 +102,7 @@ def load_production_params_mlflow(model_name: str) -&gt; dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     parametros = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;TrainingParams.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingParams.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -142,7 +142,7 @@ def load_production_datasets_names_mlflow(model_name: str) -&gt; dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     nomes_datasets = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;TrainingDatasetsNames.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingDatasetsNames.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -183,7 +183,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     baseline = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;BaselineMetrics.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;BaselineMetrics.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -220,7 +220,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="src.mllibprodest.providers_types.mlflow_provider.load_model_mlflow"><code class="name flex">
+<dt id="docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow"><code class="name flex">
 <span>def <span class="ident">load_model_mlflow</span></span>(<span>model_name: str, artifacts_destination_path: str = 'temp_area')</span>
 </code></dt>
 <dd>
@@ -242,7 +242,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         @return: Modelo carregado.
     &#34;&#34;&#34;
     artefatos_obrigatorios = [&#34;TrainingParams.pkl&#34;, &#34;TrainingDatasetsNames.pkl&#34;, &#34;BaselineMetrics.pkl&#34;]
-    caminho_artefatos = Path(artifacts_destination_path)
+    caminho_artefatos = Path(artifacts_destination_path) / model_name
 
     # Antes de carregar o modelo, faz uma limpeza em alguns artefatos antigos. Obs.: Isso é necessário para evitar que,
     # caso o usuário esqueça de salvar um artefato obrigatório, seja carregado um artefato antigo salvo localmente.
@@ -258,7 +258,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
               f&#34;de escrita negada. Programa abortado!&#34;
         logging.error(msg)
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     stage = &#39;Production&#39;
 
@@ -268,11 +268,11 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
     except RestException:
         msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no &#39;run_id&#39; do modelo
     endereco_base_artefatos = f&#34;runs:/{modelo.metadata.run_id}/&#34;
@@ -283,12 +283,12 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
               f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     return modelo</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow"><code class="name flex">
+<dt id="docs.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow"><code class="name flex">
 <span>def <span class="ident">load_production_baseline_mlflow</span></span>(<span>model_name: str) ‑> dict</span>
 </code></dt>
 <dd>
@@ -312,7 +312,7 @@ automatizada do modelo.</p>
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     baseline = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;BaselineMetrics.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;BaselineMetrics.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -342,7 +342,7 @@ automatizada do modelo.</p>
         raise RuntimeError(msg)</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow"><code class="name flex">
+<dt id="docs.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow"><code class="name flex">
 <span>def <span class="ident">load_production_datasets_names_mlflow</span></span>(<span>model_name: str) ‑> dict</span>
 </code></dt>
 <dd>
@@ -364,7 +364,7 @@ automatizada do modelo.</p>
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     nomes_datasets = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;TrainingDatasetsNames.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingDatasetsNames.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -394,7 +394,7 @@ automatizada do modelo.</p>
         raise RuntimeError(msg)</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow"><code class="name flex">
+<dt id="docs.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow"><code class="name flex">
 <span>def <span class="ident">load_production_params_mlflow</span></span>(<span>model_name: str) ‑> dict</span>
 </code></dt>
 <dd>
@@ -416,7 +416,7 @@ automatizada do modelo.</p>
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
     logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     parametros = None
-    nome_arq = str(Path(&#34;temp_area&#34;) / &#34;TrainingParams.pkl&#34;)
+    nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingParams.pkl&#34;)
     arq = None
     msg = &#34;&#34;
 
@@ -459,15 +459,15 @@ automatizada do modelo.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.mllibprodest.providers_types" href="index.html">src.mllibprodest.providers_types</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types" href="index.html">docs.mllibprodest.providers_types</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="src.mllibprodest.providers_types.mlflow_provider.load_model_mlflow" href="#src.mllibprodest.providers_types.mlflow_provider.load_model_mlflow">load_model_mlflow</a></code></li>
-<li><code><a title="src.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow" href="#src.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow">load_production_baseline_mlflow</a></code></li>
-<li><code><a title="src.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow" href="#src.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow">load_production_datasets_names_mlflow</a></code></li>
-<li><code><a title="src.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow" href="#src.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow">load_production_params_mlflow</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow">load_model_mlflow</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow">load_production_baseline_mlflow</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow">load_production_datasets_names_mlflow</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_production_params_mlflow">load_production_params_mlflow</a></code></li>
 </ul>
 </li>
 </ul>
