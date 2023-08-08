@@ -124,12 +124,8 @@ class Test:
             }
         }
 
-        msg = "=> Instanciando os modelos definidos no arquivo 'params.conf'..."
-        logging.info(msg)
-        print(f"\n\n{msg}\n")
-
-        # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
-        self.__modelos = InitModels.init_models()
+        # Guarda os modelos instanciados
+        self.__modelos = None
 
         # Instancia os scripts de testes personalizados
         self.__validation_function = None
@@ -395,6 +391,13 @@ class Test:
 
                 os.environ["MLFLOW_TRACKING_URI"] = "http://localhost:5000"
 
+                msg = "=> Instanciando os modelos definidos no arquivo 'params.conf'..."
+                logging.info(msg)
+                print(f"\n\n{msg}\n")
+
+                # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
+                self.__modelos = InitModels.init_models()
+
                 # Roda os testes padrões da lib
                 self.__validate_params_returns()
 
@@ -430,6 +433,13 @@ class Test:
                 print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
         else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
+            msg = "=> Instanciando os modelos definidos no arquivo 'params.conf'..."
+            logging.info(msg)
+            print(f"\n\n{msg}\n")
+
+            # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
+            self.__modelos = InitModels.init_models()
+
             self.__validate_params_returns()
 
             if self.__validation_function is not None:
