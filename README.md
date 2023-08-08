@@ -111,7 +111,7 @@ Se você quiser testar um registro de experimento através do código acima, fa�
 - Instale os pacotes mlflow, sklearn, matplotlib e numpy;
 
 ```bash
-pip install mlflow==2.3.2 scikit-learn==1.2.2 matplotlib==3.7.1 numpy==1.24.3
+pip install mlflow==2.5.0 scikit-learn==1.3.0 matplotlib==3.7.2 numpy==1.25.2
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
@@ -120,11 +120,11 @@ python testeml.py
 Cabe observar que: depois de rodar o código de teste, foi criada uma pasta chamada '**mlruns**', dentro da pasta de 
 testes, que serve para armazenar os artefatos gerados pelo código e que são apresentados na interface do MLflow. 
 Abaixo segue uma listagem do conteúdo gerado pelo código de teste (obs.: essa parte do caminho vai ser diferente de 
-acordo com cada experimento/execução realizados: '1/f454220e01bd43e7b66c2354c20f0085'. O conteúdo da pasta também será 
+acordo com cada experimento/execução realizados: '1/9d01359d68034063867613196395388e'. O conteúdo da pasta também será 
 diferente de acordo com cada modelo).
 ```bash
-(env) user:~/testes/mlruns/1/f454220e01bd43e7b66c2354c20f0085/artifacts$ dir
-artefato.pkl  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
+(env) user:~/testes/mlruns/1/9d01359d68034063867613196395388e/artifacts$ dir
+artefato.pkl  estimator.html  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
 ```
 Dentro da pasta criada para testes também foi gerado um arquivo chamado '**teste_mlflow.db**', que é um pequeno banco 
 de dados [SQlite](https://www.sqlite.org), que serve para armazenar os modelos que foram registrados.
