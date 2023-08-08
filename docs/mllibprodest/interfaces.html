@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>src.mllibprodest.interfaces API documentation</title>
+<title>docs.mllibprodest.interfaces API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.mllibprodest.interfaces</code></h1>
+<h1 class="title">Module <code>docs.mllibprodest.interfaces</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -49,13 +49,33 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
     &#34;&#34;&#34;
     @classmethod
     def __subclasshook__(cls, subclass):
-        return (hasattr(subclass, &#39;predict&#39;) and
+        return (hasattr(subclass, &#39;get_model_name&#39;) and
+                callable(subclass.get_model_name) and
+                hasattr(subclass, &#39;get_model_provider_name&#39;) and
+                callable(subclass.get_model_provider_name) and
+                hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
                 callable(subclass.evaluate) and
                 hasattr(subclass, &#39;get_model_info&#39;) and
                 callable(subclass.get_model_info) or
                 NotImplemented)
+
+    @abc.abstractmethod
+    def get_model_name(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém o nome do modelo que está em produção.
+            @return: Nome do modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_provider_name(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            @return: Nome do provider que proverá o modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
 
     @abc.abstractmethod
     def predict(self, dataset: list) -&gt; list:
@@ -84,7 +104,6 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
     def get_model_info(self) -&gt; dict:
         &#34;&#34;&#34;
         Obtém informações sobre o modelo que está em produção.
-
             @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -114,18 +133,16 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do modelo que estará em produção.
-
-            @return: Nome do modelo que estará em produção.
+        Obtém o nome do modelo que está em produção.
+            @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do provider que proverá o modelo que estará em produção.
-
-            @return: Nome do provider que proverá o modelo que estará em produção.
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            @return: Nome do provider que proverá o modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -133,7 +150,6 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     def get_experiment_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do experimento que será utilizado em produção.
-
             @return: Nome do experimento que será utilizado em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -141,9 +157,8 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_dataset_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do provider do dataset usado pelo modelo que estará em produção.
-
-            @return: Nome do provider do dataset usado pelo modelo que estará em produção.
+        Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+            @return: Nome do provider do dataset usado pelo modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -232,7 +247,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF"><code class="flex name class">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF"><code class="flex name class">
 <span>class <span class="ident">ModelPublicationInterfaceCLF</span></span>
 </code></dt>
 <dd>
@@ -249,13 +264,33 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     &#34;&#34;&#34;
     @classmethod
     def __subclasshook__(cls, subclass):
-        return (hasattr(subclass, &#39;predict&#39;) and
+        return (hasattr(subclass, &#39;get_model_name&#39;) and
+                callable(subclass.get_model_name) and
+                hasattr(subclass, &#39;get_model_provider_name&#39;) and
+                callable(subclass.get_model_provider_name) and
+                hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
                 callable(subclass.evaluate) and
                 hasattr(subclass, &#39;get_model_info&#39;) and
                 callable(subclass.get_model_info) or
                 NotImplemented)
+
+    @abc.abstractmethod
+    def get_model_name(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém o nome do modelo que está em produção.
+            @return: Nome do modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_provider_name(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            @return: Nome do provider que proverá o modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
 
     @abc.abstractmethod
     def predict(self, dataset: list) -&gt; list:
@@ -284,18 +319,17 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_model_info(self) -&gt; dict:
         &#34;&#34;&#34;
         Obtém informações sobre o modelo que está em produção.
-
             @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="src.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></li>
+<li><a title="docs.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate"><code class="name flex">
 <span>def <span class="ident">evaluate</span></span>(<span>self, data_features: list, data_targets: list) ‑> dict</span>
 </code></dt>
 <dd>
@@ -324,13 +358,12 @@ def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info"><code class="name flex">
 <span>def <span class="ident">get_model_info</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém informações sobre o modelo que está em produção.</p>
-<pre><code>@return: Dicionário com informações sobre o modelo.
-</code></pre></div>
+<div class="desc"><p>Obtém informações sobre o modelo que está em produção.
+@return: Dicionário com informações sobre o modelo.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -339,13 +372,50 @@ def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
 def get_model_info(self) -&gt; dict:
     &#34;&#34;&#34;
     Obtém informações sobre o modelo que está em produção.
-
         @return: Dicionário com informações sobre o modelo.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name"><code class="name flex">
+<span>def <span class="ident">get_model_name</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtém o nome do modelo que está em produção.
+@return: Nome do modelo que está em produção.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def get_model_name(self) -&gt; str:
+    &#34;&#34;&#34;
+    Obtém o nome do modelo que está em produção.
+        @return: Nome do modelo que está em produção.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name"><code class="name flex">
+<span>def <span class="ident">get_model_provider_name</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.
+@return: Nome do provider que proverá o modelo que está em produção.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def get_model_provider_name(self) -&gt; str:
+    &#34;&#34;&#34;
+    Obtém o nome do provider que proverá o modelo que está em produção.
+        @return: Nome do provider que proverá o modelo que está em produção.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict"><code class="name flex">
 <span>def <span class="ident">predict</span></span>(<span>self, dataset: list) ‑> list</span>
 </code></dt>
 <dd>
@@ -371,21 +441,21 @@ def predict(self, dataset: list) -&gt; list:
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="src.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></b></code>:
+<li><code><b><a title="docs.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></b></code>:
 <ul class="hlist">
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object">convert_artifact_to_object</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle">convert_artifact_to_pickle</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_datasets" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_datasets">load_datasets</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_model" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_model">load_model</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_baseline" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_baseline">load_production_baseline</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names">load_production_datasets_names</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_params" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_params">load_production_params</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.make_log" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.make_log">make_log</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object">convert_artifact_to_object</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle">convert_artifact_to_pickle</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_datasets" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_datasets">load_datasets</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_model" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_model">load_model</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_baseline" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_baseline">load_production_baseline</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names">load_production_datasets_names</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_params" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_params">load_production_params</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.make_log" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.make_log">make_log</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN"><code class="flex name class">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN"><code class="flex name class">
 <span>class <span class="ident">ModelPublicationInterfaceRETRAIN</span></span>
 </code></dt>
 <dd>
@@ -419,18 +489,16 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     @abc.abstractmethod
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do modelo que estará em produção.
-
-            @return: Nome do modelo que estará em produção.
+        Obtém o nome do modelo que está em produção.
+            @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do provider que proverá o modelo que estará em produção.
-
-            @return: Nome do provider que proverá o modelo que estará em produção.
+        Obtém o nome do provider que proverá o modelo que está em produção.
+            @return: Nome do provider que proverá o modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -438,7 +506,6 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_experiment_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do experimento que será utilizado em produção.
-
             @return: Nome do experimento que será utilizado em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -446,9 +513,8 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     @abc.abstractmethod
     def get_dataset_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
-        Obtém o nome do provider do dataset usado pelo modelo que estará em produção.
-
-            @return: Nome do provider do dataset usado pelo modelo que estará em produção.
+        Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+            @return: Nome do provider do dataset usado pelo modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -529,11 +595,11 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="src.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></li>
+<li><a title="docs.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></li>
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices"><code class="name flex">
 <span>def <span class="ident">generate_batch_indices</span></span>(<span>dataset_size: int, batch_size: int = 100000)</span>
 </code></dt>
 <dd>
@@ -588,7 +654,7 @@ def generate_batch_indices(dataset_size: int, batch_size: int = 100000):
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate"><code class="name flex">
 <span>def <span class="ident">evaluate</span></span>(<span>self, model, datasets: dict, baseline_metrics: dict, training_params: dict, artifacts_path: str = 'temp_area', batch_size: int = 100000) ‑> (<class 'bool'>, <class 'dict'>)</span>
 </code></dt>
 <dd>
@@ -634,13 +700,12 @@ def evaluate(self, model, datasets: dict, baseline_metrics: dict, training_param
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name"><code class="name flex">
 <span>def <span class="ident">get_dataset_provider_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do provider do dataset usado pelo modelo que estará em produção.</p>
-<pre><code>@return: Nome do provider do dataset usado pelo modelo que estará em produção.
-</code></pre></div>
+<div class="desc"><p>Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+@return: Nome do provider do dataset usado pelo modelo que está em produção.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -648,20 +713,18 @@ def evaluate(self, model, datasets: dict, baseline_metrics: dict, training_param
 <pre><code class="python">@abc.abstractmethod
 def get_dataset_provider_name(self) -&gt; str:
     &#34;&#34;&#34;
-    Obtém o nome do provider do dataset usado pelo modelo que estará em produção.
-
-        @return: Nome do provider do dataset usado pelo modelo que estará em produção.
+    Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+        @return: Nome do provider do dataset usado pelo modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name"><code class="name flex">
 <span>def <span class="ident">get_experiment_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do experimento que será utilizado em produção.</p>
-<pre><code>@return: Nome do experimento que será utilizado em produção.
-</code></pre></div>
+<div class="desc"><p>Obtém o nome do experimento que será utilizado em produção.
+@return: Nome do experimento que será utilizado em produção.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -670,19 +733,17 @@ def get_dataset_provider_name(self) -&gt; str:
 def get_experiment_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do experimento que será utilizado em produção.
-
         @return: Nome do experimento que será utilizado em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name"><code class="name flex">
 <span>def <span class="ident">get_model_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do modelo que estará em produção.</p>
-<pre><code>@return: Nome do modelo que estará em produção.
-</code></pre></div>
+<div class="desc"><p>Obtém o nome do modelo que está em produção.
+@return: Nome do modelo que está em produção.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -690,20 +751,18 @@ def get_experiment_name(self) -&gt; str:
 <pre><code class="python">@abc.abstractmethod
 def get_model_name(self) -&gt; str:
     &#34;&#34;&#34;
-    Obtém o nome do modelo que estará em produção.
-
-        @return: Nome do modelo que estará em produção.
+    Obtém o nome do modelo que está em produção.
+        @return: Nome do modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name"><code class="name flex">
 <span>def <span class="ident">get_model_provider_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do provider que proverá o modelo que estará em produção.</p>
-<pre><code>@return: Nome do provider que proverá o modelo que estará em produção.
-</code></pre></div>
+<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.
+@return: Nome do provider que proverá o modelo que está em produção.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -711,14 +770,13 @@ def get_model_name(self) -&gt; str:
 <pre><code class="python">@abc.abstractmethod
 def get_model_provider_name(self) -&gt; str:
     &#34;&#34;&#34;
-    Obtém o nome do provider que proverá o modelo que estará em produção.
-
-        @return: Nome do provider que proverá o modelo que estará em produção.
+    Obtém o nome do provider que proverá o modelo que está em produção.
+        @return: Nome do provider que proverá o modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain"><code class="name flex">
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain"><code class="name flex">
 <span>def <span class="ident">retrain</span></span>(<span>self, production_model_name: str, production_params: dict, experiment_name: str, datasets: dict, reasons: dict)</span>
 </code></dt>
 <dd>
@@ -757,16 +815,16 @@ def retrain(self, production_model_name: str, production_params: dict, experimen
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="src.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></b></code>:
+<li><code><b><a title="docs.mllibprodest.shared_classes.CommonMethods" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods">CommonMethods</a></b></code>:
 <ul class="hlist">
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object">convert_artifact_to_object</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle">convert_artifact_to_pickle</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_datasets" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_datasets">load_datasets</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_model" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_model">load_model</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_baseline" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_baseline">load_production_baseline</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names">load_production_datasets_names</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.load_production_params" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.load_production_params">load_production_params</a></code></li>
-<li><code><a title="src.mllibprodest.shared_classes.CommonMethods.make_log" href="shared_classes.html#src.mllibprodest.shared_classes.CommonMethods.make_log">make_log</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_object">convert_artifact_to_object</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.convert_artifact_to_pickle">convert_artifact_to_pickle</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_datasets" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_datasets">load_datasets</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_model" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_model">load_model</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_baseline" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_baseline">load_production_baseline</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_datasets_names">load_production_datasets_names</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.load_production_params" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.load_production_params">load_production_params</a></code></li>
+<li><code><a title="docs.mllibprodest.shared_classes.CommonMethods.make_log" href="shared_classes.html#docs.mllibprodest.shared_classes.CommonMethods.make_log">make_log</a></code></li>
 </ul>
 </li>
 </ul>
@@ -782,29 +840,31 @@ def retrain(self, production_model_name: str, production_params: dict, experimen
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.mllibprodest" href="index.html">src.mllibprodest</a></code></li>
+<li><code><a title="docs.mllibprodest" href="index.html">docs.mllibprodest</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceCLF">ModelPublicationInterfaceCLF</a></code></h4>
+<h4><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF">ModelPublicationInterfaceCLF</a></code></h4>
 <ul class="">
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate">evaluate</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info">get_model_info</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict">predict</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate">evaluate</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info">get_model_info</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name">get_model_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name">get_model_provider_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict">predict</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN">ModelPublicationInterfaceRETRAIN</a></code></h4>
+<h4><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN">ModelPublicationInterfaceRETRAIN</a></code></h4>
 <ul class="">
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate">evaluate</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices">generate_batch_indices</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name">get_dataset_provider_name</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name">get_experiment_name</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name">get_model_name</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name">get_model_provider_name</a></code></li>
-<li><code><a title="src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain" href="#src.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain">retrain</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.evaluate">evaluate</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.generate_batch_indices">generate_batch_indices</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_dataset_provider_name">get_dataset_provider_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_experiment_name">get_experiment_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_name">get_model_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.get_model_provider_name">get_model_provider_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceRETRAIN.retrain">retrain</a></code></li>
 </ul>
 </li>
 </ul>

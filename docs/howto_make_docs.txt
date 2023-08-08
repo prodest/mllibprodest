@@ -1,0 +1,20 @@
+# Preparar o código fonte;
+- É necessário substituir ':param' por '@param' e saltar uma linha entre a descrição das funções e a primeira ocorrência do '@param'
+- Também substituir ':return' por '@return'
+
+# Instalar a lib para gerar a documentação;
+pip3 install pdoc3
+
+# Criar uma pasta chamada 'docs' em um local de sua preferência;
+
+# Entrar na pasta da lib;
+
+# Copiar as pastas 'mllibprodest' (que está dentro da pasta 'src') e 'templates' para a pasta 'docs';
+
+# Rodar o comando para gerar a documentação (Tem que rodar de dentro da pasta pai da pasta 'docs');
+pdoc --html *
+
+# Alterar o título padrão da documentação;
+- Editar o arquivo html/docs/index.html
+  Substituir: <h1 class="title">Namespace <code>docs</code></h1>
+  Por: <h1 class="title">Biblioteca de ML (Machine Learning) - Prodest <code>docs</code></h1>

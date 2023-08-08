@@ -17,7 +17,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         :return: Modelo carregado.
     """
     artefatos_obrigatorios = ["TrainingParams.pkl", "TrainingDatasetsNames.pkl", "BaselineMetrics.pkl"]
-    caminho_artefatos = Path(artifacts_destination_path)
+    caminho_artefatos = Path(artifacts_destination_path) / model_name
 
     # Antes de carregar o modelo, faz uma limpeza em alguns artefatos antigos. Obs.: Isso é necessário para evitar que,
     # caso o usuário esqueça de salvar um artefato obrigatório, seja carregado um artefato antigo salvo localmente.
@@ -33,7 +33,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         msg = f"Não foi possível criar a pasta de destino dos artefatos '{artifacts_destination_path}'. Permissão " \
               f"de escrita negada. Programa abortado!"
         logging.error(msg)
-        raise PermissionError(msg)
+        raise PermissionError(msg) from None
 
     stage = 'Production'
 
@@ -43,11 +43,11 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
     except RestException:
         msg = f"O modelo '{model_name}' no estágio '{stage}' não foi encontrado. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f"Não foi possível carregar o modelo '{model_name}'. Mensagem do MLFlow: '{e}'. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no 'run_id' do modelo
     endereco_base_artefatos = f"runs:/{modelo.metadata.run_id}/"
@@ -58,7 +58,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         msg = f"Não foi possível carregar os artefatos no endereço '{endereco_base_artefatos}'. " \
               f"Mensagem do MLFlow: '{e}'. Programa abortado!"
         logging.error(msg)
-        raise RuntimeError(msg)
+        raise RuntimeError(msg) from None
 
     return modelo
 
@@ -72,7 +72,7 @@ def load_production_params_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando os parâmetros de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     parametros = None
-    nome_arq = str(Path("temp_area") / "TrainingParams.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "TrainingParams.pkl")
     arq = None
     msg = ""
 
@@ -111,7 +111,7 @@ def load_production_datasets_names_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando os parâmetros de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     nomes_datasets = None
-    nome_arq = str(Path("temp_area") / "TrainingDatasetsNames.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "TrainingDatasetsNames.pkl")
     arq = None
     msg = ""
 
@@ -151,7 +151,7 @@ def load_production_baseline_mlflow(model_name: str) -> dict:
     modelo = load_model_mlflow(model_name, artifacts_destination_path='temp_area')
     logging.info(f"Utilizando o baseline de produção do modelo '{model_name}' (run_id: {modelo.metadata.run_id})")
     baseline = None
-    nome_arq = str(Path("temp_area") / "BaselineMetrics.pkl")
+    nome_arq = str(Path("temp_area") / model_name / "BaselineMetrics.pkl")
     arq = None
     msg = ""
 

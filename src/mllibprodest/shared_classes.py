@@ -18,15 +18,15 @@ class CommonMethods:
     Métodos comuns entre as interfaces dos modelos publicados.
     """
     @staticmethod
-    def make_log(path: str):
+    def make_log(filename: str):
         """
         Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
         Depois de executar este método, para gravar os logs basta importar o pacote 'logging' e mandar salvar as
         mensagens de log com as funções: 'logging.error', 'logging.warning' ou 'logging.info', de acordo com o nível
         de criticidade da mensagem. Para mais opções, consulte a documentação do pacote 'logging'.
-            :param path: Caminho do arquivo de logs.
+            :param filename: Nome do arquivo de logs.
         """
-        make_log(path)
+        make_log(filename)
 
     @staticmethod
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
@@ -93,14 +93,15 @@ class CommonMethods:
                                    artifacts_destination_path=artifacts_destination_path)
 
     @staticmethod
-    def convert_artifact_to_pickle(artifact: object, file_name: str, path: str = "temp_area"):
+    def convert_artifact_to_pickle(model_name: str, artifact: object, file_name: str, path: str = "temp_area"):
         """
         Converte um artefato para o formato pickle, para facilitar a persistência.
+            :param model_name: Nome do modelo em que o artefato será utilizado.
             :param artifact: Artefato que será convertido (str, list, dict, tuple, etc.).
             :param file_name: Nome do arquivo que será gerado (Dica: Use a extensão '.pkl').
             :param path: Caminho para gerar o artefato convertido.
         """
-        caminho_artefato = str(Path(path) / file_name)
+        caminho_artefato = str(Path(path) / model_name / file_name)
 
         try:
             arq = open(caminho_artefato, 'wb')
@@ -108,12 +109,12 @@ class CommonMethods:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido. O caminho '{caminho_artefato}' está " \
                   f"incorreto. Programa abortado!"
             logging.error(msg)
-            raise FileNotFoundError(msg)
+            raise FileNotFoundError(msg) from None
         except PermissionError:
-            msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{path}'. Permissão de " \
-                  f"escrita negada. Programa abortado!"
+            msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{caminho_artefato}'. " \
+                  f"Permissão de escrita negada. Programa abortado!"
             logging.error(msg)
-            raise PermissionError(msg)
+            raise PermissionError(msg) from None
 
         try:
             pickle.dump(artifact, arq)
@@ -121,19 +122,21 @@ class CommonMethods:
             msg = f"Não foi possível gerar o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). Programa " \
                   f"abortado!"
             logging.error(msg)
-            raise TypeError(msg)
+            raise TypeError(msg) from None
 
         arq.close()
 
     @staticmethod
-    def convert_artifact_to_object(file_name: str, path: str = "temp_area") -> Union[list, tuple, dict, object]:
+    def convert_artifact_to_object(model_name: str, file_name: str, path: str = "temp_area") -> \
+            Union[list, tuple, dict, object]:
         """
         Converte um artefato que está no formato pickle para o objeto de origem.
+            :param model_name: Nome do modelo ao qual o artefato pertence.
             :param file_name: Nome do arquivo que será lido e convertido.
             :param path: Caminho onde o arquivo a ser convertido se encontra.
             :return: Artefato convertido.
         """
-        caminho_artefato = str(Path(path) / file_name)
+        caminho_artefato = str(Path(path) / model_name / file_name)
 
         try:
             arq = open(caminho_artefato, 'rb')
@@ -141,12 +144,12 @@ class CommonMethods:
             msg = f"Não foi possível converter o artefato '{file_name}'. O caminho '{caminho_artefato}' não foi " \
                   f"encontrado. Programa abortado!"
             logging.error(msg)
-            raise FileNotFoundError(msg)
+            raise FileNotFoundError(msg) from None
         except PermissionError:
-            msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{path}'. Permissão de " \
-                  f"leitura negada. Programa abortado!"
+            msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{caminho_artefato}'. " \
+                  f"Permissão de leitura negada. Programa abortado!"
             logging.error(msg)
-            raise PermissionError(msg)
+            raise PermissionError(msg) from None
 
         try:
             objeto = pickle.load(arq)

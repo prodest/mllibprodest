@@ -56,7 +56,7 @@ if os.environ.get('MLFLOW_TRACKING_URI') is None:
     mlflow.set_tracking_uri('sqlite:///teste_mlflow.db')
 
 # Configura o experimento (se não existir, cria)
-mlflow.set_experiment(experiment_name="Teste sklearn")
+mlflow.set_experiment(experiment_name="Teste_sklearn")
 
 # Inicia uma execução do experimento (um experimento pode possuir várias execuções)
 mlflow.start_run(run_name="t1", description="teste 1")
@@ -111,7 +111,7 @@ Se você quiser testar um registro de experimento através do código acima, fa�
 - Instale os pacotes mlflow, sklearn, matplotlib e numpy;
 
 ```bash
-pip install mlflow==2.3.2 scikit-learn==1.2.2 matplotlib==3.7.1 numpy==1.24.3
+pip install mlflow==2.5.0 scikit-learn==1.3.0 matplotlib==3.7.2 numpy==1.25.2
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
@@ -120,11 +120,11 @@ python testeml.py
 Cabe observar que: depois de rodar o código de teste, foi criada uma pasta chamada '**mlruns**', dentro da pasta de 
 testes, que serve para armazenar os artefatos gerados pelo código e que são apresentados na interface do MLflow. 
 Abaixo segue uma listagem do conteúdo gerado pelo código de teste (obs.: essa parte do caminho vai ser diferente de 
-acordo com cada experimento/execução realizados: '1/f454220e01bd43e7b66c2354c20f0085'. O conteúdo da pasta também será 
+acordo com cada experimento/execução realizados: '1/9d01359d68034063867613196395388e'. O conteúdo da pasta também será 
 diferente de acordo com cada modelo).
 ```bash
-(env) user:~/testes/mlruns/1/f454220e01bd43e7b66c2354c20f0085/artifacts$ dir
-artefato.pkl  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
+(env) user:~/testes/mlruns/1/9d01359d68034063867613196395388e/artifacts$ dir
+artefato.pkl  estimator.html  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
 ```
 Dentro da pasta criada para testes também foi gerado um arquivo chamado '**teste_mlflow.db**', que é um pequeno banco 
 de dados [SQlite](https://www.sqlite.org), que serve para armazenar os modelos que foram registrados.
@@ -142,8 +142,8 @@ conseguirá rodar o código e já observar os resultados sem ter que parar o ser
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
 ```
 
-- Verifique se o experimento foi registrado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure 
-pelo experimento/execução '**Teste sklearn**' na seção **Experiments** (se o experimento não estiver listado, verifique 
+- Verifique se o experimento foi criado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure 
+pelo experimento/execução '**Teste_sklearn**' na seção **Experiments** (se o experimento não estiver listado, verifique 
 se o servidor foi iniciado de dentro da pasta correta);
 
 
@@ -194,11 +194,10 @@ possível carregar o modelo.
 
 ## 2. Organize o código de acordo com o *template*
 Uma vez que o modelo foi desenvolvido e testado, agora é o momento de iniciar as tratativas para publicá-lo na *stack* de ML do 
-Prodest. Porém, antes, é oporturno mostrar como o modelo será integrado à *stack*. Esta integração se dará através de 
+Prodest. Porém, antes, é oportuno mostrar como o modelo será integrado à *stack*. Esta integração se dará através de 
 componentes denominados *workers*, cuja codificação é de responsabilidade de quem está construindo o modelo. Na 
 ilustração abaixo é possível observar que os *workers* são acessados pelos componentes de apoio da *stack* para 
-permitir a publicação dos modelos. Caso seja necessário, uma mesma stack poderá publicar mais de um modelo, desde que 
-sejam construídos *workers* dedicados para cada um deles.
+permitir a publicação dos modelos. Caso seja necessário, uma mesma stack poderá publicar mais de um modelo.
 
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/stack-ml.png?raw=true)
 
@@ -277,11 +276,11 @@ instalados nos ambientes virtuais criados. Quando terminar a implementação, ba
 Outro ponto importante antes de implementar as interfaces é saber que: para publicar o modelo será necessário a criação 
 de três artefatos obrigatórios, inclusive seguindo o mesmo nome (*case sensitive*). Estes artefatos devem ser 
 dicionários (dict) salvos com o [Pickle](https://docs.python.org/3/library/pickle.html) (utilize a função 
-'convert_artifact_to_pickle' quando estiver implementando as intefaces):
+'convert_artifact_to_pickle' quando estiver implementando as interfaces):
 
 - **TrainingParams.pkl**: Deve conter os parâmetros que você escolheu utilizar no treinamento do modelo. Não há 
-necessidade de colocar os parâmetros nos quais você manteve os valores *default*. Você pode colocar outros parâmetros 
-criados por você necessários para que o modelo funcione. Coloque o nome 
+necessidade de colocar os parâmetros nos quais você manteve os valores *default*. Você pode colocar outros parâmetros, 
+criados por você, necessários para que o modelo funcione. Coloque o nome 
 do parâmetro como nome da chave e o valor do parâmetro como valor da chave. Ex. baseado no *DecisionTreeClassifier*: 
 {'criterion': 'entropy', 'max_depth': '20', 'random_state': '77', 'meu_parametro_personalizado': 'teste'}. 
 
@@ -312,14 +311,27 @@ nomes dos parâmetros.
 
 **worker_pub**:
 
-- Abra o arquivo '**pub.py**', que se encontra na pasta '**worker_pub**', e implemente os métodos da interface 
+- Abra o arquivo '**pub1.py**', que se encontra na pasta '**worker_pub/models**', e implemente os métodos da interface 
 **ModelPublicationInterfaceCLF** através da classe **ModeloCLF**. Leia os comentários, eles te guiarão na implementação.
+ 
+
+- Abra o arquivo '**params.conf**', que se encontra na pasta '**worker_pub**', e informe os parâmetros dos modelos.
+Leia os comentários, eles te guiarão na configuração.
+
 
 **worker_retrain**:
 
-- Abra o arquivo '**retrain.py**', que se encontra na pasta '**worker_retrain**', e implemente os métodos da interface 
+- Abra o arquivo '**retrain1.py**', que se encontra na pasta '**worker_retrain/models**', e implemente os métodos da interface 
 **ModelPublicationInterfaceRETRAIN** através da classe **ModeloRETRAIN**. Leia os comentários, eles te guiarão na 
 implementação.
+
+
+- Abra o arquivo '**params.conf**', que se encontra na pasta '**worker_retrain**', e informe os parâmetros dos modelos.
+Leia os comentários, eles te guiarão na configuração.
+
+
+**NOTA**: É possível publicar um ou mais modelos utilizando uma mesma **Stack**. Para isso, basta fazer as devidas
+configurações de cada um dos modelos nos arquivos '**params.conf**' constantes nas pastas **worker_pub** e **worker_retrain**.
 
 A lib disponibiliza vários métodos úteis que auxiliarão na implementação das interfaces. 
 Todos os métodos estão documentados via [docstrings](https://peps.python.org/pep-0257/) que, geralmente, são 
@@ -333,7 +345,7 @@ dos modelos publicados, salvas através dos artefatos obrigatórios.
 - **convert_artifact_to_pickle** - Conversão de um artefato para o formato pickle.
 - **convert_artifact_to_object** - Conversão de um artefato que está no formato pickle para o objeto de origem.
 
-Explore a documentação para saber das possibilidades de uso da lib.
+Explore a [documentação](https://prodest.github.io/mllibprodest) para saber das possibilidades de uso da lib.
 
 ### Teste o código produzido!
 O repositório da lib disponibiliza os scripts '**test_pub.py**' e '**test_retrain.py**' para realização de testes para 
