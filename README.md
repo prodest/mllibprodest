@@ -9,7 +9,7 @@ Acesse a [documentação da lib](https://prodest.github.io/mllibprodest)!
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/workflow.png?raw=true)
 
 ## Pré-requisitos
-* **Python >= 3.9.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
+* **Python >= 3.10.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
 * **Git.** Instruções: [Linux](https://git-scm.com/download/linux) ou [Windows](https://git-scm.com/download/win).
 * **Venv.** Gerenciador de ambiente virtual Python adotado no tutorial. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment). 
 Ou qualquer outro gerenciador de ambiente Python que preferir.
