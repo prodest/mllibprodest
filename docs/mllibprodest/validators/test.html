@@ -31,7 +31,6 @@
 #
 # Obs.: Não tem nada a ver com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html)
 # ---------------------------------------------------------------------------------------------------------
-import logging
 import hashlib
 import time
 import os
@@ -47,20 +46,21 @@ GREEN = &#34;\033[0;32m&#34;
 BOLD = &#34;\033[;1m&#34;
 RESET = &#34;\033[0;0m&#34;
 
+
 class Test:
     &#34;&#34;&#34;
     Classe para realização de testes para validação da implementação das interfaces da lib. Obs.: Não tem nada a ver
     com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html).
     &#34;&#34;&#34;
     def __init__(self):
-        make_log(&#34;log_tests.log&#34;)
+        self.__logger = make_log(&#34;LOG_TESTS.log&#34;)
 
         h = hashlib.md5()
         h.update(str(time.time()).encode())
         self.__test_id = h.hexdigest()
 
         msg = f&#34;------------------&gt; Instanciando o teste com o ID: {self.__test_id} &lt;------------------&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n      {BOLD}{BLUE}{msg}{RESET}&#34;)
 
         pasta_corrente = Path.cwd().name
@@ -74,18 +74,20 @@ class Test:
         else:
             msg = &#34;Não foi possível encontrar a pasta &#39;worker_pub&#39; ou &#39;worker_retrain&#39;. Verifique se estas pastas &#34; \
                   &#34;existem ou se você está rodando os testes na pasta correta. Teste abortado!&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
 
         if Path.exists(Path(&#34;requirements.txt&#34;)):
+            arq = None
+
             try:
                 arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
             except PermissionError:
                 msg = f&#34;Não foi possível ler o arquivo &#39;requirements.txt&#39; dentro da pasta &#34; \
                       f&#34;&#39;{self.__nome_pasta_worker}&#39;. Permissão de leitura negada. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -104,12 +106,12 @@ class Test:
             if not vazio:
                 msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; e NÃO &#34; \
                       f&#34;está vazio!&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;\n\n{msg}&#34;)
             else:
                 msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; mas está &#34; \
                       f&#34;vazio. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -117,7 +119,7 @@ class Test:
             msg = f&#34;O arquivo &#39;requirements.txt&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. Por favor,&#34; \
                   f&#34; gere este arquivo com a lista de pacotes que foram utilizados na construção do(s) modelo(s). &#34; \
                   f&#34;Teste abortado!&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
@@ -169,13 +171,13 @@ class Test:
             except ImportError:
                 msg = &#34;AVISO: A função para realização do teste personalizado pelo usuário não foi encontrada.&#34; \
                       &#34;\n       Caso deseje criar um teste personalizado, faça o seguinte:\n&#34;
-                logging.info(msg + self.__howto_msg)
+                self.__logger.info(msg + self.__howto_msg)
                 print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
         else:
             msg = f&#34;AVISO: O arquivo &#39;{self.__nome_mytest}&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;&#34; \
                   f&#34;. Caso deseje criar um teste personalizado, crie\n       um arquivo chamado &#34; \
                   f&#34;&#39;{self.__nome_mytest}&#39; e faça o seguinte:\n&#34;
-            logging.info(msg + self.__howto_msg)
+            self.__logger.info(msg + self.__howto_msg)
             print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
 
     def __validate_methods(self, model, class_name: str) -&gt; bool:
@@ -191,7 +193,7 @@ class Test:
         for method_name, return_type in self.__methods_to_test[class_name].items():
             nome_metodo_aux = method_name.split(&#34;.&#34;)[1]
             msg = f&#34;=&gt; Testando o método &#39;{nome_metodo_aux}&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n\n{msg}\n&#34;)
 
             retorno = None
@@ -213,7 +215,7 @@ class Test:
                     retorno = model.get_dataset_provider_name()
             except AttributeError as e:
                 msg = f&#34;A chamada ao método &#39;{nome_metodo_aux}&#39; falhou: {str(e)}.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n{RED}***ERRO***: {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -222,13 +224,13 @@ class Test:
 
             if tipo_retorno is return_type:
                 msg = f&#34;Tipo de retorno da chamada ao método &#39;{nome_metodo_aux}&#39; OK: {retorno}&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;   {msg}\n&#34;)
             else:
                 validado = False
                 msg = f&#34;O método &#39;{nome_metodo_aux}&#39; deve retornar o tipo &#39;{return_type.__name__}&#39;, porém retornou &#34; \
                       f&#34;&#39;{tipo_retorno.__name__}&#39;.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
 
         return validado
@@ -245,7 +247,7 @@ class Test:
 
         for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.__mandatory_artifacts.items():
             msg = f&#34;=&gt; Procurando pelo artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n{msg}\n&#34;)
 
             artefato_lido = model.convert_artifact_to_object(model_name=model.get_model_name(),
@@ -255,18 +257,18 @@ class Test:
             if tipo_artefato_lido is tipo_artefato_obrigatorio:
                 if len(artefato_lido) &gt; 0:
                     msg = f&#34;Conteúdo do artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;: &#39;{artefato_lido}&#39;&#34;
-                    logging.info(msg)
+                    self.__logger.info(msg)
                     print(f&#34;  {msg}\n&#34;)
                 else:
                     validado = False
                     msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ter o tamanho maior que 0 (zero).&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
             else:
                 validado = False
                 msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ser do tipo &#34; \
                       f&#34;&#39;{tipo_artefato_obrigatorio.__name__}&#39;, porém é do tipo: &#39;{tipo_artefato_lido.__name__}&#39;.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
 
         return validado
@@ -276,7 +278,7 @@ class Test:
         Valida os scripts para publicação do modelo utilizando a classe ModeloCLF.
         &#34;&#34;&#34;
         msg = &#34;Scripts para publicação do modelo utilizando a classe &#39;ModeloCLF&#39;...&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n # {msg}&#34;)
 
         for nome_modelo, modelo in self.__modelos.items():
@@ -284,23 +286,22 @@ class Test:
 
             if not self.__validate_methods(modelo, &#34;ModeloCLF&#34;):
                 msg = &#34;Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
         msg = &#34;AVISO: Os métodos &#39;predict&#39; e &#39;evaluate&#39; não serão testados porque necessitam de dados que &#34; \
               &#34;são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
-        logging.info(msg + self.__howto_msg)
+        self.__logger.info(msg + self.__howto_msg)
         print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
-
 
     def __validate_retrain(self):
         &#34;&#34;&#34;
         Valida os scripts para publicação do modelo utilizando a classe ModeloRETRAIN.
         &#34;&#34;&#34;
         msg = &#34;Scripts para publicação do modelo utilizando a classe &#39;ModeloRETRAIN&#39;...&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n # {msg}&#34;)
 
         for nome_modelo, modelo in self.__modelos.items():
@@ -308,7 +309,7 @@ class Test:
 
             if not self.__validate_methods(modelo, &#34;ModeloRETRAIN&#34;):
                 msg = &#34;Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -321,21 +322,21 @@ class Test:
                 modelo.load_model(model_name=model_name, provider=provider_name)
             except AttributeError as e:
                 msg = f&#34;A chamada ao método &#39;load_model&#39; falhou: {str(e)}.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
             if not self.__validate_mandatory_artifacts(modelo):
                 msg = &#34;Erro ao validar os artefatos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
         msg = &#34;AVISO: Os métodos &#39;evaluate&#39; e &#39;retrain&#39; não serão testados porque necessitam de dados que &#34; \
               &#34;são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
-        logging.info(msg + self.__howto_msg)
+        self.__logger.info(msg + self.__howto_msg)
         print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
 
     def __validate_params_returns(self):
@@ -344,7 +345,7 @@ class Test:
         é escopo desta função validar os dados que estão sendo utilizados pelas funções implementadas.
         &#34;&#34;&#34;
         msg = f&#34;=&gt; INICIO: Test ID={self.__test_id}. Teste padrão da lib.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
         if self.__nome_pasta_worker == &#34;worker_pub&#34;:
@@ -353,7 +354,7 @@ class Test:
             self.__validate_retrain()
 
         msg = f&#34;=&gt; FIM: Test ID={self.__test_id}. Teste padrão da lib.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
     def __run_validation_function(self):
@@ -362,7 +363,7 @@ class Test:
         &#34;&#34;&#34;
         msg = f&#34;=&gt; INICIO: Test ID={self.__test_id}. Testes personalizados pelo usuário. Dados da função utilizada: &#34; \
               f&#34;{str(self.__validation_function)}.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
         type_validation_function = type(self.__validation_function).__name__
@@ -371,7 +372,7 @@ class Test:
             msg = f&#34;O parâmetro &#39;validation_function&#39; deve receber uma função mas recebeu &#34; \
                   f&#34;&#39;{type_validation_function}&#39;. Verifique a implementação da função &#39;test&#39; no arquivo &#34; \
                   f&#34;&#39;{self.__nome_mytest}&#39;.&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
@@ -379,7 +380,7 @@ class Test:
         self.__validation_function(self.__modelos)
 
         msg = f&#34;=&gt; FIM: Test ID={self.__test_id}. Testes personalizados pelo usuário.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
     def validate(self, mlruns_path: str = &#34;&#34;):
@@ -408,14 +409,14 @@ class Test:
                     copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
                 except FileNotFoundError:
                     msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
                 except PermissionError:
                     msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
                           f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
@@ -423,7 +424,7 @@ class Test:
                 os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
 
                 msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;\n\n{msg}\n&#34;)
 
                 # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
@@ -442,7 +443,7 @@ class Test:
                 except PermissionError:
                     msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
                           f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
@@ -459,13 +460,13 @@ class Test:
                 msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
                       &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
                       &#34;o modelo, foi iniciado. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
         else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
             msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n\n{msg}\n&#34;)
 
             # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
@@ -502,14 +503,14 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
     com &#39;Unit testing framework&#39; (https://docs.python.org/3/library/unittest.html).
     &#34;&#34;&#34;
     def __init__(self):
-        make_log(&#34;log_tests.log&#34;)
+        self.__logger = make_log(&#34;LOG_TESTS.log&#34;)
 
         h = hashlib.md5()
         h.update(str(time.time()).encode())
         self.__test_id = h.hexdigest()
 
         msg = f&#34;------------------&gt; Instanciando o teste com o ID: {self.__test_id} &lt;------------------&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n      {BOLD}{BLUE}{msg}{RESET}&#34;)
 
         pasta_corrente = Path.cwd().name
@@ -523,18 +524,20 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         else:
             msg = &#34;Não foi possível encontrar a pasta &#39;worker_pub&#39; ou &#39;worker_retrain&#39;. Verifique se estas pastas &#34; \
                   &#34;existem ou se você está rodando os testes na pasta correta. Teste abortado!&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
 
         if Path.exists(Path(&#34;requirements.txt&#34;)):
+            arq = None
+
             try:
                 arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
             except PermissionError:
                 msg = f&#34;Não foi possível ler o arquivo &#39;requirements.txt&#39; dentro da pasta &#34; \
                       f&#34;&#39;{self.__nome_pasta_worker}&#39;. Permissão de leitura negada. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -553,12 +556,12 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             if not vazio:
                 msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; e NÃO &#34; \
                       f&#34;está vazio!&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;\n\n{msg}&#34;)
             else:
                 msg = f&#34;O arquivo &#39;requirements.txt&#39; foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39; mas está &#34; \
                       f&#34;vazio. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -566,7 +569,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             msg = f&#34;O arquivo &#39;requirements.txt&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;. Por favor,&#34; \
                   f&#34; gere este arquivo com a lista de pacotes que foram utilizados na construção do(s) modelo(s). &#34; \
                   f&#34;Teste abortado!&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
@@ -618,13 +621,13 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             except ImportError:
                 msg = &#34;AVISO: A função para realização do teste personalizado pelo usuário não foi encontrada.&#34; \
                       &#34;\n       Caso deseje criar um teste personalizado, faça o seguinte:\n&#34;
-                logging.info(msg + self.__howto_msg)
+                self.__logger.info(msg + self.__howto_msg)
                 print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
         else:
             msg = f&#34;AVISO: O arquivo &#39;{self.__nome_mytest}&#39; não foi encontrado na pasta &#39;{self.__nome_pasta_worker}&#39;&#34; \
                   f&#34;. Caso deseje criar um teste personalizado, crie\n       um arquivo chamado &#34; \
                   f&#34;&#39;{self.__nome_mytest}&#39; e faça o seguinte:\n&#34;
-            logging.info(msg + self.__howto_msg)
+            self.__logger.info(msg + self.__howto_msg)
             print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
 
     def __validate_methods(self, model, class_name: str) -&gt; bool:
@@ -640,7 +643,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         for method_name, return_type in self.__methods_to_test[class_name].items():
             nome_metodo_aux = method_name.split(&#34;.&#34;)[1]
             msg = f&#34;=&gt; Testando o método &#39;{nome_metodo_aux}&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n\n{msg}\n&#34;)
 
             retorno = None
@@ -662,7 +665,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                     retorno = model.get_dataset_provider_name()
             except AttributeError as e:
                 msg = f&#34;A chamada ao método &#39;{nome_metodo_aux}&#39; falhou: {str(e)}.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n{RED}***ERRO***: {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -671,13 +674,13 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
 
             if tipo_retorno is return_type:
                 msg = f&#34;Tipo de retorno da chamada ao método &#39;{nome_metodo_aux}&#39; OK: {retorno}&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;   {msg}\n&#34;)
             else:
                 validado = False
                 msg = f&#34;O método &#39;{nome_metodo_aux}&#39; deve retornar o tipo &#39;{return_type.__name__}&#39;, porém retornou &#34; \
                       f&#34;&#39;{tipo_retorno.__name__}&#39;.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
 
         return validado
@@ -694,7 +697,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
 
         for nome_artefato_obrigatorio, tipo_artefato_obrigatorio in self.__mandatory_artifacts.items():
             msg = f&#34;=&gt; Procurando pelo artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n{msg}\n&#34;)
 
             artefato_lido = model.convert_artifact_to_object(model_name=model.get_model_name(),
@@ -704,18 +707,18 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             if tipo_artefato_lido is tipo_artefato_obrigatorio:
                 if len(artefato_lido) &gt; 0:
                     msg = f&#34;Conteúdo do artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39;: &#39;{artefato_lido}&#39;&#34;
-                    logging.info(msg)
+                    self.__logger.info(msg)
                     print(f&#34;  {msg}\n&#34;)
                 else:
                     validado = False
                     msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ter o tamanho maior que 0 (zero).&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
             else:
                 validado = False
                 msg = f&#34;O artefato obrigatório &#39;{nome_artefato_obrigatorio}&#39; deve ser do tipo &#34; \
                       f&#34;&#39;{tipo_artefato_obrigatorio.__name__}&#39;, porém é do tipo: &#39;{tipo_artefato_lido.__name__}&#39;.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;{RED}***ERRO***: {msg}{RESET}\n&#34;)
 
         return validado
@@ -725,7 +728,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         Valida os scripts para publicação do modelo utilizando a classe ModeloCLF.
         &#34;&#34;&#34;
         msg = &#34;Scripts para publicação do modelo utilizando a classe &#39;ModeloCLF&#39;...&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n # {msg}&#34;)
 
         for nome_modelo, modelo in self.__modelos.items():
@@ -733,23 +736,22 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
 
             if not self.__validate_methods(modelo, &#34;ModeloCLF&#34;):
                 msg = &#34;Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
         msg = &#34;AVISO: Os métodos &#39;predict&#39; e &#39;evaluate&#39; não serão testados porque necessitam de dados que &#34; \
               &#34;são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
-        logging.info(msg + self.__howto_msg)
+        self.__logger.info(msg + self.__howto_msg)
         print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
-
 
     def __validate_retrain(self):
         &#34;&#34;&#34;
         Valida os scripts para publicação do modelo utilizando a classe ModeloRETRAIN.
         &#34;&#34;&#34;
         msg = &#34;Scripts para publicação do modelo utilizando a classe &#39;ModeloRETRAIN&#39;...&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n # {msg}&#34;)
 
         for nome_modelo, modelo in self.__modelos.items():
@@ -757,7 +759,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
 
             if not self.__validate_methods(modelo, &#34;ModeloRETRAIN&#34;):
                 msg = &#34;Erro ao validar os métodos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -770,21 +772,21 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                 modelo.load_model(model_name=model_name, provider=provider_name)
             except AttributeError as e:
                 msg = f&#34;A chamada ao método &#39;load_model&#39; falhou: {str(e)}.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
             if not self.__validate_mandatory_artifacts(modelo):
                 msg = &#34;Erro ao validar os artefatos obrigatórios. Verifique as mensagens de validação acima.&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{RED} *** {msg}{RESET}\n&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
 
         msg = &#34;AVISO: Os métodos &#39;evaluate&#39; e &#39;retrain&#39; não serão testados porque necessitam de dados que &#34; \
               &#34;são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n&#34;
-        logging.info(msg + self.__howto_msg)
+        self.__logger.info(msg + self.__howto_msg)
         print(f&#34;\n\n{msg + self.__howto_msg}\n&#34;)
 
     def __validate_params_returns(self):
@@ -793,7 +795,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         é escopo desta função validar os dados que estão sendo utilizados pelas funções implementadas.
         &#34;&#34;&#34;
         msg = f&#34;=&gt; INICIO: Test ID={self.__test_id}. Teste padrão da lib.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
         if self.__nome_pasta_worker == &#34;worker_pub&#34;:
@@ -802,7 +804,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             self.__validate_retrain()
 
         msg = f&#34;=&gt; FIM: Test ID={self.__test_id}. Teste padrão da lib.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
     def __run_validation_function(self):
@@ -811,7 +813,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         &#34;&#34;&#34;
         msg = f&#34;=&gt; INICIO: Test ID={self.__test_id}. Testes personalizados pelo usuário. Dados da função utilizada: &#34; \
               f&#34;{str(self.__validation_function)}.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
         type_validation_function = type(self.__validation_function).__name__
@@ -820,7 +822,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             msg = f&#34;O parâmetro &#39;validation_function&#39; deve receber uma função mas recebeu &#34; \
                   f&#34;&#39;{type_validation_function}&#39;. Verifique a implementação da função &#39;test&#39; no arquivo &#34; \
                   f&#34;&#39;{self.__nome_mytest}&#39;.&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
@@ -828,7 +830,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
         self.__validation_function(self.__modelos)
 
         msg = f&#34;=&gt; FIM: Test ID={self.__test_id}. Testes personalizados pelo usuário.&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{BOLD}{BLUE}{msg}{RESET}\n&#34;)
 
     def validate(self, mlruns_path: str = &#34;&#34;):
@@ -857,14 +859,14 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                     copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
                 except FileNotFoundError:
                     msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
                 except PermissionError:
                     msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
                           f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
@@ -872,7 +874,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                 os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
 
                 msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-                logging.info(msg)
+                self.__logger.info(msg)
                 print(f&#34;\n\n{msg}\n&#34;)
 
                 # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
@@ -891,7 +893,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                 except PermissionError:
                     msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
                           f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
-                    logging.error(msg)
+                    self.__logger.error(msg)
                     print(f&#34;\n\n{msg}&#34;)
                     print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                     exit(1)
@@ -908,13 +910,13 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                 msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
                       &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
                       &#34;o modelo, foi iniciado. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
         else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
             msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n\n{msg}\n&#34;)
 
             # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
@@ -971,14 +973,14 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
                 copytree(caminho_mlruns, &#34;mlruns&#34;, dirs_exist_ok=True)
             except FileNotFoundError:
                 msg = &#34;O caminho para a pasta &#39;mlruns&#39; está incorreto. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
             except PermissionError:
                 msg = f&#34;Permissão de leitura na pasta de origem (&#39;{caminho_mlruns}&#39;) ou gravação na pasta de &#34; \
                       f&#34;destino (&#39;mlruns&#39;) negada. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -986,7 +988,7 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
             os.environ[&#34;MLFLOW_TRACKING_URI&#34;] = &#34;http://localhost:5000&#34;
 
             msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-            logging.info(msg)
+            self.__logger.info(msg)
             print(f&#34;\n\n{msg}\n&#34;)
 
             # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.
@@ -1005,7 +1007,7 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
             except PermissionError:
                 msg = f&#34;Permissão de leitura na pasta de origem (&#39;mlruns&#39;) ou gravação na pasta de destino &#34; \
                       f&#34;(&#39;{caminho_mlruns}&#39;) negada. Teste abortado!&#34;
-                logging.error(msg)
+                self.__logger.error(msg)
                 print(f&#34;\n\n{msg}&#34;)
                 print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
                 exit(1)
@@ -1022,13 +1024,13 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
             msg = &#34;Informe o parâmetro &#39;--mlruns_path=&lt;caminho completo para a pasta mlruns&gt;&#39; ao rodar o script. &#34; \
                   &#34;A pasta &#39;mlruns&#39; é criada na pasta local onde o servidor do MLflow, utilizado para registrar &#34; \
                   &#34;o modelo, foi iniciado. Teste abortado!&#34;
-            logging.error(msg)
+            self.__logger.error(msg)
             print(f&#34;\n\n{msg}&#34;)
             print(f&#34;\n{RED}  *** O TESTE FALHOU! ***{RESET}\n&#34;)
             exit(1)
     else:  # Encontrou as variáveis de ambiente e vai rodar com o MLflow remoto
         msg = &#34;=&gt; Instanciando os modelos definidos no arquivo &#39;params.conf&#39;...&#34;
-        logging.info(msg)
+        self.__logger.info(msg)
         print(f&#34;\n\n{msg}\n&#34;)
 
         # Não tratei as exceções para preservar o traceback e facilitar a procura da origem do erro.

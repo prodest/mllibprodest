@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>src.templates.worker_pub.pub API documentation</title>
-<meta name="description" content="Para gravar os logs basta salvar as mensagens de log com as funções: &#39;logging.error&#39;, &#39;logging.warning&#39; ou
-&#39;logging.info&#39;, de acordo com o nível de …" />
+<title>docs.templates.training_model.train API documentation</title>
+<meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -20,44 +19,33 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.templates.worker_pub.pub</code></h1>
+<h1 class="title">Module <code>docs.templates.training_model.train</code></h1>
 </header>
 <section id="section-intro">
-<p>Para gravar os logs basta salvar as mensagens de log com as funções: 'logging.error', 'logging.warning' ou
-'logging.info', de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
-pacote 'logging'. Ex. logging.error("Mensagem de erro"); logging.info("Mensagem informativa").</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python"># ----------------------------------------------------------------------------------------------------
-# Implementação das funcionalidades da interface ModelPublicationInterfaceCLF
-# ----------------------------------------------------------------------------------------------------
-&#34;&#34;&#34;
-Para gravar os logs basta salvar as mensagens de log com as funções: &#39;logging.error&#39;, &#39;logging.warning&#39; ou
-&#39;logging.info&#39;, de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
-pacote &#39;logging&#39;. Ex. logging.error(&#34;Mensagem de erro&#34;); logging.info(&#34;Mensagem informativa&#34;).
-&#34;&#34;&#34;
-import logging  # Para gerar os logs (aconselhamos gerar os logs para facilitar o diagnóstico de problemas)
-from mllibprodest.interfaces import ModelPublicationInterfaceCLF
+<pre><code class="python"># -------------------------------------------------------------------------------------------------------------
+# Script padrão que será chamado dentro da API para realizar o treino do(s) modelo(s) e registro
+# no MLflow da API.
+#
+# Instruções:
+# - Organize o seu código dentro da pasta &#39;training_model&#39;, não deixe nada fora desta pasta. Exceto os códigos
+#   que devem ficar nas pastas &#39;worker_pub&#39; e &#39;worker_retrain&#39;;
+# - Chame os seus scripts a partir desse script main (train.py).
+#
+# Dica:
+# - Você pode (e deve) criar uma estrutura de pastas dentro da pasta &#39;training_model&#39; para organizar
+#   o seu código, mas faça isso de forma que não haja necessidade de criar a variável de ambiente PYTHONPATH
+#   para fazer os imports do código do modelo.
+# -------------------------------------------------------------------------------------------------------------
 
+# Faça aqui seus imports...
 
-class ModeloCLF(ModelPublicationInterfaceCLF):
-    def __init__(self):  # Não receba parâmetros através do init.
-        &#34;&#34;&#34;
-        Classe para implementação das funcionalidades da interface ModelPublicationInterfaceCLF.
-        &#34;&#34;&#34;
-        # Cria um arquivo de log ou utiliza o existente.
-        self.make_log(&#34;log_pub.log&#34;)
-        # Atributos que serão necessários para implementar a interface. Altere os seus valores se precisar.
-        self.__model_name = &#34;model_name&#34;
-        self.__provider = &#34;mlflow&#34;
-        # TODO: Incluir aqui outros atributos e lógica que julgar necessário.
-
-    # Leia a documentação das funções disponibilizadas pelas inferfaces da lib e faça uso delas! como por exemplo:
-    # &#39;load_model&#39; e &#39;convert_artifact_to_object&#39;.
-
-    # TODO: Implementar o restante dos métodos da interface ModelPublicationInterfaceCLF.</code></pre>
+if __name__ == &#34;__main__&#34;:
+    # Implemente aqui o seu script de treinamento
+    pass</code></pre>
 </details>
 </section>
 <section>
@@ -67,43 +55,6 @@ class ModeloCLF(ModelPublicationInterfaceCLF):
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="src.templates.worker_pub.pub.ModeloCLF"><code class="flex name class">
-<span>class <span class="ident">ModeloCLF</span></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Interface para publicação de modelos de ML com a função de classificação.
-Leia a documentação dos métodos e implemente-os seguindo as recomendações de tipos de parâmetros e retorno.</p>
-<p>Classe para implementação das funcionalidades da interface ModelPublicationInterfaceCLF.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class ModeloCLF(ModelPublicationInterfaceCLF):
-    def __init__(self):  # Não receba parâmetros através do init.
-        &#34;&#34;&#34;
-        Classe para implementação das funcionalidades da interface ModelPublicationInterfaceCLF.
-        &#34;&#34;&#34;
-        # Cria um arquivo de log ou utiliza o existente.
-        self.make_log(&#34;log_pub.log&#34;)
-        # Atributos que serão necessários para implementar a interface. Altere os seus valores se precisar.
-        self.__model_name = &#34;model_name&#34;
-        self.__provider = &#34;mlflow&#34;
-        # TODO: Incluir aqui outros atributos e lógica que julgar necessário.
-
-    # Leia a documentação das funções disponibilizadas pelas inferfaces da lib e faça uso delas! como por exemplo:
-    # &#39;load_model&#39; e &#39;convert_artifact_to_object&#39;.
-
-    # TODO: Implementar o restante dos métodos da interface ModelPublicationInterfaceCLF.</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>mllibprodest.interfaces.ModelPublicationInterfaceCLF</li>
-<li>mllibprodest.shared_classes.CommonMethods</li>
-</ul>
-</dd>
-</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -114,14 +65,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.templates.worker_pub" href="index.html">src.templates.worker_pub</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="src.templates.worker_pub.pub.ModeloCLF" href="#src.templates.worker_pub.pub.ModeloCLF">ModeloCLF</a></code></h4>
-</li>
+<li><code><a title="docs.templates.training_model" href="index.html">docs.templates.training_model</a></code></li>
 </ul>
 </li>
 </ul>
