@@ -5,11 +5,12 @@
 # Instruções:
 # - Organize o seu código dentro da pasta 'training_model', não deixe nada fora desta pasta. Exceto os códigos
 #   que devem ficar nas pastas 'worker_pub' e 'worker_retrain';
-# - Chame os seus scripts a partir desse script main (train.py);
+# - Chame os seus scripts a partir desse script main (train.py).
 #
 # Dica:
 # - Você pode (e deve) criar uma estrutura de pastas dentro da pasta 'training_model' para organizar
-#   o seu código, mas faça isso de forma que não haja necessidade de criar a variável de ambiente PYTHONPATH;
+#   o seu código, mas faça isso de forma que não haja necessidade de criar a variável de ambiente PYTHONPATH
+#   para fazer os imports do código do modelo.
 # -------------------------------------------------------------------------------------------------------------
 
 # Faça aqui seus imports...
