@@ -2,7 +2,7 @@
 # Implementação das funcionalidades da interface ModelPublicationInterfaceCLF
 # ----------------------------------------------------------------------------------------------------
 """
-ATENÇÃO: É Aconselhável gerar logs durante a execução do modelo, para facilitar o diagnóstico de problemas.
+ATENÇÃO: É aconselhável gerar logs durante a execução do modelo, para facilitar o diagnóstico de problemas.
 
 Para gravar os logs, basta salvar as mensagens de log utilizando: 'self.__logger.error', 'self.__logger.warning' ou
 'self.__logger.info', de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do

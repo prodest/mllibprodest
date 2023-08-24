@@ -21,5 +21,5 @@ def test(modelos: dict):
     # TODO: Implementar os testes personalizados.
 
     for nome_modelo, modelo in modelos.items():
-        # TODO: Implementar as verificações para cada modelo recebibo.
+        # TODO: Implementar as verificações para cada modelo recebido.
         pass
