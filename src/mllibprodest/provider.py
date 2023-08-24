@@ -19,8 +19,8 @@ class Provider:
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
         """
         Carrega os datasets necessários para o modelo.
-        :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
-                                   Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
+            :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
+                                       Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
             :param provider: Nome do provedor que fornecerá os datasets. Tipos de provider: 'minio' e 'local'.
             :return: Dicionário com os datasets carregados.
         """
