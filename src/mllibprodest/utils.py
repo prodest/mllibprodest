@@ -9,6 +9,48 @@ from os import makedirs
 from dotenv import load_dotenv, find_dotenv
 
 
+def make_log(filename: str) -> logging.Logger:
+    """
+    Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
+    Também retorna um logger para gravação dos logs.
+        :param filename: Nome do arquivo de logs.
+        :return: Um logger para gravação dos logs.
+    """
+    # Se a pasta de logs não existir, cria
+    try:
+        makedirs("logs", exist_ok=True)
+    except PermissionError:
+        msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
+        raise PermissionError(msg) from None
+
+    logger_name = filename.split(".")[0]
+    log_file_path = str(Path("logs") / filename)
+
+    # Configuração de parâmetros para geração de logs
+    try:
+        logging.basicConfig(level=logging.CRITICAL)
+        logger = logging.getLogger(logger_name)
+        logger.setLevel(logging.INFO)
+        filehandler = logging.FileHandler(log_file_path, mode='a')
+        filehandler.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s | %(funcName)s: %(message)s')
+        filehandler.setFormatter(formatter)
+        logger.addHandler(filehandler)
+    except FileNotFoundError:
+        msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
+        raise FileNotFoundError(msg) from None
+    except PermissionError:
+        msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
+              f"escrita/leitura negada. Programa abortado!"
+        raise PermissionError(msg) from None
+
+    return logger
+
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
+
+
 def load_env_variables(path: str = ""):
     """
     Carrega as variáveis de ambiente armazenadas no arquivo '.env'.
@@ -23,7 +65,7 @@ def load_env_variables(path: str = ""):
 
         if dotenv_path != "":
             msg = f"Utilizando as configurações de ambiente obtidas através do arquivo: '{dotenv_path}'"
-            logging.info(msg)
+            LOGGER.info(msg)
 
         load_dotenv(dotenv_path)
 
@@ -44,7 +86,7 @@ def get_file_s3(file_name: str, s3_server: str, access_key: str, secret_key: str
         obj_arquivo = client.get_object(bucket_name=bucket, object_name=file_name)
     except minio.error.S3Error as e:
         msg = f"Não foi possível obter o arquivo desejado. Mensagem do servidor S3: {e}"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
     return obj_arquivo.read()
@@ -61,12 +103,12 @@ def get_file_local(file_path: str):
             bytes_arq = arq.read()
     except FileNotFoundError:
         msg = f"Não foi possível encontrar o arquivo no caminho '{file_path}'. Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise FileNotFoundError(msg) from None
     except PermissionError:
         msg = f"Não foi possível ler o arquivo no caminho '{file_path}'. Permissão de leitura negada. Programa " \
               f"abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise PermissionError(msg) from None
 
     return bytes_arq
@@ -126,37 +168,6 @@ def validate_params(received_params: list, expected_params: dict) -> tuple:
         return False, erros_encontrados
 
 
-def make_log(filename: str):
-    """
-    Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-    Depois de executar este método, para gravar os logs basta importar o pacote 'logging' e mandar salvar as
-    mensagens de log com as funções: 'logging.error', 'logging.warning' ou 'logging.info', de acordo com o nível
-    de criticidade da mensagem. Para mais opções, consulte a documentação do pacote 'logging'.
-        :param filename: Nome do arquivo de logs.
-    """
-    # Se a pasta de logs não existir, cria
-    try:
-        makedirs("logs", exist_ok=True)
-    except PermissionError:
-        msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
-        raise PermissionError(msg) from None
-
-    log_file_path = str(Path("logs") / filename)
-
-    # Configuração de parâmetros para geração de logs
-    try:
-        logging.basicConfig(filename=log_file_path,
-                            format='%(asctime)s - %(levelname)s | %(funcName)s: %(message)s',
-                            level=logging.INFO)
-    except FileNotFoundError:
-        msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
-        raise FileNotFoundError(msg) from None
-    except PermissionError:
-        msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
-              f"escrita/leitura negada. Programa abortado!"
-        raise PermissionError(msg) from None
-
-
 def get_models_params(path: str = "") -> dict:
     """
     Obtém os parâmetros que serão utilizados para instanciar os modelos. Será buscado um arquivo com o nome
@@ -165,7 +176,6 @@ def get_models_params(path: str = "") -> dict:
         :param path: Caminho onde se encontra o arquivo de parâmetros. O padrão é estar na pasta local.
         :return: Dicionário contendo como chave o nome do modelo e como valor outro dicionário com os parâmetros.
     """
-    make_log("get_models_params.log")
     parametros_padroes = ["source_file", "model_class", "experiment_name", "model_provider_name",
                           "dataset_provider_name"]
     parametros_faltantes_por_secao = {}
@@ -179,28 +189,28 @@ def get_models_params(path: str = "") -> dict:
     except configparser.MissingSectionHeaderError as e:
         msg = f"O arquivo com os parâmetros dos modelos ('params.conf') possui seções inválidas. Programa abortado! " \
               f"Mensagem configParser: '{e}'."
-        logging.error(msg)
+        LOGGER.error(msg)
         raise ValueError(msg) from None
     except configparser.DuplicateSectionError as e:
         msg = f"Existem seções duplicadas. Programa abortado! Mensagem configParser: '{e}'."
-        logging.error(msg)
+        LOGGER.error(msg)
         raise ValueError(msg) from None
     except configparser.DuplicateOptionError as e:
         msg = f"Existem parâmetros duplicados. Programa abortado! Mensagem configParser: '{e}'."
-        logging.error(msg)
+        LOGGER.error(msg)
         raise ValueError(msg) from None
 
     if "params.conf" not in nome_arq_params:
         msg = "Não foi possível encontrar o arquivo com os parâmetros dos modelos ('params.conf') ou não possui " \
               "permissão para leitura. Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)
 
     secoes = conf.sections()
 
     if not secoes:
         msg = "O arquivo com os parâmetros dos modelos ('params.conf') está vazio. Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise ValueError(msg)
 
     # Verifica se tem parâmetros padrões faltantes
@@ -218,7 +228,7 @@ def get_models_params(path: str = "") -> dict:
     if faltou_parametro:
         msg = f"Um ou mais parâmetros não foram encontrados no arquivo 'params.conf'. Parâmetros faltantes por " \
               f"modelo: {parametros_faltantes_por_secao}. Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise ValueError(msg)
 
     parametros_por_modelo = {}

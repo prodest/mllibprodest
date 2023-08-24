@@ -1,9 +1,11 @@
 # ---------------------------------------------------------------------------------------------------------
 # Classes e funções para inicialização de modelos de ML (Machine Learning).
 # ---------------------------------------------------------------------------------------------------------
-import logging
 import importlib
-from ..utils import get_models_params
+from ..utils import get_models_params, make_log
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
 
 
 class InitModels:
@@ -32,18 +34,18 @@ class InitModels:
                     msg = f"Modelo: {model_name}. O módulo '{caminho_import}' não foi encontrado. Verifique no " \
                           f"arquivo 'params.conf' se o parâmetro 'source_file' foi informado corretamente e/ou se " \
                           f"este módulo está dentro da pasta 'models'. Programa abortado!"
-                    logging.error(msg)
+                    LOGGER.error(msg)
                     raise ModuleNotFoundError(msg) from None
                 else:
                     msg = f"Modelo: {model_name}. Erro ao importar os módulos necessários para o módulo " \
                           f"'{caminho_import}'. Mensagem do Import: {msg_erro}"
-                    logging.error(msg)
+                    LOGGER.error(msg)
                     # Não utilizei o 'from None' para preservar o traceback
                     raise ModuleNotFoundError(msg)
             except ImportError as e:
                 msg = f"Modelo: {model_name}. Erro ao importar os módulos necessários para o módulo " \
                       f"'{caminho_import}'. Mensagem do Import: {str(e)}"
-                logging.error(msg)
+                LOGGER.error(msg)
                 # Não utilizei o 'from None' para preservar o traceback
                 raise ImportError(msg)
 
@@ -57,13 +59,13 @@ class InitModels:
                     except TypeError as e:
                         msg = f"Faltou a implementação do(s) seguinte(s) método(s) para o modelo '{model_name}' " \
                               f"(classe 'ModeloCLF'): {str(e)[64:]}."
-                        logging.error(msg)
+                        LOGGER.error(msg)
                         raise TypeError(msg) from None
                 else:
                     msg = f"Modelo: {model_name}. O tipo do 'ModeloCLF' está incorreto: '{type(cls).__name__}'. " \
                           f"'ModeloCLF' deve ser uma classe que herda os métodos da interface " \
                           f"'ModelPublicationInterfaceCLF' e possua as implementações para os métodos abstratos dela."
-                    logging.error(msg)
+                    LOGGER.error(msg)
                     raise TypeError(msg)
             elif models_params[model_name]['model_class'] == "ModeloRETRAIN":
                 cls = getattr(modulo, "ModeloRETRAIN")
@@ -77,20 +79,20 @@ class InitModels:
                     except TypeError as e:
                         msg = f"Faltou a implementação do(s) seguinte(s) método(s) para o modelo '{model_name}' " \
                               f"(classe 'ModeloRETRAIN'): {str(e)[68:]}."
-                        logging.error(msg)
+                        LOGGER.error(msg)
                         raise TypeError(msg) from None
                 else:
                     msg = f"Modelo: {model_name}. O tipo do 'ModeloRETRAIN' está incorreto: '{type(cls).__name__}'. " \
                           f"'ModeloRETRAIN' deve ser uma classe que herda os métodos da interface " \
                           f"'ModelPublicationInterfaceRETRAIN' e possua as implementações para os métodos " \
                           f"abstratos dela."
-                    logging.error(msg)
+                    LOGGER.error(msg)
                     raise TypeError(msg)
             else:
                 msg = f"Modelo: {model_name}. O valor do parâmetro 'model_class' está incorreto. Foi informado " \
                       f"'{models_params[model_name]['model_class']}' no arquivo 'params.conf', porém deve ser " \
                       f"'ModeloCLF' ou 'ModeloRETRAIN'. Programa abortado!"
-                logging.error(msg)
+                LOGGER.error(msg)
                 raise ValueError(msg)
 
         return modelos

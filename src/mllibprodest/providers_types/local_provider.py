@@ -2,10 +2,12 @@
 # Provider para obtenção de datasets persistidos na área de armazenamento local
 # ----------------------------------------------------------------------------------------------------
 import os
-import logging
 from io import BytesIO
-from ..utils import load_env_variables, get_file_local
+from ..utils import load_env_variables, get_file_local, make_log
 from pathlib import Path
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
 
 
 def load_datasets_local(datasets_filenames: dict) -> dict:
@@ -27,7 +29,7 @@ def load_datasets_local(datasets_filenames: dict) -> dict:
               f"chamado '.env' exista; esteja localizado na pasta da aplicação e que possua valor para a variável: " \
               f"'LOCAL_PATH'. Ou se preferir, configure essa variável de ambiente e seu respectivo valor. " \
               f"Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)
 
     datasets = {}

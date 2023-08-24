@@ -9,7 +9,7 @@ Acesse a [documentação da lib](https://prodest.github.io/mllibprodest)!
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/workflow.png?raw=true)
 
 ## Pré-requisitos
-* **Python >= 3.9.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
+* **Python == 3.10.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
 * **Git.** Instruções: [Linux](https://git-scm.com/download/linux) ou [Windows](https://git-scm.com/download/win).
 * **Venv.** Gerenciador de ambiente virtual Python adotado no tutorial. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment). 
 Ou qualquer outro gerenciador de ambiente Python que preferir.
@@ -241,6 +241,20 @@ git clone https://github.com/prodest/mllibprodest.git
 - Entre na pasta gerada no processo de clonagem do repositório e copie o conteúdo da pasta '**templates**' para outro local 
 de sua preferência (não trabalhe na pasta do repositório).
 
+
+- Organize o código responsável pelo treino do modelo. Copie todos os *scripts* que são utilizados para treinar o modelo 
+para a pasta '**training_model**' (**não** incluir a pasta '**env**' nem arquivos desnecessários) e altere o *script* 
+'**train.py**' para que ele chame o *script* principal do modelo, ou, se preferir, apague  o *script* 'train.py' e 
+renomeie o *script* principal do modelo para 'train.py'.
+
+
+- Gere o arquivo de *requirements* para o código do modelo e coloque-o dentro da pasta '**training_model**'.
+
+![](https://github.com/prodest/mllibprodest/blob/main/docs/pasta-train.png?raw=true)
+
+**NOTA**: Não altere o nome da pasta '**training_model**' nem do *script* '**train.py**'. Estruture o código para que 
+não haja necessidade de criar a variável de ambiente PYTHONPATH para fazer os 'imports' do código do modelo. 
+
 ## 3. Implemente as interfaces da biblioteca
 
 Antes de iniciar a implementação das interfaces, é importante criar um ambiente virtual Python **separadamente** para cada 
@@ -387,13 +401,10 @@ em contato para informar o ocorrido e fornecer as informações sobre o erro.
 Para disponibilizar o modelo para publicação:
 
 - Crie uma pasta chamada '**publicar**';
-- Copie as pastas '**worker_pub**' e '**worker_retrain**' para a pasta '**publicar**' (**não** incluir a pasta 
+- Copie as pastas '**worker_pub**', '**worker_retrain**' e '**training_model**' para a pasta '**publicar**' 
+(**não** incluir a pasta 
 '**env**', que é do ambiente virtual Python, nem a pasta '**temp_area**', que é utilizada para guardar arquivos 
 temporários) ;
-- Gere um arquivo de *requirements.txt* para o código responsável pelo registro dos experimentos/modelo;
-- Copie a pasta que contém o código responsável pelo registro dos experimentos/modelo para a pasta publicar (**não** 
-incluir a pasta '**env**' e arquivos desnecessários);
 - Compacte a pasta '**publicar**' utilizando o formato '.zip';
 - Envie o arquivo '**publicar.zip**' para o Prodest, conforme alinhamento prévio realizado em reunião ou qualquer 
 outro meio de contato.
-

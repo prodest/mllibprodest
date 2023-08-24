@@ -1,11 +1,14 @@
 # ----------------------------------------------------------------------------------------------------
 # Funções para prover o acesso aos modelos persistidos e aos datasets
 # ----------------------------------------------------------------------------------------------------
-import logging
+from .utils import make_log
 from .providers_types.minio_provider import load_datasets_minio
 from .providers_types.local_provider import load_datasets_local
 from .providers_types.mlflow_provider import load_production_params_mlflow, load_production_datasets_names_mlflow, \
     load_production_baseline_mlflow, load_model_mlflow
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
 
 
 class Provider:
@@ -16,8 +19,8 @@ class Provider:
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
         """
         Carrega os datasets necessários para o modelo.
-        :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
-                                   Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
+            :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
+                                       Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
             :param provider: Nome do provedor que fornecerá os datasets. Tipos de provider: 'minio' e 'local'.
             :return: Dicionário com os datasets carregados.
         """
@@ -28,7 +31,7 @@ class Provider:
         else:
             msg = f"Não foi possível carregar os datasets. O provider '{provider}' não foi encontrado. Programa " \
                   f"abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)
 
     @staticmethod
@@ -45,7 +48,7 @@ class Provider:
         else:
             msg = f"Não foi possível carregar os parâmetros do modelo '{model_name}'. O provider '{provider}' não " \
                   f"foi encontrado. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)
 
     @staticmethod
@@ -62,7 +65,7 @@ class Provider:
         else:
             msg = f"Não foi possível carregar os nomes dos datasets do modelo '{model_name}'. O provider " \
                   f"'{provider}' não foi encontrado. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)
 
     @staticmethod
@@ -80,7 +83,7 @@ class Provider:
         else:
             msg = f"Não foi possível carregar o baseline do modelo '{model_name}'. O provider '{provider}' não " \
                   f"foi encontrado. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)
 
     @staticmethod
@@ -97,5 +100,5 @@ class Provider:
         else:
             msg = f"Não foi possível carregar o modelo '{model_name}'. O provider '{provider}' não foi encontrado. " \
                   f"Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)

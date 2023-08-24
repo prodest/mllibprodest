@@ -29,12 +29,15 @@
 <pre><code class="python"># ----------------------------------------------------------------------------------------------------
 # Provider para obtenção de modelos e artefatos registrados no Mlflow
 # ----------------------------------------------------------------------------------------------------
-import logging
 import mlflow
 import pickle
 from pathlib import Path
 from mlflow.exceptions import RestException, MlflowException
 from shutil import rmtree
+from ..utils import make_log
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log(&#34;LOG_MLLIB.log&#34;)
 
 
 def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;temp_area&#34;):
@@ -61,7 +64,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
     except PermissionError:
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
               f&#34;de escrita negada. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise PermissionError(msg) from None
 
     stage = &#39;Production&#39;
@@ -71,11 +74,11 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}/{stage}&#34;)
     except RestException:
         msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no &#39;run_id&#39; do modelo
@@ -86,7 +89,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
               f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
     return modelo
@@ -100,7 +103,7 @@ def load_production_params_mlflow(model_name: str) -&gt; dict:
         @return: Dicionário contendo os parâmetros carregados.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     parametros = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingParams.pkl&#34;)
     arq = None
@@ -128,7 +131,7 @@ def load_production_params_mlflow(model_name: str) -&gt; dict:
         msg += f&#34;Não foi possível carregar os parâmetros de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua os parâmetros persistidos num dicionário, através do Pickle, com o nome &#34; \
                f&#34;&#39;TrainingParams.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)
 
 
@@ -140,7 +143,8 @@ def load_production_datasets_names_mlflow(model_name: str) -&gt; dict:
         @return: Dicionário contendo os nomes dos datasets carregados.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando os nomes dos datasets de produção do modelo &#39;{model_name}&#39; (run_id: &#34;
+                f&#34;{modelo.metadata.run_id})&#34;)
     nomes_datasets = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingDatasetsNames.pkl&#34;)
     arq = None
@@ -168,7 +172,7 @@ def load_production_datasets_names_mlflow(model_name: str) -&gt; dict:
         msg += f&#34;Não foi possível carregar os nomes dos datasets de produção do modelo &#39;{model_name}&#39;. Certifique-se &#34; \
                f&#34;que o modelo exista e que possua os nomes dos datasets persistidos num dicionário, através do &#34; \
                f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)
 
 
@@ -181,7 +185,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         @return: Dicionário contendo as métricas de baseline.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     baseline = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;BaselineMetrics.pkl&#34;)
     arq = None
@@ -209,7 +213,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         msg += f&#34;Não foi possível carregar o baseline de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua o baseline persistido num dicionário, através do Pickle, com o nome &#34; \
                f&#34;&#39;BaselineMetrics.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
 </section>
@@ -257,7 +261,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
     except PermissionError:
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
               f&#34;de escrita negada. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise PermissionError(msg) from None
 
     stage = &#39;Production&#39;
@@ -267,11 +271,11 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}/{stage}&#34;)
     except RestException:
         msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
     # Baixa todos os artefatos com base no &#39;run_id&#39; do modelo
@@ -282,7 +286,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
               f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
     return modelo</code></pre>
@@ -310,7 +314,7 @@ automatizada do modelo.</p>
         @return: Dicionário contendo as métricas de baseline.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando o baseline de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     baseline = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;BaselineMetrics.pkl&#34;)
     arq = None
@@ -338,7 +342,7 @@ automatizada do modelo.</p>
         msg += f&#34;Não foi possível carregar o baseline de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua o baseline persistido num dicionário, através do Pickle, com o nome &#34; \
                f&#34;&#39;BaselineMetrics.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
 </dd>
@@ -362,7 +366,8 @@ automatizada do modelo.</p>
         @return: Dicionário contendo os nomes dos datasets carregados.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando os nomes dos datasets de produção do modelo &#39;{model_name}&#39; (run_id: &#34;
+                f&#34;{modelo.metadata.run_id})&#34;)
     nomes_datasets = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingDatasetsNames.pkl&#34;)
     arq = None
@@ -390,7 +395,7 @@ automatizada do modelo.</p>
         msg += f&#34;Não foi possível carregar os nomes dos datasets de produção do modelo &#39;{model_name}&#39;. Certifique-se &#34; \
                f&#34;que o modelo exista e que possua os nomes dos datasets persistidos num dicionário, através do &#34; \
                f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
 </dd>
@@ -414,7 +419,7 @@ automatizada do modelo.</p>
         @return: Dicionário contendo os parâmetros carregados.
     &#34;&#34;&#34;
     modelo = load_model_mlflow(model_name, artifacts_destination_path=&#39;temp_area&#39;)
-    logging.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
+    LOGGER.info(f&#34;Utilizando os parâmetros de produção do modelo &#39;{model_name}&#39; (run_id: {modelo.metadata.run_id})&#34;)
     parametros = None
     nome_arq = str(Path(&#34;temp_area&#34;) / model_name / &#34;TrainingParams.pkl&#34;)
     arq = None
@@ -442,7 +447,7 @@ automatizada do modelo.</p>
         msg += f&#34;Não foi possível carregar os parâmetros de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua os parâmetros persistidos num dicionário, através do Pickle, com o nome &#34; \
                f&#34;&#39;TrainingParams.pkl&#39;. Programa abortado!&#34;
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
 </dd>

@@ -5,12 +5,15 @@
 # Uso: Implemente aqui qualquer classe que puder ser compartilhada entre as interfaces contidas no
 # arquivo 'mllibprodest/interfaces.py'
 # ----------------------------------------------------------------------------------------------------
-import logging
 import pickle
+from logging import Logger
 from typing import Union
 from pathlib import Path
 from .provider import Provider
 from .utils import make_log
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
 
 
 class CommonMethods:
@@ -18,15 +21,14 @@ class CommonMethods:
     Métodos comuns entre as interfaces dos modelos publicados.
     """
     @staticmethod
-    def make_log(filename: str):
+    def make_log(filename: str) -> Logger:
         """
         Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-        Depois de executar este método, para gravar os logs basta importar o pacote 'logging' e mandar salvar as
-        mensagens de log com as funções: 'logging.error', 'logging.warning' ou 'logging.info', de acordo com o nível
-        de criticidade da mensagem. Para mais opções, consulte a documentação do pacote 'logging'.
+        Também retorna um logger para gravação dos logs.
             :param filename: Nome do arquivo de logs.
+            :return: Um logger para gravação dos logs.
         """
-        make_log(filename)
+        return make_log(filename)
 
     @staticmethod
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
@@ -108,12 +110,12 @@ class CommonMethods:
         except FileNotFoundError:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido. O caminho '{caminho_artefato}' está " \
                   f"incorreto. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{caminho_artefato}'. " \
                   f"Permissão de escrita negada. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
@@ -121,7 +123,7 @@ class CommonMethods:
         except TypeError as e:
             msg = f"Não foi possível gerar o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). Programa " \
                   f"abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise TypeError(msg) from None
 
         arq.close()
@@ -143,12 +145,12 @@ class CommonMethods:
         except FileNotFoundError:
             msg = f"Não foi possível converter o artefato '{file_name}'. O caminho '{caminho_artefato}' não foi " \
                   f"encontrado. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{caminho_artefato}'. " \
                   f"Permissão de leitura negada. Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
@@ -156,7 +158,7 @@ class CommonMethods:
         except pickle.UnpicklingError as e:
             msg = f"Não foi possível converter o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). " \
                   f"Programa abortado!"
-            logging.error(msg)
+            LOGGER.error(msg)
             raise RuntimeError(msg)
 
         arq.close()

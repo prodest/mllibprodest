@@ -2,11 +2,14 @@
 # Implementação das funcionalidades da interface ModelPublicationInterfaceCLF
 # ----------------------------------------------------------------------------------------------------
 """
-Para gravar os logs basta salvar as mensagens de log com as funções: 'logging.error', 'logging.warning' ou
-'logging.info', de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
-pacote 'logging'. Ex. logging.error("Mensagem de erro"); logging.info("Mensagem informativa").
+ATENÇÃO: É aconselhável gerar logs durante a execução do modelo, para facilitar o diagnóstico de problemas.
+
+Para gravar os logs, basta salvar as mensagens de log utilizando: 'self.__logger.error', 'self.__logger.warning' ou
+'self.__logger.info', de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
+pacote 'logging'.
+
+EXEMPLOS: self.__logger.error("Mensagem de erro"); self.__logger.info("Mensagem informativa").
 """
-import logging  # Para gerar os logs (aconselhamos gerar os logs para facilitar o diagnóstico de problemas)
 from .utils import *  # Para importar todas as funções/rotinas definidas no script 'utils.py'
 from mllibprodest.interfaces import ModelPublicationInterfaceCLF
 
@@ -16,8 +19,8 @@ class ModeloCLF(ModelPublicationInterfaceCLF):
         """
         Classe para implementação das funcionalidades da interface ModelPublicationInterfaceCLF.
         """
-        # Cria um arquivo de log ou utiliza o existente.
-        self.make_log(model_name + "_pub.log")
+        # Cria um arquivo de log (ou utiliza o existente) e retorna um objeto logger para escrita dos logs.
+        self.__logger = self.make_log(model_name + "_pub.log")
         # Atributos que serão necessários para implementar a interface.
         self.__model_name = model_name
         self.__model_provider_name = model_provider_name

@@ -2,9 +2,11 @@
 # Provider para obtenção de datasets persistidos no Minio
 # ----------------------------------------------------------------------------------------------------
 import os
-import logging
 from io import BytesIO
-from ..utils import load_env_variables, get_file_s3
+from ..utils import load_env_variables, get_file_s3, make_log
+
+# Para facilitar, define um logger único para todas as funções
+LOGGER = make_log("LOG_MLLIB.log")
 
 
 def load_datasets_minio(datasets_filenames: dict) -> dict:
@@ -30,7 +32,7 @@ def load_datasets_minio(datasets_filenames: dict) -> dict:
               f"chamado '.env' exista; esteja localizado na pasta da aplicação e que possua valores para as " \
               f"variáveis: 'MINIO', 'ACCESS_KEY', 'SECRET_KEY' e 'BUCKET'. Ou se preferir, configure essas variáveis " \
               f"de ambiente e seus respectivos valores. Programa abortado!"
-        logging.error(msg)
+        LOGGER.error(msg)
         raise RuntimeError(msg)
 
     datasets = {}

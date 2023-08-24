@@ -16,7 +16,7 @@ cd mllibprodest
 ```
 Crie o ambiente virtual.
 ```bash
-python3 -m venv env
+python3.10 -m venv env
 ```
 Ative o ambiente virtual.
 ```bash
@@ -46,14 +46,14 @@ dependencies = ['minio==7.1.11', 'python-dotenv==0.21.0', 'mlflow==1.28.0', 'bot
 Antes de rodar os comandos para construir o pacote com a biblioteca, atualize o *pip*, *build* e *twine*. 
 
 ```bash
-python3 -m pip install --upgrade pip build twine
+python -m pip install --upgrade pip build twine
 ```
 
 De dentro da pasta criada no processo de clonagem do repositório (mllibprodest), rode os comandos abaixo.
 
 - Constrói o pacote e salva na pasta *'dist'*.
 ```bash
-python3 -m build
+python -m build
 ```
 
 - Envia o pacote para o PyPI. Caso existam mais pacotes nesta pasta, é necessário especificar quais deles
