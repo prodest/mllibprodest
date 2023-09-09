@@ -25,12 +25,12 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 callable(subclass.get_model_name) and
                 hasattr(subclass, 'get_model_provider_name') and
                 callable(subclass.get_model_provider_name) and
+                hasattr(subclass, 'get_model_info') and
+                callable(subclass.get_model_info) and
                 hasattr(subclass, 'predict') and
                 callable(subclass.predict) and
                 hasattr(subclass, 'evaluate') and
-                callable(subclass.evaluate) and
-                hasattr(subclass, 'get_model_info') and
-                callable(subclass.get_model_info) or
+                callable(subclass.evaluate) or
                 NotImplemented)
 
     @abc.abstractmethod
@@ -46,6 +46,14 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
         """
         Obtém o nome do provider que proverá o modelo que está em produção.
             :return: Nome do provider que proverá o modelo que está em produção.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_info(self) -> dict:
+        """
+        Obtém informações sobre o modelo que está em produção.
+            :return: Dicionário com informações sobre o modelo.
         """
         raise NotImplementedError
 
@@ -67,14 +75,6 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
             :return: Dicionário com as métricas calculadas.
-        """
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def get_model_info(self) -> dict:
-        """
-        Obtém informações sobre o modelo que está em produção.
-            :return: Dicionário com informações sobre o modelo.
         """
         raise NotImplementedError
 
