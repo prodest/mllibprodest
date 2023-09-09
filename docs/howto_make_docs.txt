@@ -1,6 +1,6 @@
 # Preparar o código fonte;
-- É necessário substituir ':param' por '@param' e saltar uma linha entre a descrição das funções e a primeira ocorrência do '@param'
-- Também substituir ':return' por '@return'
+- É necessário substituir ':param' por '@param' e saltar uma linha entre as descrições das funções e a primeira ocorrência do '@param';
+- Também substituir ':return' por '@return' e saltar uma linha entre as descrições das funções e a ocorrência do '@return', quando não houver parâmetro na função.
 
 # Criar um ambiente virtual para executar esta tarefa;
 
