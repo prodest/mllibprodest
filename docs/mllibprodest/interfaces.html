@@ -53,18 +53,19 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 callable(subclass.get_model_name) and
                 hasattr(subclass, &#39;get_model_provider_name&#39;) and
                 callable(subclass.get_model_provider_name) and
+                hasattr(subclass, &#39;get_model_info&#39;) and
+                callable(subclass.get_model_info) and
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
-                callable(subclass.evaluate) and
-                hasattr(subclass, &#39;get_model_info&#39;) and
-                callable(subclass.get_model_info) or
+                callable(subclass.evaluate) or
                 NotImplemented)
 
     @abc.abstractmethod
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do modelo que está em produção.
+
             @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -73,7 +74,17 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider que proverá o modelo que está em produção.
+
             @return: Nome do provider que proverá o modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_info(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Obtém informações sobre o modelo que está em produção.
+
+            @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -97,14 +108,6 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
             @return: Dicionário com as métricas calculadas.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def get_model_info(self) -&gt; dict:
-        &#34;&#34;&#34;
-        Obtém informações sobre o modelo que está em produção.
-            @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -134,6 +137,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do modelo que está em produção.
+
             @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -142,6 +146,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider que proverá o modelo que está em produção.
+
             @return: Nome do provider que proverá o modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -150,6 +155,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     def get_experiment_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do experimento que será utilizado em produção.
+
             @return: Nome do experimento que será utilizado em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -158,6 +164,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
     def get_dataset_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+
             @return: Nome do provider do dataset usado pelo modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -268,18 +275,19 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
                 callable(subclass.get_model_name) and
                 hasattr(subclass, &#39;get_model_provider_name&#39;) and
                 callable(subclass.get_model_provider_name) and
+                hasattr(subclass, &#39;get_model_info&#39;) and
+                callable(subclass.get_model_info) and
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
-                callable(subclass.evaluate) and
-                hasattr(subclass, &#39;get_model_info&#39;) and
-                callable(subclass.get_model_info) or
+                callable(subclass.evaluate) or
                 NotImplemented)
 
     @abc.abstractmethod
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do modelo que está em produção.
+
             @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -288,7 +296,17 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider que proverá o modelo que está em produção.
+
             @return: Nome do provider que proverá o modelo que está em produção.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_info(self) -&gt; dict:
+        &#34;&#34;&#34;
+        Obtém informações sobre o modelo que está em produção.
+
+            @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -312,14 +330,6 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
             @return: Dicionário com as métricas calculadas.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def get_model_info(self) -&gt; dict:
-        &#34;&#34;&#34;
-        Obtém informações sobre o modelo que está em produção.
-            @return: Dicionário com informações sobre o modelo.
         &#34;&#34;&#34;
         raise NotImplementedError</code></pre>
 </details>
@@ -362,8 +372,9 @@ def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
 <span>def <span class="ident">get_model_info</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém informações sobre o modelo que está em produção.
-@return: Dicionário com informações sobre o modelo.</p></div>
+<div class="desc"><p>Obtém informações sobre o modelo que está em produção.</p>
+<pre><code>@return: Dicionário com informações sobre o modelo.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -372,6 +383,7 @@ def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
 def get_model_info(self) -&gt; dict:
     &#34;&#34;&#34;
     Obtém informações sobre o modelo que está em produção.
+
         @return: Dicionário com informações sobre o modelo.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -381,8 +393,9 @@ def get_model_info(self) -&gt; dict:
 <span>def <span class="ident">get_model_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do modelo que está em produção.
-@return: Nome do modelo que está em produção.</p></div>
+<div class="desc"><p>Obtém o nome do modelo que está em produção.</p>
+<pre><code>@return: Nome do modelo que está em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -391,6 +404,7 @@ def get_model_info(self) -&gt; dict:
 def get_model_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do modelo que está em produção.
+
         @return: Nome do modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -400,8 +414,9 @@ def get_model_name(self) -&gt; str:
 <span>def <span class="ident">get_model_provider_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.
-@return: Nome do provider que proverá o modelo que está em produção.</p></div>
+<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.</p>
+<pre><code>@return: Nome do provider que proverá o modelo que está em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -410,6 +425,7 @@ def get_model_name(self) -&gt; str:
 def get_model_provider_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do provider que proverá o modelo que está em produção.
+
         @return: Nome do provider que proverá o modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -490,6 +506,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_model_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do modelo que está em produção.
+
             @return: Nome do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -498,6 +515,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_model_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider que proverá o modelo que está em produção.
+
             @return: Nome do provider que proverá o modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -506,6 +524,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_experiment_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do experimento que será utilizado em produção.
+
             @return: Nome do experimento que será utilizado em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -514,6 +533,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
     def get_dataset_provider_name(self) -&gt; str:
         &#34;&#34;&#34;
         Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+
             @return: Nome do provider do dataset usado pelo modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
@@ -704,8 +724,9 @@ def evaluate(self, model, datasets: dict, baseline_metrics: dict, training_param
 <span>def <span class="ident">get_dataset_provider_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do provider do dataset usado pelo modelo que está em produção.
-@return: Nome do provider do dataset usado pelo modelo que está em produção.</p></div>
+<div class="desc"><p>Obtém o nome do provider do dataset usado pelo modelo que está em produção.</p>
+<pre><code>@return: Nome do provider do dataset usado pelo modelo que está em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -714,6 +735,7 @@ def evaluate(self, model, datasets: dict, baseline_metrics: dict, training_param
 def get_dataset_provider_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do provider do dataset usado pelo modelo que está em produção.
+
         @return: Nome do provider do dataset usado pelo modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -723,8 +745,9 @@ def get_dataset_provider_name(self) -&gt; str:
 <span>def <span class="ident">get_experiment_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do experimento que será utilizado em produção.
-@return: Nome do experimento que será utilizado em produção.</p></div>
+<div class="desc"><p>Obtém o nome do experimento que será utilizado em produção.</p>
+<pre><code>@return: Nome do experimento que será utilizado em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -733,6 +756,7 @@ def get_dataset_provider_name(self) -&gt; str:
 def get_experiment_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do experimento que será utilizado em produção.
+
         @return: Nome do experimento que será utilizado em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -742,8 +766,9 @@ def get_experiment_name(self) -&gt; str:
 <span>def <span class="ident">get_model_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do modelo que está em produção.
-@return: Nome do modelo que está em produção.</p></div>
+<div class="desc"><p>Obtém o nome do modelo que está em produção.</p>
+<pre><code>@return: Nome do modelo que está em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -752,6 +777,7 @@ def get_experiment_name(self) -&gt; str:
 def get_model_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do modelo que está em produção.
+
         @return: Nome do modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
@@ -761,8 +787,9 @@ def get_model_name(self) -&gt; str:
 <span>def <span class="ident">get_model_provider_name</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.
-@return: Nome do provider que proverá o modelo que está em produção.</p></div>
+<div class="desc"><p>Obtém o nome do provider que proverá o modelo que está em produção.</p>
+<pre><code>@return: Nome do provider que proverá o modelo que está em produção.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -771,6 +798,7 @@ def get_model_name(self) -&gt; str:
 def get_model_provider_name(self) -&gt; str:
     &#34;&#34;&#34;
     Obtém o nome do provider que proverá o modelo que está em produção.
+
         @return: Nome do provider que proverá o modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
