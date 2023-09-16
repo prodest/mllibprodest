@@ -41,17 +41,17 @@ Independente da opção escolhida, haverá necessidade de, agora ou depois, apre
 experimentos do modelo no MLflow. 
 Para alcançar esse objetivo, leia a [documentação oficial do MLflow](https://mlflow.org/docs/latest/index.html).
 
-Segue abaixo, um exemplo simples de como registrar os experimentos de um modelo construído com o [scikit-learn](https://scikit-learn.org) 
-utilizando o MLflow.
+Segue abaixo, um exemplo simples de como utilizar o MLflow para registrar os experimentos de um modelo construído com o [scikit-learn](https://scikit-learn.org).
 
 ```python
 import os
 import mlflow.sklearn  # Importa o sklearn através do MLflow
 import pickle  # Para gerar um artefato de exemplo
 
-# Obs.: Utilize as duas linhas abaixo, exatamente como apresentadas, para configurar o parâmetro 'Tracking URI' do MLflow 
-# nos seus códigos de testes. Dessa forma, quando subir para produção não haverá necessidade de modificá-las, pois lá
-# o parâmetro 'Tracking URI' será obtido diretamente através da variável de ambiente 'MLFLOW_TRACKING_URI'.
+# Obs.: Utilize as duas linhas abaixo, exatamente como apresentadas, para configurar o 
+# parâmetro 'Tracking URI' do MLflow nos seus códigos de testes. Dessa forma, quando subir 
+# para produção não haverá necessidade de modificá-las, pois lá o parâmetro 'Tracking URI' 
+# será obtido diretamente através da variável de ambiente 'MLFLOW_TRACKING_URI'.
 if os.environ.get('MLFLOW_TRACKING_URI') is None:
     mlflow.set_tracking_uri('sqlite:///teste_mlflow.db')
 
@@ -61,7 +61,8 @@ mlflow.set_experiment(experiment_name="Teste_sklearn")
 # Inicia uma execução do experimento (um experimento pode possuir várias execuções)
 mlflow.start_run(run_name="t1", description="teste 1")
 
-# Registra algumas informações adicionais no experimento (coloque as informações que julgar necessárias, no formato dict)
+# Registra algumas informações adicionais no experimento (coloque as informações que julgar 
+# necessárias, no formato dict)
 tags = {"Projeto": "Teste", "team": "ML", "util": "Informação útil"}
 mlflow.set_tags(tags)
 
@@ -82,12 +83,14 @@ clf = clf.fit(X, Y)
 '''Fim do exemplo de modelo.'''
 
 '''
-Salva um artefato de seu interesse no MLflow (podem ser arquivos em diversos formatos: txt, pkl, png, jpeg, etc.).
-Exemplos de artefato: gráficos, objetos persistidos com pickle, enfim, tudo que for relevante e/ou necessário para
-que o modelo funcione e/ou para análise das execuções.
+Salva um artefato de seu interesse no MLflow (podem ser arquivos em diversos formatos: txt, 
+pkl, png, jpeg, etc.). Exemplos de artefatos: gráficos, objetos persistidos com pickle, 
+enfim, tudo que for relevante e/ou necessário para que o modelo funcione e/ou para análise 
+das execuções.
 '''
 # Cria um aterfato de teste no formato pickle (obs.: todas as classes da lib tem os métodos 
-# 'convert_artifact_to_pickle' e 'convert_artifact_to_object' para auxiliar na persistência dos artefatos)
+# 'convert_artifact_to_pickle' e 'convert_artifact_to_object' para auxiliar na persistência 
+# dos artefatos)
 artefato = {"t": 1}
 caminho_artefato = "artefato.pkl"
 with open(caminho_artefato, 'wb') as arq:
@@ -108,7 +111,12 @@ Se você quiser testar um registro de experimento através do código acima, fa�
 - Copie e cole o código acima em um editor de texto simples e salve com o nome 'testeml.py' dentro da pasta criada;
 - Abra um prompt de comando ou terminal e entre na pasta criada;
 - Crie e ative um ambiente virtual Python, conforme instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment);
+- Atualize o pip;
 - Instale os pacotes mlflow, sklearn, matplotlib e numpy;
+
+```bash
+pip install --upgrade pip
+```
 
 ```bash
 pip install mlflow==2.5.0 scikit-learn==1.3.0 matplotlib==3.7.2 numpy==1.25.2
@@ -131,12 +139,12 @@ de dados [SQlite](https://www.sqlite.org), que serve para armazenar os modelos q
 
 - Inicie o servidor do MLflow;
 
-Perceba que a pasta '**mlruns**' e o arquivo '**teste_mlflow.db**' foram passados como parâmetros na hora de iniciar o 
+Perceba que a pasta '**mlruns**' e o arquivo '**teste_mlflow.db**' são passados como parâmetros na hora de iniciar o 
 servidor, para que o experimento de teste possa ser visualizado. Portanto, é **mandatório** sempre iniciar o servidor do
 MLflow **de dentro da pasta** onde se encontra o código que fará o registro dos artefatos e dos experimentos/modelos.
 
 **DICA**: Abra um outro prompt de comando ou terminal diferente; entre na pasta onde se encontra o código para registro 
-dos experimentos/modelo; execute o comando para iniciar o servidor do MLflow de dentro desta pasta. Pois assim, você 
+dos experimentos/modelo; **ative** o ambiente virtual criado anteriormente; execute o comando para iniciar o servidor do MLflow de dentro desta pasta. Pois assim, você 
 conseguirá rodar o código e já observar os resultados sem ter que parar o servidor para liberar o prompt ou terminal.
 ```bash
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
@@ -175,7 +183,7 @@ descrito no passo 3. Siga as instruções abaixo para registrar o modelo:
 
 - Caso o servidor do MLflow não esteja rodando, entre na pasta onde o **script que salvará o experimento** (código 
 desenvolvido para criação do modelo) se encontra; 
-- Ative o ambiente virtual Python. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
+- Ative o ambiente virtual Python criado anteriormente, ou se preferir, crie um novo. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
 - Inicie o servidor do MLflow;
 ```bash
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
@@ -242,7 +250,7 @@ git clone https://github.com/prodest/mllibprodest.git
 de sua preferência (não trabalhe na pasta do repositório).
 
 
-- Organize o código responsável pelo treino do modelo. Copie todos os *scripts* que são utilizados para treinar o modelo 
+- **Organize o código responsável pelo treino do modelo**. Copie todos os *scripts* que são utilizados para treinar o modelo 
 para a pasta '**training_model**' (**não** incluir a pasta '**env**' nem arquivos desnecessários) e altere o *script* 
 '**train.py**' para que ele chame o *script* principal do modelo, ou, se preferir, apague  o *script* 'train.py' e 
 renomeie o *script* principal do modelo para 'train.py'.
@@ -264,8 +272,10 @@ Antes de iniciar a implementação das interfaces, é importante criar um ambien
 - Abra um prompt de comando ou terminal;
 - Entre na pasta para onde você copiou o conteúdo da pasta '**templates**'; 
 - Entre na pasta '**worker_pub**', crie e ative um ambiente virtual Python, conforme instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
+- Atualize o pip;
 - Instale a lib para o worker_pub;
 ```bash
+pip install --upgrade pip
 pip install mllibprodest
 ```
 - Feche o prompt de comando ou terminal.
@@ -275,8 +285,10 @@ pip install mllibprodest
 - Abra **outro** prompt de comando ou terminal (**Não** aproveite o anterior de forma alguma, pois dará errado!);
 - Entre na pasta para onde você copiou o conteúdo da pasta '**templates**'; 
 - Entre na pasta '**worker_retrain**', crie e ative **outro** ambiente virtual Python;
+- Atualize o pip;
 - Instale a lib para o worker_retrain;
 ```bash
+pip install --upgrade pip
 pip install mllibprodest
 ```
 - Feche o prompt de comando ou terminal.
@@ -307,7 +319,7 @@ treinamento do modelo. Exemplo: {'features': 'nome_arquivo_features', 'targets':
 retreinado. Por exemplo, você poderia definir a métrica acurácia mínima e caso o modelo que estiver em produção, ao ser 
 avaliado, não estiver atingindo o valor dessa métrica, será um indicativo de que ele precisa ser retreinado. Outro exemplo 
 claro da necessidade de retreinamento é quando um modelo de classificação é treinado para predizer um conjunto de *labels* 
-e por um motivo qualquer surgem novos *labels*, nesse caso o modelo não saberá predizer estes *labels* e necessitará 
+e por um motivo qualquer surgem novos *labels*. Nesse caso, o modelo não saberá predizer estes *labels* e necessitará 
 ser retreinado em um dataset atualizado com os novos *labels*. Exemplo: {'acuracia_minima': 0.94, 
 'labels_presentes_no_treino': ['gato', 'cachorro']}.
 
@@ -339,10 +351,8 @@ Leia os comentários, eles te guiarão na configuração.
 **ModelPublicationInterfaceRETRAIN** através da classe **ModeloRETRAIN**. Leia os comentários, eles te guiarão na 
 implementação.
 
-
 - Abra o arquivo '**params.conf**', que se encontra na pasta '**worker_retrain**', e informe os parâmetros dos modelos.
 Leia os comentários, eles te guiarão na configuração.
-
 
 **NOTA**: É possível publicar um ou mais modelos utilizando uma mesma **Stack**. Para isso, basta fazer as devidas
 configurações de cada um dos modelos nos arquivos '**params.conf**' constantes nas pastas **worker_pub** e **worker_retrain**.
@@ -397,6 +407,10 @@ Leia atentamente as mensagens e caso exista alguma inconsistência no teste, ate
 Antes de enviar os códigos, certifique-se que eles estão funcionando de acordo com as regras estabelecidas e que os 
 arquivos com os *requirements* foram gerados corretamente. Se ocorrer algum erro que impeça a publicação, entraremos 
 em contato para informar o ocorrido e fornecer as informações sobre o erro. 
+
+**DICA:** **Não** é obrigatório, porém se você quiser testar o modelo implementado utilizando a Stack, 
+antes de disponibilizá-lo para publicação; clone o repositório da [Stack de ML do Prodest](https://github.com/prodest/prodest-ml-stack)
+(versão standalone) e siga as instruções para fazer o *deploy* da Stack e o teste do modelo.
 
 Para disponibilizar o modelo para publicação:
 

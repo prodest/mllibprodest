@@ -3,6 +3,7 @@
 # necessárias para publicação do modelo.
 # ----------------------------------------------------------------------------------------------------
 import sys
+import logging
 from mllibprodest.utils import validate_params
 from mllibprodest.validators.test import Test
 
@@ -15,6 +16,10 @@ if __name__ == "__main__":
 
     Uso: python test_pub.py --mlruns_path="caminho completo para a pasta mlruns"
     """
+    # Evita a propagação dos logs na tela ao realizar os testes
+    logger = logging.getLogger("LOG_TESTS")
+    logger.propagate = False
+    
     params = sys.argv
     mlruns_path = ""
 
