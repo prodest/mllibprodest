@@ -261,8 +261,8 @@ class Test:
                 print(f"\n{RED}  *** O TESTE FALHOU! ***{RESET}\n")
                 exit(1)
 
-        msg = "AVISO: Os métodos 'predict' e 'evaluate' não serão testados porque necessitam de dados que " \
-              "são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
+        msg = "AVISO: Os métodos 'predict', 'evaluate' e 'get_feedback' não serão testados porque necessitam de " \
+              "dados que são específicos para cada implementação.\nCaso deseje testar estes métodos, faça o seguinte:\n"
         self.__logger.info(msg + self.__howto_msg)
         print(f"\n\n{msg + self.__howto_msg}\n")
 

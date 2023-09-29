@@ -30,7 +30,9 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 hasattr(subclass, 'predict') and
                 callable(subclass.predict) and
                 hasattr(subclass, 'evaluate') and
-                callable(subclass.evaluate) or
+                callable(subclass.evaluate) and
+                hasattr(subclass, 'get_feedback') and
+                callable(subclass.get_feedback) or
                 NotImplemented)
 
     @abc.abstractmethod
@@ -75,6 +77,16 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
             :return: Dicionário com as métricas calculadas.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_feedback(self, y_pred: list, y_true: list) -> dict:
+        """
+        Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.
+            :param y_pred: Lista com os labels preditos.
+            :param y_true: Lista com os labels verdadeiros.
+            :return: Dicionário com o feedback.
         """
         raise NotImplementedError
 
