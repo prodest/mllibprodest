@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 import minio
 import logging
+from logging.handlers import RotatingFileHandler
 import configparser
 from pathlib import Path
 from os import makedirs
@@ -31,11 +32,11 @@ def make_log(filename: str) -> logging.Logger:
         logging.basicConfig(level=logging.CRITICAL)
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.INFO)
-        filehandler = logging.FileHandler(log_file_path, mode='a')
-        filehandler.setLevel(logging.INFO)
+        rotatehandler = RotatingFileHandler(log_file_path, mode='a', maxBytes=10485760, backupCount=5)
+        rotatehandler.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s | %(funcName)s: %(message)s')
-        filehandler.setFormatter(formatter)
-        logger.addHandler(filehandler)
+        rotatehandler.setFormatter(formatter)
+        logger.addHandler(rotatehandler)
     except FileNotFoundError:
         msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
         raise FileNotFoundError(msg) from None
