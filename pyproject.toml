@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mllibprodest"
-version = "1.6.7"
+version = "1.7.0"
 license = {text = "GPLv3"}
 authors = [
   { name="Instituto de Tecnologia da Informação e Comunicação do Espírito Santo (PRODEST)", email="prodest@prodest.es.gov.br" },
