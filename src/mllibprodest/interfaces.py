@@ -52,41 +52,43 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_model_info(self) -> dict:
+    def get_model_info(self) -> dict | str:
         """
         Obtém informações sobre o modelo que está em produção.
-            :return: Dicionário com informações sobre o modelo.
+            :return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma 'string' com a mensagem de
+                     erro.
         """
         raise NotImplementedError
 
     @abc.abstractmethod
-    def predict(self, dataset: list) -> list:
+    def predict(self, dataset: list) -> list | str:
         """
         Faz predições utilizando o modelo que está em produção.
             :param dataset: Lista com os dados utilizados como features para realizar a predição.
-            :return: Lista com os labels preditos.
+            :return: Lista com os labels preditos. Em caso de erro, retorne uma 'string' com a mensagem de erro.
         """
         raise NotImplementedError
 
     @abc.abstractmethod
-    def evaluate(self, data_features: list, data_targets: list) -> dict:
+    def evaluate(self, data_features: list, data_targets: list) -> dict | str:
         """
         Calcula as métricas para avaliação do modelo.
             :param data_features: Lista com os dados utilizados como features para realizar o cálculo.
             :param data_targets: Lista com os targets correspondentes às features para realizar o cálculo.
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
-            :return: Dicionário com as métricas calculadas.
+            :return: Dicionário com as métricas calculadas. Em caso de erro, retorne uma 'string' com a mensagem de
+                     erro.
         """
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_feedback(self, y_pred: list, y_true: list) -> dict:
+    def get_feedback(self, y_pred: list, y_true: list) -> dict | str:
         """
         Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.
             :param y_pred: Lista com os labels preditos.
             :param y_true: Lista com os labels verdadeiros.
-            :return: Dicionário com o feedback.
+            :return: Dicionário com o feedback. Em caso de erro, retorne uma 'string' com a mensagem de erro.
         """
         raise NotImplementedError
 
