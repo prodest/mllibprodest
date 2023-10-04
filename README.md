@@ -111,15 +111,15 @@ Se você quiser testar um registro de experimento através do código acima, fa�
 - Copie e cole o código acima em um editor de texto simples e salve com o nome 'testeml.py' dentro da pasta criada;
 - Abra um prompt de comando ou terminal e entre na pasta criada;
 - Crie e ative um ambiente virtual Python, conforme instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment);
-- Atualize o pip;
+- Atualize o pip e o setuptools;
 - Instale os pacotes mlflow, sklearn, matplotlib e numpy;
 
 ```bash
-pip install --upgrade pip
+pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==2.5.0 scikit-learn==1.3.0 matplotlib==3.7.2 numpy==1.25.2
+pip install mlflow==2.7.1 scikit-learn==1.3.0 matplotlib==3.8.0 numpy==1.26.0
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
@@ -128,10 +128,10 @@ python testeml.py
 Cabe observar que: depois de rodar o código de teste, foi criada uma pasta chamada '**mlruns**', dentro da pasta de 
 testes, que serve para armazenar os artefatos gerados pelo código e que são apresentados na interface do MLflow. 
 Abaixo segue uma listagem do conteúdo gerado pelo código de teste (obs.: essa parte do caminho vai ser diferente de 
-acordo com cada experimento/execução realizados: '1/9d01359d68034063867613196395388e'. O conteúdo da pasta também será 
+acordo com cada experimento/execução realizados: '1/1fb6ac45b0ca4babb3bacb48320c790b'. O conteúdo da pasta também será 
 diferente de acordo com cada modelo).
 ```bash
-(env) user:~/testes/mlruns/1/9d01359d68034063867613196395388e/artifacts$ dir
+(env) user:~/teste/mlruns/1/1fb6ac45b0ca4babb3bacb48320c790b/artifacts/artifacts$ dir
 artefato.pkl  estimator.html  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
 ```
 Dentro da pasta criada para testes também foi gerado um arquivo chamado '**teste_mlflow.db**', que é um pequeno banco 
@@ -183,7 +183,7 @@ descrito no passo 3. Siga as instruções abaixo para registrar o modelo:
 
 - Caso o servidor do MLflow não esteja rodando, entre na pasta onde o **script que salvará o experimento** (código 
 desenvolvido para criação do modelo) se encontra; 
-- Ative o ambiente virtual Python criado anteriormente, ou se preferir, crie um novo. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
+- Ative o ambiente virtual Python criado para rodar os experimentos, ou se preferir, crie um novo. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
 - Inicie o servidor do MLflow;
 ```bash
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
@@ -272,10 +272,10 @@ Antes de iniciar a implementação das interfaces, é importante criar um ambien
 - Abra um prompt de comando ou terminal;
 - Entre na pasta para onde você copiou o conteúdo da pasta '**templates**'; 
 - Entre na pasta '**worker_pub**', crie e ative um ambiente virtual Python, conforme instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment); 
-- Atualize o pip;
+- Atualize o pip e o setuptools;
 - Instale a lib para o worker_pub;
 ```bash
-pip install --upgrade pip
+pip install --upgrade pip setuptools
 pip install mllibprodest
 ```
 - Feche o prompt de comando ou terminal.
@@ -285,10 +285,10 @@ pip install mllibprodest
 - Abra **outro** prompt de comando ou terminal (**Não** aproveite o anterior de forma alguma, pois dará errado!);
 - Entre na pasta para onde você copiou o conteúdo da pasta '**templates**'; 
 - Entre na pasta '**worker_retrain**', crie e ative **outro** ambiente virtual Python;
-- Atualize o pip;
+- Atualize o pip e o setuptools;
 - Instale a lib para o worker_retrain;
 ```bash
-pip install --upgrade pip
+pip install --upgrade pip setuptools
 pip install mllibprodest
 ```
 - Feche o prompt de comando ou terminal.
@@ -408,9 +408,9 @@ Antes de enviar os códigos, certifique-se que eles estão funcionando de acordo
 arquivos com os *requirements* foram gerados corretamente. Se ocorrer algum erro que impeça a publicação, entraremos 
 em contato para informar o ocorrido e fornecer as informações sobre o erro. 
 
-**DICA:** **Não** é obrigatório, porém se você quiser testar o modelo implementado utilizando a Stack, 
-antes de disponibilizá-lo para publicação; clone o repositório da [Stack de ML do Prodest](https://github.com/prodest/prodest-ml-stack)
-(versão standalone) e siga as instruções para fazer o *deploy* da Stack e o teste do modelo.
+**DICA:** **Não** é obrigatório, porém se você quiser testar o modelo implementado, antes de disponibilizá-lo para 
+publicação; clone o repositório da [Stack de ML do Prodest](https://github.com/prodest/prodest-ml-stack)
+(versão standalone) e siga as instruções para fazer o *deploy* da Stack e o teste do seu modelo utilizando ela.
 
 Para disponibilizar o modelo para publicação:
 
