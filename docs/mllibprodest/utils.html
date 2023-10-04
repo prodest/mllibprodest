@@ -31,6 +31,7 @@
 # ----------------------------------------------------------------------------------------------------
 import minio
 import logging
+from logging.handlers import RotatingFileHandler
 import configparser
 from pathlib import Path
 from os import makedirs
@@ -60,11 +61,11 @@ def make_log(filename: str) -&gt; logging.Logger:
         logging.basicConfig(level=logging.CRITICAL)
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.INFO)
-        filehandler = logging.FileHandler(log_file_path, mode=&#39;a&#39;)
-        filehandler.setLevel(logging.INFO)
+        rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
+        rotatehandler.setLevel(logging.INFO)
         formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
-        filehandler.setFormatter(formatter)
-        logger.addHandler(filehandler)
+        rotatehandler.setFormatter(formatter)
+        logger.addHandler(rotatehandler)
     except FileNotFoundError:
         msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
         raise FileNotFoundError(msg) from None
@@ -520,11 +521,11 @@ Também retorna um logger para gravação dos logs.</p>
         logging.basicConfig(level=logging.CRITICAL)
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.INFO)
-        filehandler = logging.FileHandler(log_file_path, mode=&#39;a&#39;)
-        filehandler.setLevel(logging.INFO)
+        rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
+        rotatehandler.setLevel(logging.INFO)
         formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
-        filehandler.setFormatter(formatter)
-        logger.addHandler(filehandler)
+        rotatehandler.setFormatter(formatter)
+        logger.addHandler(rotatehandler)
     except FileNotFoundError:
         msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
         raise FileNotFoundError(msg) from None

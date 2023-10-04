@@ -58,7 +58,9 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
-                callable(subclass.evaluate) or
+                callable(subclass.evaluate) and
+                hasattr(subclass, &#39;get_feedback&#39;) and
+                callable(subclass.get_feedback) or
                 NotImplemented)
 
     @abc.abstractmethod
@@ -80,26 +82,27 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_model_info(self) -&gt; dict:
+    def get_model_info(self) -&gt; dict | str:
         &#34;&#34;&#34;
         Obtém informações sobre o modelo que está em produção.
 
-            @return: Dicionário com informações sobre o modelo.
+            @return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                     erro.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
-    def predict(self, dataset: list) -&gt; list:
+    def predict(self, dataset: list) -&gt; list | str:
         &#34;&#34;&#34;
         Faz predições utilizando o modelo que está em produção.
 
             @param dataset: Lista com os dados utilizados como features para realizar a predição.
-            @return: Lista com os labels preditos.
+            @return: Lista com os labels preditos. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
-    def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
+    def evaluate(self, data_features: list, data_targets: list) -&gt; dict | str:
         &#34;&#34;&#34;
         Calcula as métricas para avaliação do modelo.
 
@@ -107,7 +110,19 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
             @param data_targets: Lista com os targets correspondentes às features para realizar o cálculo.
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
-            @return: Dicionário com as métricas calculadas.
+            @return: Dicionário com as métricas calculadas. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                     erro.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_feedback(self, y_pred: list, y_true: list) -&gt; dict | str:
+        &#34;&#34;&#34;
+        Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.
+
+            @param y_pred: Lista com os labels preditos.
+            @param y_true: Lista com os labels verdadeiros.
+            @return: Dicionário com o feedback. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -280,7 +295,9 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
-                callable(subclass.evaluate) or
+                callable(subclass.evaluate) and
+                hasattr(subclass, &#39;get_feedback&#39;) and
+                callable(subclass.get_feedback) or
                 NotImplemented)
 
     @abc.abstractmethod
@@ -302,26 +319,27 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_model_info(self) -&gt; dict:
+    def get_model_info(self) -&gt; dict | str:
         &#34;&#34;&#34;
         Obtém informações sobre o modelo que está em produção.
 
-            @return: Dicionário com informações sobre o modelo.
+            @return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                     erro.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
-    def predict(self, dataset: list) -&gt; list:
+    def predict(self, dataset: list) -&gt; list | str:
         &#34;&#34;&#34;
         Faz predições utilizando o modelo que está em produção.
 
             @param dataset: Lista com os dados utilizados como features para realizar a predição.
-            @return: Lista com os labels preditos.
+            @return: Lista com os labels preditos. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
         &#34;&#34;&#34;
         raise NotImplementedError
 
     @abc.abstractmethod
-    def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
+    def evaluate(self, data_features: list, data_targets: list) -&gt; dict | str:
         &#34;&#34;&#34;
         Calcula as métricas para avaliação do modelo.
 
@@ -329,7 +347,19 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
             @param data_targets: Lista com os targets correspondentes às features para realizar o cálculo.
                                  É imprescindível que a posição de cada elemento da lista de features corresponda à
                                  resposta esperada para cada elemento da lista de targets.
-            @return: Dicionário com as métricas calculadas.
+            @return: Dicionário com as métricas calculadas. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                     erro.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_feedback(self, y_pred: list, y_true: list) -&gt; dict | str:
+        &#34;&#34;&#34;
+        Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.
+
+            @param y_pred: Lista com os labels preditos.
+            @param y_true: Lista com os labels verdadeiros.
+            @return: Dicionário com o feedback. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
         &#34;&#34;&#34;
         raise NotImplementedError</code></pre>
 </details>
@@ -340,7 +370,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 <h3>Methods</h3>
 <dl>
 <dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate"><code class="name flex">
-<span>def <span class="ident">evaluate</span></span>(<span>self, data_features: list, data_targets: list) ‑> dict</span>
+<span>def <span class="ident">evaluate</span></span>(<span>self, data_features: list, data_targets: list) ‑> dict | str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Calcula as métricas para avaliação do modelo.</p>
@@ -348,14 +378,15 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 @param data_targets: Lista com os targets correspondentes às features para realizar o cálculo.
                      É imprescindível que a posição de cada elemento da lista de features corresponda à
                      resposta esperada para cada elemento da lista de targets.
-@return: Dicionário com as métricas calculadas.
+@return: Dicionário com as métricas calculadas. Em caso de erro, retorne uma 'string' com a mensagem de
+         erro.
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abc.abstractmethod
-def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
+def evaluate(self, data_features: list, data_targets: list) -&gt; dict | str:
     &#34;&#34;&#34;
     Calcula as métricas para avaliação do modelo.
 
@@ -363,28 +394,56 @@ def evaluate(self, data_features: list, data_targets: list) -&gt; dict:
         @param data_targets: Lista com os targets correspondentes às features para realizar o cálculo.
                              É imprescindível que a posição de cada elemento da lista de features corresponda à
                              resposta esperada para cada elemento da lista de targets.
-        @return: Dicionário com as métricas calculadas.
+        @return: Dicionário com as métricas calculadas. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                 erro.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info"><code class="name flex">
-<span>def <span class="ident">get_model_info</span></span>(<span>self) ‑> dict</span>
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_feedback"><code class="name flex">
+<span>def <span class="ident">get_feedback</span></span>(<span>self, y_pred: list, y_true: list) ‑> dict | str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Obtém informações sobre o modelo que está em produção.</p>
-<pre><code>@return: Dicionário com informações sobre o modelo.
+<div class="desc"><p>Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.</p>
+<pre><code>@param y_pred: Lista com os labels preditos.
+@param y_true: Lista com os labels verdadeiros.
+@return: Dicionário com o feedback. Em caso de erro, retorne uma 'string' com a mensagem de erro.
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abc.abstractmethod
-def get_model_info(self) -&gt; dict:
+def get_feedback(self, y_pred: list, y_true: list) -&gt; dict | str:
+    &#34;&#34;&#34;
+    Obtém um feedback relacionado às métricas de interesse calculadas para o modelo.
+
+        @param y_pred: Lista com os labels preditos.
+        @param y_true: Lista com os labels verdadeiros.
+        @return: Dicionário com o feedback. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info"><code class="name flex">
+<span>def <span class="ident">get_model_info</span></span>(<span>self) ‑> dict | str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtém informações sobre o modelo que está em produção.</p>
+<pre><code>@return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma 'string' com a mensagem de
+         erro.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def get_model_info(self) -&gt; dict | str:
     &#34;&#34;&#34;
     Obtém informações sobre o modelo que está em produção.
 
-        @return: Dicionário com informações sobre o modelo.
+        @return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
+                 erro.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
@@ -432,24 +491,24 @@ def get_model_provider_name(self) -&gt; str:
 </details>
 </dd>
 <dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict"><code class="name flex">
-<span>def <span class="ident">predict</span></span>(<span>self, dataset: list) ‑> list</span>
+<span>def <span class="ident">predict</span></span>(<span>self, dataset: list) ‑> list | str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Faz predições utilizando o modelo que está em produção.</p>
 <pre><code>@param dataset: Lista com os dados utilizados como features para realizar a predição.
-@return: Lista com os labels preditos.
+@return: Lista com os labels preditos. Em caso de erro, retorne uma 'string' com a mensagem de erro.
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abc.abstractmethod
-def predict(self, dataset: list) -&gt; list:
+def predict(self, dataset: list) -&gt; list | str:
     &#34;&#34;&#34;
     Faz predições utilizando o modelo que está em produção.
 
         @param dataset: Lista com os dados utilizados como features para realizar a predição.
-        @return: Lista com os labels preditos.
+        @return: Lista com os labels preditos. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de erro.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
@@ -877,6 +936,7 @@ def retrain(self, production_model_name: str, production_params: dict, experimen
 <h4><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF">ModelPublicationInterfaceCLF</a></code></h4>
 <ul class="">
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.evaluate">evaluate</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_feedback" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_feedback">get_feedback</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info">get_model_info</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name">get_model_name</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name">get_model_provider_name</a></code></li>
