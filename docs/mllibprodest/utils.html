@@ -36,43 +36,62 @@ import configparser
 from pathlib import Path
 from os import makedirs
 from dotenv import load_dotenv, find_dotenv
+from os import environ as env
 
 
 def make_log(filename: str) -&gt; logging.Logger:
     &#34;&#34;&#34;
-    Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-    Também retorna um logger para gravação dos logs.
+    Cria um logger para gerar logs na console ou gravar em um arquivo. Se o arquivo já existir, inicia a gravação a
+    partir do final dele.
 
-        @param filename: Nome do arquivo de logs.
-        @return: Um logger para gravação dos logs.
+        @param filename: Nome do arquivo de logs (caso o log seja gravado em arquivo).
+        @return: Um logger para geração dos logs.
     &#34;&#34;&#34;
-    # Se a pasta de logs não existir, cria
-    try:
-        makedirs(&#34;logs&#34;, exist_ok=True)
-    except PermissionError:
-        msg = &#34;Erro ao criar a pasta &#39;logs&#39;. Permissão de escrita negada!&#34;
-        raise PermissionError(msg) from None
+    # Para controlar a gravação de logs em arquivo ou não
+    stack_log_output = env.get(&#39;STACK_LOG_OUTPUT&#39;)
 
+    if not stack_log_output:
+        stack_log_output = &#34;file&#34;
+
+    # Configurações básicas
     logger_name = filename.split(&#34;.&#34;)[0]
-    log_file_path = str(Path(&#34;logs&#34;) / filename)
+    logging.basicConfig(level=logging.CRITICAL)
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
 
-    # Configuração de parâmetros para geração de logs
-    try:
-        logging.basicConfig(level=logging.CRITICAL)
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.INFO)
-        rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
-        rotatehandler.setLevel(logging.INFO)
-        formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
-        rotatehandler.setFormatter(formatter)
-        logger.addHandler(rotatehandler)
-    except FileNotFoundError:
-        msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
-        raise FileNotFoundError(msg) from None
-    except PermissionError:
-        msg = f&#34;Não foi possível criar/acessar o arquivo de log no caminho &#39;{log_file_path}&#39;. Permissão de &#34; \
-              f&#34;escrita/leitura negada. Programa abortado!&#34;
-        raise PermissionError(msg) from None
+    if stack_log_output == &#34;console&#34;:
+        logger.propagate = False
+        consolehandler = logging.StreamHandler()
+        consolehandler.setLevel(logging.INFO)
+        consolehandler.setFormatter(formatter)
+        logger.addHandler(consolehandler)
+    elif stack_log_output == &#34;file&#34;:
+        # Se a pasta de logs não existir, cria
+        try:
+            makedirs(&#34;logs&#34;, exist_ok=True)
+        except PermissionError:
+            msg = &#34;Erro ao criar a pasta &#39;logs&#39;. Permissão de escrita negada!&#34;
+            raise PermissionError(msg) from None
+
+        log_file_path = str(Path(&#34;logs&#34;) / filename)
+
+        # Configuração de parâmetros para gravação de logs
+        try:
+            rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
+            rotatehandler.setLevel(logging.INFO)
+            rotatehandler.setFormatter(formatter)
+            logger.addHandler(rotatehandler)
+        except FileNotFoundError:
+            msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
+            raise FileNotFoundError(msg) from None
+        except PermissionError:
+            msg = f&#34;Não foi possível criar/acessar o arquivo de log no caminho &#39;{log_file_path}&#39;. Permissão de &#34; \
+                f&#34;escrita/leitura negada. Programa abortado!&#34;
+            raise PermissionError(msg) from None
+    else:
+        raise ValueError(f&#34;A variável de ambiente &#39;STACK_LOG_OUTPUT&#39; contém um tipo de saída do log incorreto &#34;
+                         f&#34;(&#39;{stack_log_output}&#39;). Os possíveis valores são: &#39;console&#39; ou &#39;file&#39;.&#34;)
 
     return logger
 
@@ -489,10 +508,10 @@ def get_models_params(path: str = &#34;&#34;) -&gt; dict:
 <span>def <span class="ident">make_log</span></span>(<span>filename: str) ‑> logging.Logger</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-Também retorna um logger para gravação dos logs.</p>
-<pre><code>@param filename: Nome do arquivo de logs.
-@return: Um logger para gravação dos logs.
+<div class="desc"><p>Cria um logger para gerar logs na console ou gravar em um arquivo. Se o arquivo já existir, inicia a gravação a
+partir do final dele.</p>
+<pre><code>@param filename: Nome do arquivo de logs (caso o log seja gravado em arquivo).
+@return: Um logger para geração dos logs.
 </code></pre></div>
 <details class="source">
 <summary>
@@ -500,39 +519,57 @@ Também retorna um logger para gravação dos logs.</p>
 </summary>
 <pre><code class="python">def make_log(filename: str) -&gt; logging.Logger:
     &#34;&#34;&#34;
-    Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-    Também retorna um logger para gravação dos logs.
+    Cria um logger para gerar logs na console ou gravar em um arquivo. Se o arquivo já existir, inicia a gravação a
+    partir do final dele.
 
-        @param filename: Nome do arquivo de logs.
-        @return: Um logger para gravação dos logs.
+        @param filename: Nome do arquivo de logs (caso o log seja gravado em arquivo).
+        @return: Um logger para geração dos logs.
     &#34;&#34;&#34;
-    # Se a pasta de logs não existir, cria
-    try:
-        makedirs(&#34;logs&#34;, exist_ok=True)
-    except PermissionError:
-        msg = &#34;Erro ao criar a pasta &#39;logs&#39;. Permissão de escrita negada!&#34;
-        raise PermissionError(msg) from None
+    # Para controlar a gravação de logs em arquivo ou não
+    stack_log_output = env.get(&#39;STACK_LOG_OUTPUT&#39;)
 
+    if not stack_log_output:
+        stack_log_output = &#34;file&#34;
+
+    # Configurações básicas
     logger_name = filename.split(&#34;.&#34;)[0]
-    log_file_path = str(Path(&#34;logs&#34;) / filename)
+    logging.basicConfig(level=logging.CRITICAL)
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
 
-    # Configuração de parâmetros para geração de logs
-    try:
-        logging.basicConfig(level=logging.CRITICAL)
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.INFO)
-        rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
-        rotatehandler.setLevel(logging.INFO)
-        formatter = logging.Formatter(&#39;%(asctime)s - %(levelname)s | %(funcName)s: %(message)s&#39;)
-        rotatehandler.setFormatter(formatter)
-        logger.addHandler(rotatehandler)
-    except FileNotFoundError:
-        msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
-        raise FileNotFoundError(msg) from None
-    except PermissionError:
-        msg = f&#34;Não foi possível criar/acessar o arquivo de log no caminho &#39;{log_file_path}&#39;. Permissão de &#34; \
-              f&#34;escrita/leitura negada. Programa abortado!&#34;
-        raise PermissionError(msg) from None
+    if stack_log_output == &#34;console&#34;:
+        logger.propagate = False
+        consolehandler = logging.StreamHandler()
+        consolehandler.setLevel(logging.INFO)
+        consolehandler.setFormatter(formatter)
+        logger.addHandler(consolehandler)
+    elif stack_log_output == &#34;file&#34;:
+        # Se a pasta de logs não existir, cria
+        try:
+            makedirs(&#34;logs&#34;, exist_ok=True)
+        except PermissionError:
+            msg = &#34;Erro ao criar a pasta &#39;logs&#39;. Permissão de escrita negada!&#34;
+            raise PermissionError(msg) from None
+
+        log_file_path = str(Path(&#34;logs&#34;) / filename)
+
+        # Configuração de parâmetros para gravação de logs
+        try:
+            rotatehandler = RotatingFileHandler(log_file_path, mode=&#39;a&#39;, maxBytes=10485760, backupCount=5)
+            rotatehandler.setLevel(logging.INFO)
+            rotatehandler.setFormatter(formatter)
+            logger.addHandler(rotatehandler)
+        except FileNotFoundError:
+            msg = f&#34;Não foi possível encontrar/criar o arquivo de log no caminho &#39;{log_file_path}&#39;. Programa abortado!&#34;
+            raise FileNotFoundError(msg) from None
+        except PermissionError:
+            msg = f&#34;Não foi possível criar/acessar o arquivo de log no caminho &#39;{log_file_path}&#39;. Permissão de &#34; \
+                f&#34;escrita/leitura negada. Programa abortado!&#34;
+            raise PermissionError(msg) from None
+    else:
+        raise ValueError(f&#34;A variável de ambiente &#39;STACK_LOG_OUTPUT&#39; contém um tipo de saída do log incorreto &#34;
+                         f&#34;(&#39;{stack_log_output}&#39;). Os possíveis valores são: &#39;console&#39; ou &#39;file&#39;.&#34;)
 
     return logger</code></pre>
 </details>

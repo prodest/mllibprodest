@@ -8,42 +8,61 @@ import configparser
 from pathlib import Path
 from os import makedirs
 from dotenv import load_dotenv, find_dotenv
+from os import environ as env
 
 
 def make_log(filename: str) -> logging.Logger:
     """
-    Cria um arquivo para geração de logs. Se o mesmo já existir, inicia a gravação a partir do final desse arquivo.
-    Também retorna um logger para gravação dos logs.
-        :param filename: Nome do arquivo de logs.
-        :return: Um logger para gravação dos logs.
+    Cria um logger para gerar logs na console ou gravar em um arquivo. Se o arquivo já existir, inicia a gravação a
+    partir do final dele.
+        :param filename: Nome do arquivo de logs (caso o log seja gravado em arquivo).
+        :return: Um logger para geração dos logs.
     """
-    # Se a pasta de logs não existir, cria
-    try:
-        makedirs("logs", exist_ok=True)
-    except PermissionError:
-        msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
-        raise PermissionError(msg) from None
+    # Para controlar a gravação de logs em arquivo ou não
+    stack_log_output = env.get('STACK_LOG_OUTPUT')
 
+    if not stack_log_output:
+        stack_log_output = "file"
+
+    # Configurações básicas
     logger_name = filename.split(".")[0]
-    log_file_path = str(Path("logs") / filename)
+    logging.basicConfig(level=logging.CRITICAL)
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s | %(funcName)s: %(message)s')
 
-    # Configuração de parâmetros para geração de logs
-    try:
-        logging.basicConfig(level=logging.CRITICAL)
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.INFO)
-        rotatehandler = RotatingFileHandler(log_file_path, mode='a', maxBytes=10485760, backupCount=5)
-        rotatehandler.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s | %(funcName)s: %(message)s')
-        rotatehandler.setFormatter(formatter)
-        logger.addHandler(rotatehandler)
-    except FileNotFoundError:
-        msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
-        raise FileNotFoundError(msg) from None
-    except PermissionError:
-        msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
-              f"escrita/leitura negada. Programa abortado!"
-        raise PermissionError(msg) from None
+    if stack_log_output == "console":
+        logger.propagate = False
+        consolehandler = logging.StreamHandler()
+        consolehandler.setLevel(logging.INFO)
+        consolehandler.setFormatter(formatter)
+        logger.addHandler(consolehandler)
+    elif stack_log_output == "file":
+        # Se a pasta de logs não existir, cria
+        try:
+            makedirs("logs", exist_ok=True)
+        except PermissionError:
+            msg = "Erro ao criar a pasta 'logs'. Permissão de escrita negada!"
+            raise PermissionError(msg) from None
+
+        log_file_path = str(Path("logs") / filename)
+
+        # Configuração de parâmetros para gravação de logs
+        try:
+            rotatehandler = RotatingFileHandler(log_file_path, mode='a', maxBytes=10485760, backupCount=5)
+            rotatehandler.setLevel(logging.INFO)
+            rotatehandler.setFormatter(formatter)
+            logger.addHandler(rotatehandler)
+        except FileNotFoundError:
+            msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
+            raise FileNotFoundError(msg) from None
+        except PermissionError:
+            msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
+                f"escrita/leitura negada. Programa abortado!"
+            raise PermissionError(msg) from None
+    else:
+        raise ValueError(f"A variável de ambiente 'STACK_LOG_OUTPUT' contém um tipo de saída do log incorreto "
+                         f"('{stack_log_output}'). Os possíveis valores são: 'console' ou 'file'.")
 
     return logger
 
