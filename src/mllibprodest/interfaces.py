@@ -171,7 +171,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
                 indices.append((ind_inicial, ind_final))
                 ind_inicial = ind_final
 
-                # Evita que o último indice seja maior que o tamanho do dataset
+                # Evita que o último índice seja maior que o tamanho do dataset
                 if ind_inicial + batch_size < dataset_size:
                     ind_final += batch_size
                 else:
@@ -209,8 +209,8 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
         Faz o retreinamento do modelo de forma automatizada.
             :param production_model_name: Nome do modelo que está em produção para obtenção dos parâmetros para o
                                           retreino, se necessário.
-            :param production_params: Dicionário com os parâmetros que foram utilizados no treinamento do modelo que
-                                      está em produção.
+            :param production_params: Dicionário com os parâmetros utilizados no treinamento do modelo que está em
+                                      produção.
             :param experiment_name: Nome do experimento para persistir o modelo retreinado.
             :param datasets: Dicionário com os datasets que serão utilizados no retreino. Dica: Colocar o tipo de
                              dataset (features, targets, etc.) como chave e o dataset em si como valor.

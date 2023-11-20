@@ -37,7 +37,7 @@ class Provider:
     @staticmethod
     def load_production_params(model_name: str, provider: str = 'mlflow') -> dict:
         """
-        Carrega os parâmetros que foram utilizados para treinar o modelo que está em produção.
+        Carrega os parâmetros utilizados para treinar o modelo que está em produção.
             :param model_name: Nome do modelo que está em produção.
             :param provider: Nome do provedor que fornecerá os parâmetros do modelo em produção. Tipos de provider:
                              'mlflow'.

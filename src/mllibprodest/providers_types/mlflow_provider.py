@@ -68,7 +68,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
 
 def load_production_params_mlflow(model_name: str) -> dict:
     """
-    Carrega os parâmetros que foram utilizados para treinar o modelo que está em produção no MLflow.
+    Carrega os parâmetros utilizados para treinar o modelo que está em produção no MLflow.
         :param model_name: Nome do modelo que está em produção.
         :return: Dicionário contendo os parâmetros carregados.
     """

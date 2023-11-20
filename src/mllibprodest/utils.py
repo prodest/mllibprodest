@@ -136,8 +136,8 @@ def get_file_local(file_path: str):
 
 def validate_params(received_params: list, expected_params: dict) -> tuple:
     """
-    Valida os parâmetros que foram recebidos via linha de comando na execução de um programa. Utiliza somente o '='
-    como separador entre o parâmetro e seu valor.
+    Valida os parâmetros recebidos via linha de comando na execução de um programa. Utiliza somente o '=' como
+    separador entre o parâmetro e seu valor.
         :param received_params: Parâmetros recebidos via linha de comando no momento da execução de um programa.
                                 Obs.: A lista de parâmetros deve ser obtida através da propriedade 'sys.argv'.
         :param expected_params: Nomes de parâmetros e tipos esperados pelo programa que servirão como base para a

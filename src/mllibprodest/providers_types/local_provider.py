@@ -12,8 +12,8 @@ LOGGER = make_log("LOG_MLLIB.log")
 
 def load_datasets_local(datasets_filenames: dict) -> dict:
     """
-    Carrega os datasets necessários para o modelo que foram persistidos na área de armazenamento local. Os parâmetros
-    de acesso deverão ser fornecidos através de um arquivo chamado '.env' que deve ser criado no repositório local e
+    Carrega os datasets que foram persistidos na área de armazenamento local, necessários para o modelo. Os parâmetros
+    de acesso deverão ser fornecidos por um arquivo chamado '.env' que deve ser criado no repositório local e
     preenchido com a seguinte variável: LOCAL_PATH = "caminho local onde os datasets se encontram". Dica de
     segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositório remoto do código.
         :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.

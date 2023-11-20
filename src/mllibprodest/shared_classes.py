@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------------------
-# Implementação de classes que são compartilhadas entre as interfaces padrões para publicação de
-# modelos no ML Worker.
+# Implementação de classes compartilhadas entre as interfaces padrões para publicação de modelos no
+# ML Worker.
 #
 # Uso: Implemente aqui qualquer classe que puder ser compartilhada entre as interfaces contidas no
 # arquivo 'mllibprodest/interfaces.py'
@@ -33,16 +33,16 @@ class CommonMethods:
     @staticmethod
     def load_datasets(datasets_filenames: dict, provider: str = 'minio') -> dict:
         """
-        Carrega os datasets necessários para o modelo. Os parâmetros de acesso deverão ser fornecidos através de um
-        arquivo chamado '.env' que deve ser criado no repositório local e preenchido com as seguintes variáveis:
-        MINIO = "nome do servidor s3", ACCESS_KEY = "chave de acesso", SECRET_KEY = "senha de acesso" e
-        BUCKET = "nome do bucket", no caso do provider 'minio', ou somente a variável LOCAL_PATH = "caminho local onde
-        os datasets se encontram", se o provider for 'local'. Dica de segurança: Não deixe o arquivo '.env' ser
+        Carrega os datasets necessários para o modelo. Os parâmetros de acesso deverão ser fornecidos por um arquivo
+        chamado '.env' que deve ser criado no repositório local e preenchido com as seguintes variáveis: MINIO =
+        "nome do servidor s3", ACCESS_KEY = "chave de acesso", SECRET_KEY = "senha de acesso" e BUCKET =
+        "nome do bucket", no caso do provider 'minio', ou somente a variável LOCAL_PATH = "caminho local onde os
+        datasets se encontram", se o provider for 'local'. Dica de segurança: Não deixe o arquivo '.env' ser
         versionado/persistido no repositório remoto do código.
             :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
                                        Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
             :param provider: Nome do provedor que fornecerá os datasets. Tipos de provider: 'minio' e 'local'.
-            :return: Dicionário com os datasets carregados e prontos para serem lidos, por exemplo, através do pandas
+            :return: Dicionário com os datasets carregados e prontos para serem lidos, por exemplo, através do Pandas
                      com a função read_csv(), se for um arquivo csv. Obs.: As chaves do dicionário retornado serão as
                      mesmas informadas no parâmetro 'datasets_filenames' e os valores serão os datasets carregados.
         """
@@ -51,7 +51,7 @@ class CommonMethods:
     @staticmethod
     def load_production_params(model_name: str, provider: str = 'mlflow') -> dict:
         """
-        Carrega os parâmetros que foram utilizados para treinar o modelo que está em produção.
+        Carrega os parâmetros utilizados para treinar o modelo que está em produção.
             :param model_name: Nome do modelo que está em produção.
             :param provider: Nome do provedor que fornecerá os parâmetros do modelo que está em produção. Tipos de
                              provider: 'mlflow'.

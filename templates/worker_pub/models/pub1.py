@@ -5,7 +5,7 @@
 ATENÇÃO: É aconselhável gerar logs durante a execução do modelo, para facilitar o diagnóstico de problemas.
 
 Para gravar os logs, basta salvar as mensagens de log utilizando: 'self.__logger.error', 'self.__logger.warning' ou
-'self.__logger.info', de acordo com o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
+'self.__logger.info', conforme o nível de criticidade da mensagem. Para mais opções, consulte a documentação do
 pacote 'logging'.
 
 EXEMPLOS: self.__logger.error("Mensagem de erro"); self.__logger.info("Mensagem informativa").
@@ -33,7 +33,7 @@ class ModeloCLF(ModelPublicationInterfaceCLF):
     def get_model_provider_name(self) -> str:
         return self.__model_provider_name
 
-    # Leia a documentação das funções disponibilizadas pelas inferfaces da lib e faça uso delas! como por exemplo:
+    # Leia a documentação das funções disponibilizadas pelas interfaces da lib e faça uso delas! como, por exemplo:
     # 'load_model' e 'convert_artifact_to_object'.
 
     # TODO: Implementar o restante dos métodos da interface ModelPublicationInterfaceCLF.
