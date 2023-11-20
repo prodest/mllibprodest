@@ -52,8 +52,6 @@ class Test:
             exit(1)
 
         if Path.exists(Path("requirements.txt")):
-            arq = None
-
             try:
                 arq = open("requirements.txt", "r")
             except PermissionError:
