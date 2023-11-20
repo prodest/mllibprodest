@@ -40,8 +40,8 @@ LOGGER = make_log(&#34;LOG_MLLIB.log&#34;)
 
 def load_datasets_local(datasets_filenames: dict) -&gt; dict:
     &#34;&#34;&#34;
-    Carrega os datasets necessários para o modelo que foram persistidos na área de armazenamento local. Os parâmetros
-    de acesso deverão ser fornecidos através de um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e
+    Carrega os datasets que foram persistidos na área de armazenamento local, necessários para o modelo. Os parâmetros
+    de acesso deverão ser fornecidos por um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e
     preenchido com a seguinte variável: LOCAL_PATH = &#34;caminho local onde os datasets se encontram&#34;. Dica de
     segurança: Não deixe o arquivo &#39;.env&#39; ser versionado/persistido no repositório remoto do código.
 
@@ -80,8 +80,8 @@ def load_datasets_local(datasets_filenames: dict) -&gt; dict:
 <span>def <span class="ident">load_datasets_local</span></span>(<span>datasets_filenames: dict) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Carrega os datasets necessários para o modelo que foram persistidos na área de armazenamento local. Os parâmetros
-de acesso deverão ser fornecidos através de um arquivo chamado '.env' que deve ser criado no repositório local e
+<div class="desc"><p>Carrega os datasets que foram persistidos na área de armazenamento local, necessários para o modelo. Os parâmetros
+de acesso deverão ser fornecidos por um arquivo chamado '.env' que deve ser criado no repositório local e
 preenchido com a seguinte variável: LOCAL_PATH = "caminho local onde os datasets se encontram". Dica de
 segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositório remoto do código.</p>
 <pre><code>@param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
@@ -94,8 +94,8 @@ segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositóri
 </summary>
 <pre><code class="python">def load_datasets_local(datasets_filenames: dict) -&gt; dict:
     &#34;&#34;&#34;
-    Carrega os datasets necessários para o modelo que foram persistidos na área de armazenamento local. Os parâmetros
-    de acesso deverão ser fornecidos através de um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e
+    Carrega os datasets que foram persistidos na área de armazenamento local, necessários para o modelo. Os parâmetros
+    de acesso deverão ser fornecidos por um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e
     preenchido com a seguinte variável: LOCAL_PATH = &#34;caminho local onde os datasets se encontram&#34;. Dica de
     segurança: Não deixe o arquivo &#39;.env&#39; ser versionado/persistido no repositório remoto do código.
 

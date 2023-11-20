@@ -210,7 +210,7 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
                 indices.append((ind_inicial, ind_final))
                 ind_inicial = ind_final
 
-                # Evita que o último indice seja maior que o tamanho do dataset
+                # Evita que o último índice seja maior que o tamanho do dataset
                 if ind_inicial + batch_size &lt; dataset_size:
                     ind_final += batch_size
                 else:
@@ -250,8 +250,8 @@ class ModelPublicationInterfaceRETRAIN(CommonMethods, metaclass=abc.ABCMeta):
 
             @param production_model_name: Nome do modelo que está em produção para obtenção dos parâmetros para o
                                           retreino, se necessário.
-            @param production_params: Dicionário com os parâmetros que foram utilizados no treinamento do modelo que
-                                      está em produção.
+            @param production_params: Dicionário com os parâmetros utilizados no treinamento do modelo que está em
+                                      produção.
             @param experiment_name: Nome do experimento para persistir o modelo retreinado.
             @param datasets: Dicionário com os datasets que serão utilizados no retreino. Dica: Colocar o tipo de
                              dataset (features, targets, etc.) como chave e o dataset em si como valor.
@@ -623,7 +623,7 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
                 indices.append((ind_inicial, ind_final))
                 ind_inicial = ind_final
 
-                # Evita que o último indice seja maior que o tamanho do dataset
+                # Evita que o último índice seja maior que o tamanho do dataset
                 if ind_inicial + batch_size &lt; dataset_size:
                     ind_final += batch_size
                 else:
@@ -663,8 +663,8 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 
             @param production_model_name: Nome do modelo que está em produção para obtenção dos parâmetros para o
                                           retreino, se necessário.
-            @param production_params: Dicionário com os parâmetros que foram utilizados no treinamento do modelo que
-                                      está em produção.
+            @param production_params: Dicionário com os parâmetros utilizados no treinamento do modelo que está em
+                                      produção.
             @param experiment_name: Nome do experimento para persistir o modelo retreinado.
             @param datasets: Dicionário com os datasets que serão utilizados no retreino. Dica: Colocar o tipo de
                              dataset (features, targets, etc.) como chave e o dataset em si como valor.
@@ -719,7 +719,7 @@ def generate_batch_indices(dataset_size: int, batch_size: int = 100000):
             indices.append((ind_inicial, ind_final))
             ind_inicial = ind_final
 
-            # Evita que o último indice seja maior que o tamanho do dataset
+            # Evita que o último índice seja maior que o tamanho do dataset
             if ind_inicial + batch_size &lt; dataset_size:
                 ind_final += batch_size
             else:
@@ -870,8 +870,8 @@ def get_model_provider_name(self) -&gt; str:
 <div class="desc"><p>Faz o retreinamento do modelo de forma automatizada.</p>
 <pre><code>@param production_model_name: Nome do modelo que está em produção para obtenção dos parâmetros para o
                               retreino, se necessário.
-@param production_params: Dicionário com os parâmetros que foram utilizados no treinamento do modelo que
-                          está em produção.
+@param production_params: Dicionário com os parâmetros utilizados no treinamento do modelo que está em
+                          produção.
 @param experiment_name: Nome do experimento para persistir o modelo retreinado.
 @param datasets: Dicionário com os datasets que serão utilizados no retreino. Dica: Colocar o tipo de
                  dataset (features, targets, etc.) como chave e o dataset em si como valor.
@@ -889,8 +889,8 @@ def retrain(self, production_model_name: str, production_params: dict, experimen
 
         @param production_model_name: Nome do modelo que está em produção para obtenção dos parâmetros para o
                                       retreino, se necessário.
-        @param production_params: Dicionário com os parâmetros que foram utilizados no treinamento do modelo que
-                                  está em produção.
+        @param production_params: Dicionário com os parâmetros utilizados no treinamento do modelo que está em
+                                  produção.
         @param experiment_name: Nome do experimento para persistir o modelo retreinado.
         @param datasets: Dicionário com os datasets que serão utilizados no retreino. Dica: Colocar o tipo de
                          dataset (features, targets, etc.) como chave e o dataset em si como valor.
