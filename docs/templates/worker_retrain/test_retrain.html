@@ -31,7 +31,7 @@
 # necessárias para publicação do modelo.
 # ----------------------------------------------------------------------------------------------------
 import sys
-import logging
+from logging import getLogger
 from mllibprodest.utils import validate_params
 from mllibprodest.validators.test import Test
 
@@ -45,7 +45,7 @@ if __name__ == &#34;__main__&#34;:
     Uso: python test_retrain.py --mlruns_path=&#34;caminho completo para a pasta mlruns&#34;
     &#34;&#34;&#34;
     # Evita a propagação dos logs na tela ao realizar os testes
-    logger = logging.getLogger(&#34;LOG_TESTS&#34;)
+    logger = getLogger(&#34;LOG_TESTS&#34;)
     logger.propagate = False
     
     params = sys.argv

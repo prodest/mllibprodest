@@ -11,11 +11,11 @@ LOGGER = make_log("LOG_MLLIB.log")
 
 def load_datasets_minio(datasets_filenames: dict) -> dict:
     """
-    Carrega os datasets necessários para o modelo que foram persistidos utilizando o Minio. Os parâmetros de acesso
-    deverão ser fornecidos através de um arquivo chamado '.env' que deve ser criado no repositório local e preenchido
-    com as seguintes variáveis: MINIO = "nome do servidor s3", ACCESS_KEY = "chave de acesso", SECRET_KEY = "senha de
-    acesso" e BUCKET = "nome do bucket". Dica de segurança: Não deixe o arquivo '.env' ser versionado/persistido no
-    repositório remoto do código.
+    Carrega os datasets que foram persistidos utilizando o Minio, necessários para o modelo. Os parâmetros de acesso
+    deverão ser fornecidos por um arquivo chamado '.env' que deve ser criado no repositório local e preenchido com as
+    seguintes variáveis: MINIO = "nome do servidor s3", ACCESS_KEY = "chave de acesso", SECRET_KEY = "senha de acesso"
+    e BUCKET = "nome do bucket". Dica de segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositório
+    remoto do código.
         :param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
                                    Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
         :return: Dicionário com os datasets carregados.

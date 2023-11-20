@@ -80,8 +80,6 @@ class Test:
             exit(1)
 
         if Path.exists(Path(&#34;requirements.txt&#34;)):
-            arq = None
-
             try:
                 arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
             except PermissionError:
@@ -394,7 +392,7 @@ class Test:
                                 do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
                                 mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
                                 o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
-                                endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+                                endpoint utilizado para a persistência dos artefatos gerados nos experimentos.
         &#34;&#34;&#34;
         # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
         # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
@@ -530,8 +528,6 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
             exit(1)
 
         if Path.exists(Path(&#34;requirements.txt&#34;)):
-            arq = None
-
             try:
                 arq = open(&#34;requirements.txt&#34;, &#34;r&#34;)
             except PermissionError:
@@ -844,7 +840,7 @@ com 'Unit testing framework' (<a href="https://docs.python.org/3/library/unittes
                                 do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
                                 mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
                                 o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
-                                endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+                                endpoint utilizado para a persistência dos artefatos gerados nos experimentos.
         &#34;&#34;&#34;
         # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
         # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
@@ -941,7 +937,7 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
                     do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
                     mantido, tenta utilizar as variáveis de ambiente 'MLFLOW_TRACKING_URI', para encontrar
                     o endereço do servidor MLflow, e 'MLFLOW_S3_ENDPOINT_URL' para obter o endereço do
-                    endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+                    endpoint utilizado para a persistência dos artefatos gerados nos experimentos.
 </code></pre></div>
 <details class="source">
 <summary>
@@ -958,7 +954,7 @@ utilizada para rodar os testes personalizados pelo usuário.</p>
                             do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
                             mantido, tenta utilizar as variáveis de ambiente &#39;MLFLOW_TRACKING_URI&#39;, para encontrar
                             o endereço do servidor MLflow, e &#39;MLFLOW_S3_ENDPOINT_URL&#39; para obter o endereço do
-                            endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+                            endpoint utilizado para a persistência dos artefatos gerados nos experimentos.
     &#34;&#34;&#34;
     # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
     # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.

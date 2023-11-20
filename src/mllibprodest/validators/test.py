@@ -52,8 +52,6 @@ class Test:
             exit(1)
 
         if Path.exists(Path("requirements.txt")):
-            arq = None
-
             try:
                 arq = open("requirements.txt", "r")
             except PermissionError:
@@ -363,7 +361,7 @@ class Test:
                                 do MLflow, utilizado para registrar o modelo, foi iniciado. Se o valor padrão for
                                 mantido, tenta utilizar as variáveis de ambiente 'MLFLOW_TRACKING_URI', para encontrar
                                 o endereço do servidor MLflow, e 'MLFLOW_S3_ENDPOINT_URL' para obter o endereço do
-                                endpoint que é utilizado para a persistência dos artefatos gerados nos experimentos.
+                                endpoint utilizado para a persistência dos artefatos gerados nos experimentos.
         """
         # Verifica se as variáveis de ambiente para o MLflow funcionar remotamente e com os artefatos via s3 existem.
         # Se não existirem, prepara o ambiente para rodar os testes com o MLflow local.
