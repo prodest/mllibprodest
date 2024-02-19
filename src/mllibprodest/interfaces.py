@@ -27,6 +27,8 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 callable(subclass.get_model_provider_name) and
                 hasattr(subclass, 'get_model_info') and
                 callable(subclass.get_model_info) and
+                hasattr(subclass, 'get_model_version') and
+                callable(subclass.get_model_version) and
                 hasattr(subclass, 'predict') and
                 callable(subclass.predict) and
                 hasattr(subclass, 'evaluate') and
@@ -57,6 +59,15 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
         Obtém informações sobre o modelo que está em produção.
             :return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma 'string' com a mensagem de
                      erro.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_version(self) -> str:
+        """
+        Obtém a versão do modelo que está em produção. Esta versão é única para cada modelo e deve ser alterada toda
+        vez que o modelo é treinado e colocado em produção.
+            :return: String contendo a versão do modelo que está em produção.
         """
         raise NotImplementedError
 

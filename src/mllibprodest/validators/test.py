@@ -114,7 +114,8 @@ class Test:
             'ModeloCLF': {
                 'ModeloCLF.get_model_name': str,
                 'ModeloCLF.get_model_provider_name': str,
-                'ModeloCLF.get_model_info': dict
+                'ModeloCLF.get_model_info': dict,
+                'ModeloCLF.get_model_version': str
             },
             'ModeloRETRAIN': {
                 'ModeloRETRAIN.get_model_name': str,
@@ -174,6 +175,8 @@ class Test:
                     retorno = model.get_model_provider_name()
                 elif method_name == "ModeloCLF.get_model_info":
                     retorno = model.get_model_info()
+                elif method_name == "ModeloCLF.get_model_version":
+                    retorno = model.get_model_version()
                 elif method_name == "ModeloRETRAIN.get_model_name":
                     retorno = model.get_model_name()
                 elif method_name == "ModeloRETRAIN.get_model_provider_name":
