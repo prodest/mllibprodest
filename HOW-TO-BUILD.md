@@ -26,7 +26,7 @@ source env/bin/activate
 ## 3. Se necessário, atualize os dados do projeto
 Para fazer alguma correção e/ou melhoria no pacote que já está publicado, é obrigatório o incremento da versão. 
 Portanto é preciso editar o arquivo *'pyproject.toml'* e alterar a variável *'version'*, conforme exemplo abaixo. No caso, essa
-variável poderia ser alterada para '1.8.3', se a mudança for pequena, ou 1.9.0 se a mudança for um pouco maior. Essa decisão 
+variável poderia ser alterada para '1.8.4', se a mudança for pequena, ou 1.9.0 se a mudança for um pouco maior. Essa decisão 
 deverá levar em conta a política de versionamento adotada.
 
 Outra configuração comum de ser alterada são as dependências da biblioteca. Se alguma dependência for atualizada, 
@@ -36,7 +36,7 @@ a nova versão deverá ser informada na variável *'dependencies'*.
 ```toml
 [project]
 ...
-version = "1.8.2"
+version = "1.8.3"
 ...
 dependencies = ['minio==7.2.1', 'python-dotenv==1.0.0', 'mlflow==2.9.2', 'boto3==1.34.7']
 ```

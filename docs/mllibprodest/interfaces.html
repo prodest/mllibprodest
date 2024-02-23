@@ -55,6 +55,8 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
                 callable(subclass.get_model_provider_name) and
                 hasattr(subclass, &#39;get_model_info&#39;) and
                 callable(subclass.get_model_info) and
+                hasattr(subclass, &#39;get_model_version&#39;) and
+                callable(subclass.get_model_version) and
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
@@ -88,6 +90,16 @@ class ModelPublicationInterfaceCLF(CommonMethods, metaclass=abc.ABCMeta):
 
             @return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
                      erro.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_version(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém a versão do modelo que está em produção. Esta versão é única para cada modelo e deve ser alterada toda
+        vez que o modelo for treinado e colocado em produção.
+
+            @return: String contendo a versão do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -292,6 +304,8 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
                 callable(subclass.get_model_provider_name) and
                 hasattr(subclass, &#39;get_model_info&#39;) and
                 callable(subclass.get_model_info) and
+                hasattr(subclass, &#39;get_model_version&#39;) and
+                callable(subclass.get_model_version) and
                 hasattr(subclass, &#39;predict&#39;) and
                 callable(subclass.predict) and
                 hasattr(subclass, &#39;evaluate&#39;) and
@@ -325,6 +339,16 @@ Leia a documentação dos métodos e implemente-os seguindo as recomendações d
 
             @return: Dicionário com informações sobre o modelo. Em caso de erro, retorne uma &#39;string&#39; com a mensagem de
                      erro.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_model_version(self) -&gt; str:
+        &#34;&#34;&#34;
+        Obtém a versão do modelo que está em produção. Esta versão é única para cada modelo e deve ser alterada toda
+        vez que o modelo for treinado e colocado em produção.
+
+            @return: String contendo a versão do modelo que está em produção.
         &#34;&#34;&#34;
         raise NotImplementedError
 
@@ -486,6 +510,29 @@ def get_model_provider_name(self) -&gt; str:
     Obtém o nome do provider que proverá o modelo que está em produção.
 
         @return: Nome do provider que proverá o modelo que está em produção.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_version"><code class="name flex">
+<span>def <span class="ident">get_model_version</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtém a versão do modelo que está em produção. Esta versão é única para cada modelo e deve ser alterada toda
+vez que o modelo for treinado e colocado em produção.</p>
+<pre><code>@return: String contendo a versão do modelo que está em produção.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def get_model_version(self) -&gt; str:
+    &#34;&#34;&#34;
+    Obtém a versão do modelo que está em produção. Esta versão é única para cada modelo e deve ser alterada toda
+    vez que o modelo for treinado e colocado em produção.
+
+        @return: String contendo a versão do modelo que está em produção.
     &#34;&#34;&#34;
     raise NotImplementedError</code></pre>
 </details>
@@ -940,6 +987,7 @@ def retrain(self, production_model_name: str, production_params: dict, experimen
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_info">get_model_info</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_name">get_model_name</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_provider_name">get_model_provider_name</a></code></li>
+<li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_version" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.get_model_version">get_model_version</a></code></li>
 <li><code><a title="docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict" href="#docs.mllibprodest.interfaces.ModelPublicationInterfaceCLF.predict">predict</a></code></li>
 </ul>
 </li>
