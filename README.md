@@ -119,7 +119,7 @@ pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==2.9.2 scikit-learn==1.3.2 matplotlib==3.8.2 numpy==1.26.2
+pip install mlflow==2.11.1 scikit-learn==1.4.1.post1 matplotlib==3.8.3 numpy==1.26.4
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
@@ -128,10 +128,10 @@ python testeml.py
 Cabe observar que: depois de rodar o código de teste, foi criada uma pasta chamada '**mlruns**', dentro da pasta de 
 testes, que serve para armazenar os artefatos gerados pelo código e que são apresentados na interface do MLflow. 
 Abaixo segue uma listagem do conteúdo gerado pelo código de teste (obs.: essa parte do caminho vai ser diferente de 
-acordo com cada experimento/execução realizados: '1/1fb6ac45b0ca4babb3bacb48320c790b'. O conteúdo da pasta também será 
+acordo com cada experimento/execução realizados: '1/1a67156e63444d6e886fab7c8459bb8b'. O conteúdo da pasta também será 
 diferente de acordo com cada modelo).
 ```bash
-(env) user:~/teste/mlruns/1/1fb6ac45b0ca4babb3bacb48320c790b/artifacts/artifacts$ dir
+(env) user:/teste/mlruns/1/1a67156e63444d6e886fab7c8459bb8b/artifacts$ dir
 artefato.pkl  estimator.html  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
 ```
 Dentro da pasta criada para testes também foi gerado um arquivo chamado '**teste_mlflow.db**', que é um pequeno banco 
