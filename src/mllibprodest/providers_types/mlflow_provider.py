@@ -38,13 +38,13 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
-    stage = 'Production'
+    alias = 'production'
 
     # Carrega o modelo que está em produção
     try:
-        modelo = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}/{stage}")
+        modelo = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}@{alias}")
     except RestException:
-        msg = f"O modelo '{model_name}' no estágio '{stage}' não foi encontrado. Programa abortado!"
+        msg = f"O modelo '{model_name}' com o alias '{alias}' não foi encontrado. Programa abortado!"
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:

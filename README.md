@@ -195,8 +195,8 @@ o experimento não estiver listado, verifique se o servidor do MLflow foi inicia
 - Dê um nome para o modelo e clique em **'Register'**;
 - Na barra superior clique em **'Models'**;
 - Clique no link para a última versão do modelo que está em **'Latest Version'**;
-- Desative a opção **'New model registry UI'**;
-- Na opção **'Stage'** troque de **'None'** para **'Production'** e clique em OK.
+- Na opção **'Aliases'**, clique em **'Add'**;
+- Digite ***production*** e clique em **'Save aliases'**.
 
 Quando for testar a implementação dos *workers* (passo 3), lembre de deixar o servidor do MLflow rodando para que seja 
 possível carregar o modelo.
