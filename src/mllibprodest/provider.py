@@ -32,7 +32,7 @@ class Provider:
             msg = f"Não foi possível carregar os datasets. O provider '{provider}' não foi encontrado. Programa " \
                   f"abortado!"
             LOGGER.error(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
 
     @staticmethod
     def load_production_params(model_name: str, provider: str = 'mlflow') -> dict:
@@ -49,7 +49,7 @@ class Provider:
             msg = f"Não foi possível carregar os parâmetros do modelo '{model_name}'. O provider '{provider}' não " \
                   f"foi encontrado. Programa abortado!"
             LOGGER.error(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
 
     @staticmethod
     def load_production_datasets_names(model_name: str, provider: str = 'mlflow') -> dict:
@@ -66,7 +66,7 @@ class Provider:
             msg = f"Não foi possível carregar os nomes dos datasets do modelo '{model_name}'. O provider " \
                   f"'{provider}' não foi encontrado. Programa abortado!"
             LOGGER.error(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
 
     @staticmethod
     def load_production_baseline(model_name: str, provider: str = 'mlflow') -> dict:
@@ -84,7 +84,7 @@ class Provider:
             msg = f"Não foi possível carregar o baseline do modelo '{model_name}'. O provider '{provider}' não " \
                   f"foi encontrado. Programa abortado!"
             LOGGER.error(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
 
     @staticmethod
     def load_model(model_name: str, provider: str = 'mlflow', artifacts_destination_path: str = 'temp_area'):
@@ -101,4 +101,4 @@ class Provider:
             msg = f"Não foi possível carregar o modelo '{model_name}'. O provider '{provider}' não foi encontrado. " \
                   f"Programa abortado!"
             LOGGER.error(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
