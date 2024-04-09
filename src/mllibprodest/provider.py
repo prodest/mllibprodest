@@ -5,7 +5,7 @@ from .utils import make_log
 from .providers_types.minio_provider import load_datasets_minio
 from .providers_types.local_provider import load_datasets_local
 from .providers_types.mlflow_provider import load_production_params_mlflow, load_production_datasets_names_mlflow, \
-    load_production_baseline_mlflow, load_model_mlflow
+    load_production_baseline_mlflow, load_model_mlflow, get_models_versions_mlflow
 
 # Para facilitar, define um logger único para todas as funções
 LOGGER = make_log("LOG_MLLIB.log")
@@ -100,5 +100,27 @@ class Provider:
         else:
             msg = f"Não foi possível carregar o modelo '{model_name}'. O provider '{provider}' não foi encontrado. " \
                   f"Programa abortado!"
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
+    @staticmethod
+    def get_models_versions(models_names: list, provider: str = 'mlflow') -> dict:
+        """
+        Obtém as versões de alguns modelos que estão sendo providos pelo provider.
+            :param models_names: Lista com os nomes dos modelos para obtenção das versões.
+            :param provider: Provedor para obtenção das versões dos modelos.
+            :return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
+        """
+        if type(models_names) is not list:
+            msg = f"Não foi possível obter as versões para os modelos. '{models_names}' não é uma lista de modelos. " \
+                  f"Programa abortado!"
+            LOGGER.error(msg)
+            raise TypeError(msg)
+
+        if provider == "mlflow":
+            return get_models_versions_mlflow(models_names)
+        else:
+            msg = f"Não foi possível obter as versões para os modelos: {models_names}. O provider '{provider}' não " \
+                  f"foi encontrado. Programa abortado!"
             LOGGER.error(msg)
             raise ValueError(msg)

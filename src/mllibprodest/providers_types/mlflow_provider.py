@@ -3,6 +3,8 @@
 # ----------------------------------------------------------------------------------------------------
 import mlflow
 import pickle
+import requests
+from os import getenv
 from pathlib import Path
 from mlflow.exceptions import RestException, MlflowException
 from shutil import rmtree
@@ -183,3 +185,63 @@ def load_production_baseline_mlflow(model_name: str) -> dict:
                f"'BaselineMetrics.pkl'. Programa abortado!"
         LOGGER.error(msg)
         raise RuntimeError(msg)
+
+
+def get_models_versions_mlflow(models_names: list) -> dict:
+    """
+    Obtém as versões de alguns modelos que estão sendo providos pelo provider.
+        :param models_names: Lista com os nomes dos modelos para obtenção das versões.
+        :return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
+    """
+    # Obtém as credenciais para acesso ao MLflow
+    mlflow_uri = getenv("MLFLOW_TRACKING_URI")
+    if not mlflow_uri:
+        msg = "Não foi possível obter a variável de ambiente 'MLFLOW_TRACKING_URI'"
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_user = getenv("MLFLOW_TRACKING_USERNAME")
+    if not mlflow_user:
+        msg = "Não foi possível obter a variável de ambiente 'MLFLOW_TRACKING_USERNAME'"
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_password = getenv("MLFLOW_TRACKING_PASSWORD")
+    if not mlflow_password:
+        msg = "Não foi possível obter a variável de ambiente 'MLFLOW_TRACKING_PASSWORD'"
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    models_versions = {}
+
+    # Faz a busca da versão dos modelos utilizando alias
+    for model_name in models_names:
+        params = {'name': model_name, 'alias': "production"}
+
+        try:
+            response = requests.get(
+                f"{mlflow_uri}/api/2.0/mlflow/registered-models/alias",
+                params=params,
+                auth=(mlflow_user, mlflow_password)
+            )
+        except BaseException as e:
+            msg = f"Não foi possível obter as versões para os modelos: {models_names}. Erro reportado pelo MLflow: " \
+                  f"{e}. Programa abortado!"
+            LOGGER.error(msg)
+            raise RuntimeError(e) from None
+
+        dados_modelo = response.json()
+
+        if "model_version" not in dados_modelo:
+            msg = f"A resposta do MLflow não contém a chave 'model_version'. Resposta do MLflow: {dados_modelo}"
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        if "run_id" not in dados_modelo['model_version']:
+            msg = f"A resposta do MLflow não contém a chave 'run_id'. Resposta do MLflow: {dados_modelo}"
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        models_versions[model_name] = dados_modelo['model_version']['run_id']
+
+    return models_versions
