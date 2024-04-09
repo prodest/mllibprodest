@@ -36,7 +36,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         Path.mkdir(caminho_artefatos, parents=True, exist_ok=True)
     except PermissionError:
         msg = f"Não foi possível criar a pasta de destino dos artefatos '{artifacts_destination_path}'. Permissão " \
-              f"de escrita negada. Programa abortado!"
+              f"de escrita negada."
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
@@ -46,11 +46,11 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
     try:
         modelo = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}@{alias}")
     except RestException:
-        msg = f"O modelo '{model_name}' com o alias '{alias}' não foi encontrado. Programa abortado!"
+        msg = f"O modelo '{model_name}' com o alias '{alias}' não foi encontrado."
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:
-        msg = f"Não foi possível carregar o modelo '{model_name}'. Mensagem do MLFlow: '{e}'. Programa abortado!"
+        msg = f"Não foi possível carregar o modelo '{model_name}'. Mensagem do MLFlow: '{e}'."
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -61,7 +61,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = "temp_a
         mlflow.artifacts.download_artifacts(artifact_uri=endereco_base_artefatos, dst_path=str(caminho_artefatos))
     except MlflowException as e:
         msg = f"Não foi possível carregar os artefatos no endereço '{endereco_base_artefatos}'. " \
-              f"Mensagem do MLFlow: '{e}'. Programa abortado!"
+              f"Mensagem do MLFlow: '{e}'."
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -102,7 +102,7 @@ def load_production_params_mlflow(model_name: str) -> dict:
     else:
         msg += f"Não foi possível carregar os parâmetros de produção do modelo '{model_name}'. Certifique-se que o " \
                f"modelo exista e que possua os parâmetros persistidos num dicionário, através do Pickle, com o nome " \
-               f"'TrainingParams.pkl'. Programa abortado!"
+               f"'TrainingParams.pkl'."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -142,7 +142,7 @@ def load_production_datasets_names_mlflow(model_name: str) -> dict:
     else:
         msg += f"Não foi possível carregar os nomes dos datasets de produção do modelo '{model_name}'. Certifique-se " \
                f"que o modelo exista e que possua os nomes dos datasets persistidos num dicionário, através do " \
-               f"Pickle, com o nome 'TrainingDatasetsNames.pkl'. Programa abortado!"
+               f"Pickle, com o nome 'TrainingDatasetsNames.pkl'."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -182,7 +182,7 @@ def load_production_baseline_mlflow(model_name: str) -> dict:
     else:
         msg += f"Não foi possível carregar o baseline de produção do modelo '{model_name}'. Certifique-se que o " \
                f"modelo exista e que possua o baseline persistido num dicionário, através do Pickle, com o nome " \
-               f"'BaselineMetrics.pkl'. Programa abortado!"
+               f"'BaselineMetrics.pkl'."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -226,7 +226,7 @@ def get_models_versions_mlflow(models_names: list) -> dict:
             )
         except BaseException as e:
             msg = f"Não foi possível obter as versões para os modelos: {models_names}. Erro reportado pelo MLflow: " \
-                  f"{e}. Programa abortado!"
+                  f"{e}."
             LOGGER.error(msg)
             raise RuntimeError(e) from None
 

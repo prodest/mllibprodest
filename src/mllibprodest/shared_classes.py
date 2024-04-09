@@ -109,20 +109,19 @@ class CommonMethods:
             arq = open(caminho_artefato, 'wb')
         except FileNotFoundError:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido. O caminho '{caminho_artefato}' está " \
-                  f"incorreto. Programa abortado!"
+                  f"incorreto."
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível gerar o artefato '{file_name}' convertido no caminho '{caminho_artefato}'. " \
-                  f"Permissão de escrita negada. Programa abortado!"
+                  f"Permissão de escrita negada."
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             pickle.dump(artifact, arq)
         except TypeError as e:
-            msg = f"Não foi possível gerar o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). Programa " \
-                  f"abortado!"
+            msg = f"Não foi possível gerar o artefato '{file_name}' com o Pickle (mensagem Pickle: {e})."
             LOGGER.error(msg)
             raise TypeError(msg) from None
 
@@ -144,20 +143,19 @@ class CommonMethods:
             arq = open(caminho_artefato, 'rb')
         except FileNotFoundError:
             msg = f"Não foi possível converter o artefato '{file_name}'. O caminho '{caminho_artefato}' não foi " \
-                  f"encontrado. Programa abortado!"
+                  f"encontrado."
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível converter o artefato '{file_name}' usando o caminho '{caminho_artefato}'. " \
-                  f"Permissão de leitura negada. Programa abortado!"
+                  f"Permissão de leitura negada."
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             objeto = pickle.load(arq)
         except pickle.UnpicklingError as e:
-            msg = f"Não foi possível converter o artefato '{file_name}' com o Pickle (mensagem Pickle: {e}). " \
-                  f"Programa abortado!"
+            msg = f"Não foi possível converter o artefato '{file_name}' com o Pickle (mensagem Pickle: {e})."
             LOGGER.error(msg)
             raise RuntimeError(msg)
 

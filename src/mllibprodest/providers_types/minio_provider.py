@@ -31,7 +31,7 @@ def load_datasets_minio(datasets_filenames: dict) -> dict:
         msg = f"Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo " \
               f"chamado '.env' exista; esteja localizado na pasta da aplicação e que possua valores para as " \
               f"variáveis: 'MINIO', 'ACCESS_KEY', 'SECRET_KEY' e 'BUCKET'. Ou se preferir, configure essas variáveis " \
-              f"de ambiente e seus respectivos valores. Programa abortado!"
+              f"de ambiente e seus respectivos valores."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 

@@ -29,8 +29,7 @@ class Provider:
         elif provider == "local":
             return load_datasets_local(datasets_filenames)
         else:
-            msg = f"Não foi possível carregar os datasets. O provider '{provider}' não foi encontrado. Programa " \
-                  f"abortado!"
+            msg = f"Não foi possível carregar os datasets. O provider '{provider}' não foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -47,7 +46,7 @@ class Provider:
             return load_production_params_mlflow(model_name)
         else:
             msg = f"Não foi possível carregar os parâmetros do modelo '{model_name}'. O provider '{provider}' não " \
-                  f"foi encontrado. Programa abortado!"
+                  f"foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -64,7 +63,7 @@ class Provider:
             return load_production_datasets_names_mlflow(model_name)
         else:
             msg = f"Não foi possível carregar os nomes dos datasets do modelo '{model_name}'. O provider " \
-                  f"'{provider}' não foi encontrado. Programa abortado!"
+                  f"'{provider}' não foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -82,7 +81,7 @@ class Provider:
             return load_production_baseline_mlflow(model_name)
         else:
             msg = f"Não foi possível carregar o baseline do modelo '{model_name}'. O provider '{provider}' não " \
-                  f"foi encontrado. Programa abortado!"
+                  f"foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -98,8 +97,7 @@ class Provider:
         if provider == "mlflow":
             return load_model_mlflow(model_name, artifacts_destination_path)
         else:
-            msg = f"Não foi possível carregar o modelo '{model_name}'. O provider '{provider}' não foi encontrado. " \
-                  f"Programa abortado!"
+            msg = f"Não foi possível carregar o modelo '{model_name}'. O provider '{provider}' não foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)
 
@@ -112,8 +110,7 @@ class Provider:
             :return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
         """
         if type(models_names) is not list:
-            msg = f"Não foi possível obter as versões para os modelos. '{models_names}' não é uma lista de modelos. " \
-                  f"Programa abortado!"
+            msg = f"Não foi possível obter as versões para os modelos. '{models_names}' não é uma lista de modelos."
             LOGGER.error(msg)
             raise TypeError(msg)
 
@@ -121,6 +118,6 @@ class Provider:
             return get_models_versions_mlflow(models_names)
         else:
             msg = f"Não foi possível obter as versões para os modelos: {models_names}. O provider '{provider}' não " \
-                  f"foi encontrado. Programa abortado!"
+                  f"foi encontrado."
             LOGGER.error(msg)
             raise ValueError(msg)

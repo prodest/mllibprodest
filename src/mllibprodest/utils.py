@@ -54,11 +54,11 @@ def make_log(filename: str) -> logging.Logger:
             rotatehandler.setFormatter(formatter)
             logger.addHandler(rotatehandler)
         except FileNotFoundError:
-            msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'. Programa abortado!"
+            msg = f"Não foi possível encontrar/criar o arquivo de log no caminho '{log_file_path}'."
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f"Não foi possível criar/acessar o arquivo de log no caminho '{log_file_path}'. Permissão de " \
-                f"escrita/leitura negada. Programa abortado!"
+                f"escrita/leitura negada."
             raise PermissionError(msg) from None
     else:
         raise ValueError(f"A variável de ambiente 'STACK_LOG_OUTPUT' contém um tipo de saída do log incorreto "
@@ -122,12 +122,11 @@ def get_file_local(file_path: str):
         with open(file_path, 'rb') as arq:
             bytes_arq = arq.read()
     except FileNotFoundError:
-        msg = f"Não foi possível encontrar o arquivo no caminho '{file_path}'. Programa abortado!"
+        msg = f"Não foi possível encontrar o arquivo no caminho '{file_path}'."
         LOGGER.error(msg)
         raise FileNotFoundError(msg) from None
     except PermissionError:
-        msg = f"Não foi possível ler o arquivo no caminho '{file_path}'. Permissão de leitura negada. Programa " \
-              f"abortado!"
+        msg = f"Não foi possível ler o arquivo no caminho '{file_path}'. Permissão de leitura negada."
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
@@ -207,29 +206,29 @@ def get_models_params(path: str = "") -> dict:
     try:
         nome_arq_params = conf.read(param_file_path)
     except configparser.MissingSectionHeaderError as e:
-        msg = f"O arquivo com os parâmetros dos modelos ('params.conf') possui seções inválidas. Programa abortado! " \
-              f"Mensagem configParser: '{e}'."
+        msg = f"O arquivo com os parâmetros dos modelos ('params.conf') possui seções inválidas. Mensagem " \
+              f"configParser: '{e}'."
         LOGGER.error(msg)
         raise ValueError(msg) from None
     except configparser.DuplicateSectionError as e:
-        msg = f"Existem seções duplicadas. Programa abortado! Mensagem configParser: '{e}'."
+        msg = f"Existem seções duplicadas. Mensagem configParser: '{e}'."
         LOGGER.error(msg)
         raise ValueError(msg) from None
     except configparser.DuplicateOptionError as e:
-        msg = f"Existem parâmetros duplicados. Programa abortado! Mensagem configParser: '{e}'."
+        msg = f"Existem parâmetros duplicados. Mensagem configParser: '{e}'."
         LOGGER.error(msg)
         raise ValueError(msg) from None
 
     if "params.conf" not in nome_arq_params:
         msg = "Não foi possível encontrar o arquivo com os parâmetros dos modelos ('params.conf') ou não possui " \
-              "permissão para leitura. Programa abortado!"
+              "permissão para leitura."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
     secoes = conf.sections()
 
     if not secoes:
-        msg = "O arquivo com os parâmetros dos modelos ('params.conf') está vazio. Programa abortado!"
+        msg = "O arquivo com os parâmetros dos modelos ('params.conf') está vazio."
         LOGGER.error(msg)
         raise ValueError(msg)
 
@@ -247,7 +246,7 @@ def get_models_params(path: str = "") -> dict:
 
     if faltou_parametro:
         msg = f"Um ou mais parâmetros não foram encontrados no arquivo 'params.conf'. Parâmetros faltantes por " \
-              f"modelo: {parametros_faltantes_por_secao}. Programa abortado!"
+              f"modelo: {parametros_faltantes_por_secao}."
         LOGGER.error(msg)
         raise ValueError(msg)
 
