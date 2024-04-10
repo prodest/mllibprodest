@@ -144,20 +144,19 @@ class CommonMethods:
             arq = open(caminho_artefato, &#39;wb&#39;)
         except FileNotFoundError:
             msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido. O caminho &#39;{caminho_artefato}&#39; está &#34; \
-                  f&#34;incorreto. Programa abortado!&#34;
+                  f&#34;incorreto.&#34;
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido no caminho &#39;{caminho_artefato}&#39;. &#34; \
-                  f&#34;Permissão de escrita negada. Programa abortado!&#34;
+                  f&#34;Permissão de escrita negada.&#34;
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             pickle.dump(artifact, arq)
         except TypeError as e:
-            msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). Programa &#34; \
-                  f&#34;abortado!&#34;
+            msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
             LOGGER.error(msg)
             raise TypeError(msg) from None
 
@@ -180,20 +179,19 @@ class CommonMethods:
             arq = open(caminho_artefato, &#39;rb&#39;)
         except FileNotFoundError:
             msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39;. O caminho &#39;{caminho_artefato}&#39; não foi &#34; \
-                  f&#34;encontrado. Programa abortado!&#34;
+                  f&#34;encontrado.&#34;
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; usando o caminho &#39;{caminho_artefato}&#39;. &#34; \
-                  f&#34;Permissão de leitura negada. Programa abortado!&#34;
+                  f&#34;Permissão de leitura negada.&#34;
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             objeto = pickle.load(arq)
         except pickle.UnpicklingError as e:
-            msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). &#34; \
-                  f&#34;Programa abortado!&#34;
+            msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
@@ -320,20 +318,19 @@ class CommonMethods:
             arq = open(caminho_artefato, &#39;wb&#39;)
         except FileNotFoundError:
             msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido. O caminho &#39;{caminho_artefato}&#39; está &#34; \
-                  f&#34;incorreto. Programa abortado!&#34;
+                  f&#34;incorreto.&#34;
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido no caminho &#39;{caminho_artefato}&#39;. &#34; \
-                  f&#34;Permissão de escrita negada. Programa abortado!&#34;
+                  f&#34;Permissão de escrita negada.&#34;
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             pickle.dump(artifact, arq)
         except TypeError as e:
-            msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). Programa &#34; \
-                  f&#34;abortado!&#34;
+            msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
             LOGGER.error(msg)
             raise TypeError(msg) from None
 
@@ -356,20 +353,19 @@ class CommonMethods:
             arq = open(caminho_artefato, &#39;rb&#39;)
         except FileNotFoundError:
             msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39;. O caminho &#39;{caminho_artefato}&#39; não foi &#34; \
-                  f&#34;encontrado. Programa abortado!&#34;
+                  f&#34;encontrado.&#34;
             LOGGER.error(msg)
             raise FileNotFoundError(msg) from None
         except PermissionError:
             msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; usando o caminho &#39;{caminho_artefato}&#39;. &#34; \
-                  f&#34;Permissão de leitura negada. Programa abortado!&#34;
+                  f&#34;Permissão de leitura negada.&#34;
             LOGGER.error(msg)
             raise PermissionError(msg) from None
 
         try:
             objeto = pickle.load(arq)
         except pickle.UnpicklingError as e:
-            msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). &#34; \
-                  f&#34;Programa abortado!&#34;
+            msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
             LOGGER.error(msg)
             raise RuntimeError(msg)
 
@@ -415,20 +411,19 @@ def convert_artifact_to_object(model_name: str, file_name: str, path: str = &#34
         arq = open(caminho_artefato, &#39;rb&#39;)
     except FileNotFoundError:
         msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39;. O caminho &#39;{caminho_artefato}&#39; não foi &#34; \
-              f&#34;encontrado. Programa abortado!&#34;
+              f&#34;encontrado.&#34;
         LOGGER.error(msg)
         raise FileNotFoundError(msg) from None
     except PermissionError:
         msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; usando o caminho &#39;{caminho_artefato}&#39;. &#34; \
-              f&#34;Permissão de leitura negada. Programa abortado!&#34;
+              f&#34;Permissão de leitura negada.&#34;
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
     try:
         objeto = pickle.load(arq)
     except pickle.UnpicklingError as e:
-        msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). &#34; \
-              f&#34;Programa abortado!&#34;
+        msg = f&#34;Não foi possível converter o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -467,20 +462,19 @@ def convert_artifact_to_pickle(model_name: str, artifact: object, file_name: str
         arq = open(caminho_artefato, &#39;wb&#39;)
     except FileNotFoundError:
         msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido. O caminho &#39;{caminho_artefato}&#39; está &#34; \
-              f&#34;incorreto. Programa abortado!&#34;
+              f&#34;incorreto.&#34;
         LOGGER.error(msg)
         raise FileNotFoundError(msg) from None
     except PermissionError:
         msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; convertido no caminho &#39;{caminho_artefato}&#39;. &#34; \
-              f&#34;Permissão de escrita negada. Programa abortado!&#34;
+              f&#34;Permissão de escrita negada.&#34;
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
     try:
         pickle.dump(artifact, arq)
     except TypeError as e:
-        msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}). Programa &#34; \
-              f&#34;abortado!&#34;
+        msg = f&#34;Não foi possível gerar o artefato &#39;{file_name}&#39; com o Pickle (mensagem Pickle: {e}).&#34;
         LOGGER.error(msg)
         raise TypeError(msg) from None
 

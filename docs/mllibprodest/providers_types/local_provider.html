@@ -56,8 +56,7 @@ def load_datasets_local(datasets_filenames: dict) -&gt; dict:
     if local_path is None:
         msg = f&#34;Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo &#34; \
               f&#34;chamado &#39;.env&#39; exista; esteja localizado na pasta da aplicação e que possua valor para a variável: &#34; \
-              f&#34;&#39;LOCAL_PATH&#39;. Ou se preferir, configure essa variável de ambiente e seu respectivo valor. &#34; \
-              f&#34;Programa abortado!&#34;
+              f&#34;&#39;LOCAL_PATH&#39;. Ou se preferir, configure essa variável de ambiente e seu respectivo valor.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -110,8 +109,7 @@ segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositóri
     if local_path is None:
         msg = f&#34;Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo &#34; \
               f&#34;chamado &#39;.env&#39; exista; esteja localizado na pasta da aplicação e que possua valor para a variável: &#34; \
-              f&#34;&#39;LOCAL_PATH&#39;. Ou se preferir, configure essa variável de ambiente e seu respectivo valor. &#34; \
-              f&#34;Programa abortado!&#34;
+              f&#34;&#39;LOCAL_PATH&#39;. Ou se preferir, configure essa variável de ambiente e seu respectivo valor.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>docs.mllibprodest.providers_types.minio_provider API documentation</title>
+<title>docs.mllibprodest.providers_types.utils API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>docs.mllibprodest.providers_types.minio_provider</code></h1>
+<h1 class="title">Module <code>docs.mllibprodest.providers_types.utils</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -27,49 +27,38 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python"># ----------------------------------------------------------------------------------------------------
-# Provider para obtenção de datasets persistidos no Minio
+# Funções úteis que poderão ser utilizadas pelos providers
 # ----------------------------------------------------------------------------------------------------
-import os
-from io import BytesIO
-from ..utils import load_env_variables, get_file_s3, make_log
-
-# Para facilitar, define um logger único para todas as funções
-LOGGER = make_log(&#34;LOG_MLLIB.log&#34;)
+from ..provider import Provider
+from ..utils import get_models_params
 
 
-def load_datasets_minio(datasets_filenames: dict) -&gt; dict:
+def get_models_versions_providers(path: str = &#34;&#34;) -&gt; dict:
     &#34;&#34;&#34;
-    Carrega os datasets que foram persistidos utilizando o Minio, necessários para o modelo. Os parâmetros de acesso
-    deverão ser fornecidos por um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e preenchido com as
-    seguintes variáveis: MINIO = &#34;nome do servidor s3&#34;, ACCESS_KEY = &#34;chave de acesso&#34;, SECRET_KEY = &#34;senha de acesso&#34;
-    e BUCKET = &#34;nome do bucket&#34;. Dica de segurança: Não deixe o arquivo &#39;.env&#39; ser versionado/persistido no repositório
-    remoto do código.
+    Obtém as versões dos modelos que estão sendo providas pelos providers. Obs.: Esta versão é gerenciada pelo provider.
 
-        @param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
-                                   Exemplo: {&#39;features&#39;: &#39;nome_arquivo_features&#39;, &#39;targets&#39;: &#39;nome_arquivo_targets&#39;}
-        @return: Dicionário com os datasets carregados.
+        @param path: Caminho onde se encontra o arquivo de parâmetros. O padrão é estar na pasta local.
+        @return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
     &#34;&#34;&#34;
-    # Obtém as credenciais e as informações necessárias para baixar os arquivos
-    load_env_variables()
-    s3_server = os.environ.get(&#34;MINIO&#34;)
-    access_key = os.environ.get(&#34;ACCESS_KEY&#34;)
-    secret_key = os.environ.get(&#34;SECRET_KEY&#34;)
-    bucket = os.environ.get(&#34;BUCKET&#34;)
+    models_params = get_models_params(path)
+    models_per_provider = {}
+    models_version = {}
 
-    if s3_server is None or access_key is None or secret_key is None or bucket is None:
-        msg = f&#34;Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo &#34; \
-              f&#34;chamado &#39;.env&#39; exista; esteja localizado na pasta da aplicação e que possua valores para as &#34; \
-              f&#34;variáveis: &#39;MINIO&#39;, &#39;ACCESS_KEY&#39;, &#39;SECRET_KEY&#39; e &#39;BUCKET&#39;. Ou se preferir, configure essas variáveis &#34; \
-              f&#34;de ambiente e seus respectivos valores.&#34;
-        LOGGER.error(msg)
-        raise RuntimeError(msg)
+    # Obtém os nomes dos modelos e organiza por provider
+    for model_name in models_params.keys():
+        model_provider_name = models_params[model_name][&#39;model_provider_name&#39;]
 
-    datasets = {}
+        if model_provider_name not in models_per_provider:
+            models_per_provider[model_provider_name] = [model_name]
+        else:
+            models_per_provider[model_provider_name].append(model_name)
 
-    for tipo, nome_arquivo in datasets_filenames.items():
-        datasets[tipo] = BytesIO(get_file_s3(nome_arquivo, s3_server, access_key, secret_key, bucket))
+    # Busca as versões dos modelos nos respectivos providers
+    for model_provider_name in models_per_provider.keys():
+        models_names = models_per_provider[model_provider_name]
+        models_version.update(Provider.get_models_versions(models_names=models_names, provider=model_provider_name))
 
-    return datasets</code></pre>
+    return models_version</code></pre>
 </details>
 </section>
 <section>
@@ -79,56 +68,44 @@ def load_datasets_minio(datasets_filenames: dict) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="docs.mllibprodest.providers_types.minio_provider.load_datasets_minio"><code class="name flex">
-<span>def <span class="ident">load_datasets_minio</span></span>(<span>datasets_filenames: dict) ‑> dict</span>
+<dt id="docs.mllibprodest.providers_types.utils.get_models_versions_providers"><code class="name flex">
+<span>def <span class="ident">get_models_versions_providers</span></span>(<span>path: str = '') ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Carrega os datasets que foram persistidos utilizando o Minio, necessários para o modelo. Os parâmetros de acesso
-deverão ser fornecidos por um arquivo chamado '.env' que deve ser criado no repositório local e preenchido com as
-seguintes variáveis: MINIO = "nome do servidor s3", ACCESS_KEY = "chave de acesso", SECRET_KEY = "senha de acesso"
-e BUCKET = "nome do bucket". Dica de segurança: Não deixe o arquivo '.env' ser versionado/persistido no repositório
-remoto do código.</p>
-<pre><code>@param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
-                           Exemplo: {'features': 'nome_arquivo_features', 'targets': 'nome_arquivo_targets'}
-@return: Dicionário com os datasets carregados.
+<div class="desc"><p>Obtém as versões dos modelos que estão sendo providas pelos providers. Obs.: Esta versão é gerenciada pelo provider.</p>
+<pre><code>@param path: Caminho onde se encontra o arquivo de parâmetros. O padrão é estar na pasta local.
+@return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
 </code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def load_datasets_minio(datasets_filenames: dict) -&gt; dict:
+<pre><code class="python">def get_models_versions_providers(path: str = &#34;&#34;) -&gt; dict:
     &#34;&#34;&#34;
-    Carrega os datasets que foram persistidos utilizando o Minio, necessários para o modelo. Os parâmetros de acesso
-    deverão ser fornecidos por um arquivo chamado &#39;.env&#39; que deve ser criado no repositório local e preenchido com as
-    seguintes variáveis: MINIO = &#34;nome do servidor s3&#34;, ACCESS_KEY = &#34;chave de acesso&#34;, SECRET_KEY = &#34;senha de acesso&#34;
-    e BUCKET = &#34;nome do bucket&#34;. Dica de segurança: Não deixe o arquivo &#39;.env&#39; ser versionado/persistido no repositório
-    remoto do código.
+    Obtém as versões dos modelos que estão sendo providas pelos providers. Obs.: Esta versão é gerenciada pelo provider.
 
-        @param datasets_filenames: Dicionário contendo os tipos de datasets e os nomes dos respectivos arquivos.
-                                   Exemplo: {&#39;features&#39;: &#39;nome_arquivo_features&#39;, &#39;targets&#39;: &#39;nome_arquivo_targets&#39;}
-        @return: Dicionário com os datasets carregados.
+        @param path: Caminho onde se encontra o arquivo de parâmetros. O padrão é estar na pasta local.
+        @return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
     &#34;&#34;&#34;
-    # Obtém as credenciais e as informações necessárias para baixar os arquivos
-    load_env_variables()
-    s3_server = os.environ.get(&#34;MINIO&#34;)
-    access_key = os.environ.get(&#34;ACCESS_KEY&#34;)
-    secret_key = os.environ.get(&#34;SECRET_KEY&#34;)
-    bucket = os.environ.get(&#34;BUCKET&#34;)
+    models_params = get_models_params(path)
+    models_per_provider = {}
+    models_version = {}
 
-    if s3_server is None or access_key is None or secret_key is None or bucket is None:
-        msg = f&#34;Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo &#34; \
-              f&#34;chamado &#39;.env&#39; exista; esteja localizado na pasta da aplicação e que possua valores para as &#34; \
-              f&#34;variáveis: &#39;MINIO&#39;, &#39;ACCESS_KEY&#39;, &#39;SECRET_KEY&#39; e &#39;BUCKET&#39;. Ou se preferir, configure essas variáveis &#34; \
-              f&#34;de ambiente e seus respectivos valores.&#34;
-        LOGGER.error(msg)
-        raise RuntimeError(msg)
+    # Obtém os nomes dos modelos e organiza por provider
+    for model_name in models_params.keys():
+        model_provider_name = models_params[model_name][&#39;model_provider_name&#39;]
 
-    datasets = {}
+        if model_provider_name not in models_per_provider:
+            models_per_provider[model_provider_name] = [model_name]
+        else:
+            models_per_provider[model_provider_name].append(model_name)
 
-    for tipo, nome_arquivo in datasets_filenames.items():
-        datasets[tipo] = BytesIO(get_file_s3(nome_arquivo, s3_server, access_key, secret_key, bucket))
+    # Busca as versões dos modelos nos respectivos providers
+    for model_provider_name in models_per_provider.keys():
+        models_names = models_per_provider[model_provider_name]
+        models_version.update(Provider.get_models_versions(models_names=models_names, provider=model_provider_name))
 
-    return datasets</code></pre>
+    return models_version</code></pre>
 </details>
 </dd>
 </dl>
@@ -149,7 +126,7 @@ remoto do código.</p>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="docs.mllibprodest.providers_types.minio_provider.load_datasets_minio" href="#docs.mllibprodest.providers_types.minio_provider.load_datasets_minio">load_datasets_minio</a></code></li>
+<li><code><a title="docs.mllibprodest.providers_types.utils.get_models_versions_providers" href="#docs.mllibprodest.providers_types.utils.get_models_versions_providers">get_models_versions_providers</a></code></li>
 </ul>
 </li>
 </ul>
