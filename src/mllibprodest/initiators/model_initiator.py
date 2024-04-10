@@ -33,7 +33,7 @@ class InitModels:
                 if caminho_import in msg_erro:
                     msg = f"Modelo: {model_name}. O módulo '{caminho_import}' não foi encontrado. Verifique no " \
                           f"arquivo 'params.conf' se o parâmetro 'source_file' foi informado corretamente e/ou se " \
-                          f"este módulo está dentro da pasta 'models'. Programa abortado!"
+                          f"este módulo está dentro da pasta 'models'."
                     LOGGER.error(msg)
                     raise ModuleNotFoundError(msg) from None
                 else:
@@ -91,7 +91,7 @@ class InitModels:
             else:
                 msg = f"Modelo: {model_name}. O valor do parâmetro 'model_class' está incorreto. Foi informado " \
                       f"'{models_params[model_name]['model_class']}' no arquivo 'params.conf', porém deve ser " \
-                      f"'ModeloCLF' ou 'ModeloRETRAIN'. Programa abortado!"
+                      f"'ModeloCLF' ou 'ModeloRETRAIN'."
                 LOGGER.error(msg)
                 raise ValueError(msg)
 

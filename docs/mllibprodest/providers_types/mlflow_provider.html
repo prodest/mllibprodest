@@ -31,6 +31,8 @@
 # ----------------------------------------------------------------------------------------------------
 import mlflow
 import pickle
+import requests
+from os import getenv
 from pathlib import Path
 from mlflow.exceptions import RestException, MlflowException
 from shutil import rmtree
@@ -63,21 +65,21 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         Path.mkdir(caminho_artefatos, parents=True, exist_ok=True)
     except PermissionError:
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
-              f&#34;de escrita negada. Programa abortado!&#34;
+              f&#34;de escrita negada.&#34;
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
-    stage = &#39;Production&#39;
+    alias = &#39;production&#39;
 
     # Carrega o modelo que está em produção
     try:
-        modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}/{stage}&#34;)
+        modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}@{alias}&#34;)
     except RestException:
-        msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
+        msg = f&#34;O modelo &#39;{model_name}&#39; com o alias &#39;{alias}&#39; não foi encontrado.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:
-        msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
+        msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -88,7 +90,7 @@ def load_model_mlflow(model_name: str, artifacts_destination_path: str = &#34;te
         mlflow.artifacts.download_artifacts(artifact_uri=endereco_base_artefatos, dst_path=str(caminho_artefatos))
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
-              f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
+              f&#34;Mensagem do MLFlow: &#39;{e}&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -130,7 +132,7 @@ def load_production_params_mlflow(model_name: str) -&gt; dict:
     else:
         msg += f&#34;Não foi possível carregar os parâmetros de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua os parâmetros persistidos num dicionário, através do Pickle, com o nome &#34; \
-               f&#34;&#39;TrainingParams.pkl&#39;. Programa abortado!&#34;
+               f&#34;&#39;TrainingParams.pkl&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -171,7 +173,7 @@ def load_production_datasets_names_mlflow(model_name: str) -&gt; dict:
     else:
         msg += f&#34;Não foi possível carregar os nomes dos datasets de produção do modelo &#39;{model_name}&#39;. Certifique-se &#34; \
                f&#34;que o modelo exista e que possua os nomes dos datasets persistidos num dicionário, através do &#34; \
-               f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;. Programa abortado!&#34;
+               f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
@@ -212,9 +214,70 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
     else:
         msg += f&#34;Não foi possível carregar o baseline de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua o baseline persistido num dicionário, através do Pickle, com o nome &#34; \
-               f&#34;&#39;BaselineMetrics.pkl&#39;. Programa abortado!&#34;
+               f&#34;&#39;BaselineMetrics.pkl&#39;.&#34;
         LOGGER.error(msg)
-        raise RuntimeError(msg)</code></pre>
+        raise RuntimeError(msg)
+
+
+def get_models_versions_mlflow(models_names: list) -&gt; dict:
+    &#34;&#34;&#34;
+    Obtém as versões de alguns modelos que estão sendo providos pelo provider.
+
+        @param models_names: Lista com os nomes dos modelos para obtenção das versões.
+        @return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
+    &#34;&#34;&#34;
+    # Obtém as credenciais para acesso ao MLflow
+    mlflow_uri = getenv(&#34;MLFLOW_TRACKING_URI&#34;)
+    if not mlflow_uri:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_URI&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_user = getenv(&#34;MLFLOW_TRACKING_USERNAME&#34;)
+    if not mlflow_user:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_USERNAME&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_password = getenv(&#34;MLFLOW_TRACKING_PASSWORD&#34;)
+    if not mlflow_password:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_PASSWORD&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    models_versions = {}
+
+    # Faz a busca da versão dos modelos utilizando alias
+    for model_name in models_names:
+        params = {&#39;name&#39;: model_name, &#39;alias&#39;: &#34;production&#34;}
+
+        try:
+            response = requests.get(
+                f&#34;{mlflow_uri}/api/2.0/mlflow/registered-models/alias&#34;,
+                params=params,
+                auth=(mlflow_user, mlflow_password)
+            )
+        except BaseException as e:
+            msg = f&#34;Não foi possível obter as versões para os modelos: {models_names}. Erro reportado pelo MLflow: &#34; \
+                  f&#34;{e}.&#34;
+            LOGGER.error(msg)
+            raise RuntimeError(e) from None
+
+        dados_modelo = response.json()
+
+        if &#34;model_version&#34; not in dados_modelo:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;model_version&#39;. Resposta do MLflow: {dados_modelo}&#34;
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        if &#34;run_id&#34; not in dados_modelo[&#39;model_version&#39;]:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;run_id&#39;. Resposta do MLflow: {dados_modelo}&#34;
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;run_id&#39;]
+
+    return models_versions</code></pre>
 </details>
 </section>
 <section>
@@ -224,6 +287,79 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="docs.mllibprodest.providers_types.mlflow_provider.get_models_versions_mlflow"><code class="name flex">
+<span>def <span class="ident">get_models_versions_mlflow</span></span>(<span>models_names: list) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Obtém as versões de alguns modelos que estão sendo providos pelo provider.</p>
+<pre><code>@param models_names: Lista com os nomes dos modelos para obtenção das versões.
+@return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_models_versions_mlflow(models_names: list) -&gt; dict:
+    &#34;&#34;&#34;
+    Obtém as versões de alguns modelos que estão sendo providos pelo provider.
+
+        @param models_names: Lista com os nomes dos modelos para obtenção das versões.
+        @return: Dicionário com o nome de cada modelo como chave e a respectiva versão como valor.
+    &#34;&#34;&#34;
+    # Obtém as credenciais para acesso ao MLflow
+    mlflow_uri = getenv(&#34;MLFLOW_TRACKING_URI&#34;)
+    if not mlflow_uri:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_URI&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_user = getenv(&#34;MLFLOW_TRACKING_USERNAME&#34;)
+    if not mlflow_user:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_USERNAME&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    mlflow_password = getenv(&#34;MLFLOW_TRACKING_PASSWORD&#34;)
+    if not mlflow_password:
+        msg = &#34;Não foi possível obter a variável de ambiente &#39;MLFLOW_TRACKING_PASSWORD&#39;&#34;
+        LOGGER.error(msg)
+        raise RuntimeError(msg)
+
+    models_versions = {}
+
+    # Faz a busca da versão dos modelos utilizando alias
+    for model_name in models_names:
+        params = {&#39;name&#39;: model_name, &#39;alias&#39;: &#34;production&#34;}
+
+        try:
+            response = requests.get(
+                f&#34;{mlflow_uri}/api/2.0/mlflow/registered-models/alias&#34;,
+                params=params,
+                auth=(mlflow_user, mlflow_password)
+            )
+        except BaseException as e:
+            msg = f&#34;Não foi possível obter as versões para os modelos: {models_names}. Erro reportado pelo MLflow: &#34; \
+                  f&#34;{e}.&#34;
+            LOGGER.error(msg)
+            raise RuntimeError(e) from None
+
+        dados_modelo = response.json()
+
+        if &#34;model_version&#34; not in dados_modelo:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;model_version&#39;. Resposta do MLflow: {dados_modelo}&#34;
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        if &#34;run_id&#34; not in dados_modelo[&#39;model_version&#39;]:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;run_id&#39;. Resposta do MLflow: {dados_modelo}&#34;
+            LOGGER.error(msg)
+            raise KeyError(msg)
+
+        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;run_id&#39;]
+
+    return models_versions</code></pre>
+</details>
+</dd>
 <dt id="docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow"><code class="name flex">
 <span>def <span class="ident">load_model_mlflow</span></span>(<span>model_name: str, artifacts_destination_path: str = 'temp_area')</span>
 </code></dt>
@@ -260,21 +396,21 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         Path.mkdir(caminho_artefatos, parents=True, exist_ok=True)
     except PermissionError:
         msg = f&#34;Não foi possível criar a pasta de destino dos artefatos &#39;{artifacts_destination_path}&#39;. Permissão &#34; \
-              f&#34;de escrita negada. Programa abortado!&#34;
+              f&#34;de escrita negada.&#34;
         LOGGER.error(msg)
         raise PermissionError(msg) from None
 
-    stage = &#39;Production&#39;
+    alias = &#39;production&#39;
 
     # Carrega o modelo que está em produção
     try:
-        modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}/{stage}&#34;)
+        modelo = mlflow.pyfunc.load_model(model_uri=f&#34;models:/{model_name}@{alias}&#34;)
     except RestException:
-        msg = f&#34;O modelo &#39;{model_name}&#39; no estágio &#39;{stage}&#39; não foi encontrado. Programa abortado!&#34;
+        msg = f&#34;O modelo &#39;{model_name}&#39; com o alias &#39;{alias}&#39; não foi encontrado.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
     except MlflowException as e:
-        msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
+        msg = f&#34;Não foi possível carregar o modelo &#39;{model_name}&#39;. Mensagem do MLFlow: &#39;{e}&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -285,7 +421,7 @@ def load_production_baseline_mlflow(model_name: str) -&gt; dict:
         mlflow.artifacts.download_artifacts(artifact_uri=endereco_base_artefatos, dst_path=str(caminho_artefatos))
     except MlflowException as e:
         msg = f&#34;Não foi possível carregar os artefatos no endereço &#39;{endereco_base_artefatos}&#39;. &#34; \
-              f&#34;Mensagem do MLFlow: &#39;{e}&#39;. Programa abortado!&#34;
+              f&#34;Mensagem do MLFlow: &#39;{e}&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg) from None
 
@@ -341,7 +477,7 @@ automatizada do modelo.</p>
     else:
         msg += f&#34;Não foi possível carregar o baseline de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua o baseline persistido num dicionário, através do Pickle, com o nome &#34; \
-               f&#34;&#39;BaselineMetrics.pkl&#39;. Programa abortado!&#34;
+               f&#34;&#39;BaselineMetrics.pkl&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
@@ -394,7 +530,7 @@ automatizada do modelo.</p>
     else:
         msg += f&#34;Não foi possível carregar os nomes dos datasets de produção do modelo &#39;{model_name}&#39;. Certifique-se &#34; \
                f&#34;que o modelo exista e que possua os nomes dos datasets persistidos num dicionário, através do &#34; \
-               f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;. Programa abortado!&#34;
+               f&#34;Pickle, com o nome &#39;TrainingDatasetsNames.pkl&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
@@ -446,7 +582,7 @@ automatizada do modelo.</p>
     else:
         msg += f&#34;Não foi possível carregar os parâmetros de produção do modelo &#39;{model_name}&#39;. Certifique-se que o &#34; \
                f&#34;modelo exista e que possua os parâmetros persistidos num dicionário, através do Pickle, com o nome &#34; \
-               f&#34;&#39;TrainingParams.pkl&#39;. Programa abortado!&#34;
+               f&#34;&#39;TrainingParams.pkl&#39;.&#34;
         LOGGER.error(msg)
         raise RuntimeError(msg)</code></pre>
 </details>
@@ -469,6 +605,7 @@ automatizada do modelo.</p>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.get_models_versions_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.get_models_versions_mlflow">get_models_versions_mlflow</a></code></li>
 <li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_model_mlflow">load_model_mlflow</a></code></li>
 <li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_production_baseline_mlflow">load_production_baseline_mlflow</a></code></li>
 <li><code><a title="docs.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow" href="#docs.mllibprodest.providers_types.mlflow_provider.load_production_datasets_names_mlflow">load_production_datasets_names_mlflow</a></code></li>

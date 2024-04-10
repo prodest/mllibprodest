@@ -27,8 +27,7 @@ def load_datasets_local(datasets_filenames: dict) -> dict:
     if local_path is None:
         msg = f"Não foram encontradas todas as variáveis de ambiente necessárias. Certifique-se que um arquivo " \
               f"chamado '.env' exista; esteja localizado na pasta da aplicação e que possua valor para a variável: " \
-              f"'LOCAL_PATH'. Ou se preferir, configure essa variável de ambiente e seu respectivo valor. " \
-              f"Programa abortado!"
+              f"'LOCAL_PATH'. Ou se preferir, configure essa variável de ambiente e seu respectivo valor."
         LOGGER.error(msg)
         raise RuntimeError(msg)
 
