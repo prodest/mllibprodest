@@ -119,7 +119,7 @@ pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==2.11.1 scikit-learn==1.4.1.post1 matplotlib==3.8.3 numpy==1.26.4
+pip install mlflow==2.16.2 scikit-learn==1.5.2 matplotlib==3.9.2 numpy==2.1.2
 ```
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
 ```bash
