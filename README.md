@@ -201,7 +201,7 @@ mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 50
 
 - Acesse o MLflow ([http://localhost:5000](http://localhost:5000)) e clique no experimento que foi criado por você (se
   o experimento não estiver listado, verifique se o servidor do MLflow foi iniciado de dentro da pasta correta);
-- Clique no link (que está na coluna **'Run Name'**) para a rodada do experimento que deseja registrar;
+- Clique no link (que está na coluna **'Models'**) para a rodada do experimento que deseja registrar;
 - Clique no botão **'Register Model'** e escolha a opção **'Create New Model'**;
 - Dê um nome para o modelo e clique em **'Register'**;
 - Na barra superior clique em **'Models'**;
