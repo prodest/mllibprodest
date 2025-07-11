@@ -270,12 +270,12 @@ def get_models_versions_mlflow(models_names: list) -&gt; dict:
             LOGGER.error(msg)
             raise KeyError(msg)
 
-        if &#34;run_id&#34; not in dados_modelo[&#39;model_version&#39;]:
-            msg = f&#34;A resposta do MLflow não contém a chave &#39;run_id&#39;. Resposta do MLflow: {dados_modelo}&#34;
+        if &#34;version&#34; not in dados_modelo[&#39;model_version&#39;]:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;version&#39;. Resposta do MLflow: {dados_modelo}&#34;
             LOGGER.error(msg)
             raise KeyError(msg)
 
-        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;run_id&#39;]
+        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;version&#39;]
 
     return models_versions</code></pre>
 </details>
@@ -350,12 +350,12 @@ def get_models_versions_mlflow(models_names: list) -&gt; dict:
             LOGGER.error(msg)
             raise KeyError(msg)
 
-        if &#34;run_id&#34; not in dados_modelo[&#39;model_version&#39;]:
-            msg = f&#34;A resposta do MLflow não contém a chave &#39;run_id&#39;. Resposta do MLflow: {dados_modelo}&#34;
+        if &#34;version&#34; not in dados_modelo[&#39;model_version&#39;]:
+            msg = f&#34;A resposta do MLflow não contém a chave &#39;version&#39;. Resposta do MLflow: {dados_modelo}&#34;
             LOGGER.error(msg)
             raise KeyError(msg)
 
-        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;run_id&#39;]
+        models_versions[model_name] = dados_modelo[&#39;model_version&#39;][&#39;version&#39;]
 
     return models_versions</code></pre>
 </details>
