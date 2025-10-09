@@ -11,7 +11,7 @@ _Workflow_ básico para construção, disponibilização e publicação de model
 
 ## Pré-requisitos
 
-- **Python >= 3.11.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
+- **Python >= 3.12.** Instruções: [Linux (Geralmente já vem instalado por padrão)](https://python.org.br/instalacao-linux) ou [Windows](https://www.python.org/downloads/windows).
 - **Git.** Instruções: [Linux](https://git-scm.com/download/linux) ou [Windows](https://git-scm.com/download/win).
 - **Venv.** Gerenciador de ambiente virtual Python adotado no tutorial. Instruções: [Linux e Windows (escolha o sistema na página)](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment).
   Ou qualquer outro gerenciador de ambiente Python que preferir.
@@ -121,7 +121,7 @@ pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==3.1.1 scikit-learn==1.7.0 matplotlib==3.10.3 numpy==2.3.1
+pip install mlflow==3.4.0 scikit-learn==1.7.2 matplotlib==3.10.6 numpy==2.3.3
 ```
 
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
@@ -204,7 +204,7 @@ mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 50
 - Clique no link (que está na coluna **'Models'**) para a rodada do experimento que deseja registrar;
 - Clique no botão **'Register Model'** e escolha a opção **'Create New Model'**;
 - Dê um nome para o modelo e clique em **'Register'**;
-- Na barra superior clique em **'Models'**;
+- Na barra lateral esquerda clique em **'Models'**;
 - Clique no link para a última versão do modelo que está em **'Latest Version'**;
 - Na opção **'Aliases'**, clique em **'Add'**;
 - Digite **_production_** e clique em **'Save aliases'**.
