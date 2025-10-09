@@ -23,7 +23,7 @@ cd mllibprodest
 Crie o ambiente virtual.
 
 ```bash
-python3.11 -m venv env
+python3.12 -m venv env
 ```
 
 Ative o ambiente virtual.
