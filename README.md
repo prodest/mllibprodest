@@ -61,7 +61,10 @@ if os.environ.get('MLFLOW_TRACKING_URI') is None:
 mlflow.set_experiment(experiment_name="Teste_sklearn")
 
 # Inicia uma execução do experimento (um experimento pode possuir várias execuções)
-mlflow.start_run(run_name="t1", description="teste 1")
+mlflow.start_run(description="teste 1")
+
+# Define o nome do run ANTES do autolog (corrige bug com sklearn.autolog)
+mlflow.set_tag("mlflow.runName", "t1")
 
 # Registra algumas informações adicionais no experimento (coloque as informações que julgar
 # necessárias, no formato dict)
@@ -121,7 +124,7 @@ pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==3.4.0 scikit-learn==1.7.2 matplotlib==3.10.6 numpy==2.3.3
+pip install mlflow==3.6.0 scikit-learn==1.7.2 matplotlib==3.10.7 numpy==2.3.5
 ```
 
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
@@ -155,7 +158,7 @@ dos experimentos/modelo; **ative** o ambiente virtual criado anteriormente; exec
 conseguirá rodar o código e já observar os resultados sem ter que parar o servidor para liberar o prompt ou terminal.
 
 ```bash
-mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
+mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --allowed-hosts="*" --default-artifact-root mlruns
 ```
 
 - Verifique se o experimento foi criado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure
@@ -196,7 +199,7 @@ descrito no passo 3. Siga as instruções abaixo para registrar o modelo:
 - Inicie o servidor do MLflow;
 
 ```bash
-mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
+mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --allowed-hosts="*" --default-artifact-root mlruns
 ```
 
 - Acesse o MLflow ([http://localhost:5000](http://localhost:5000)) e clique no experimento que foi criado por você (se
@@ -205,7 +208,7 @@ mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 50
 - Clique no botão **'Register Model'** e escolha a opção **'Create New Model'**;
 - Dê um nome para o modelo e clique em **'Register'**;
 - Na barra lateral esquerda clique em **'Models'**;
-- Clique no link para a última versão do modelo que está em **'Latest Version'**;
+- Clique no link do modelo registrado que está em **'Registered Models'**;
 - Na opção **'Aliases'**, clique em **'Add'**;
 - Digite **_production_** e clique em **'Save aliases'**.
 
@@ -401,7 +404,7 @@ Para testar o seu código siga as instruções abaixo:
   e inicie o servidor do MLflow:
 
 ```bash
-mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --default-artifact-root mlruns
+mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --allowed-hosts="*" --default-artifact-root mlruns
 ```
 
 - Obtenha o caminho completo da pasta '**mlruns**' (ela é criada dentro da pasta onde o script para geração dos
