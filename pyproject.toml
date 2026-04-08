@@ -18,7 +18,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: Portuguese (Brazilian)"
 ]
-dependencies = ['minio==7.2.20', 'python-dotenv==1.2.2', 'mlflow==3.10.1', 'boto3==1.42.78']
+dependencies = ['minio==7.2.20', 'python-dotenv==1.2.2', 'mlflow==3.11.0rc1', 'boto3==1.42.78']
 keywords = ['Prodest', 'ML', 'lib', 'stack']
 
 [project.urls]
