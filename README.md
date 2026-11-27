@@ -124,7 +124,7 @@ pip install --upgrade pip setuptools
 ```
 
 ```bash
-pip install mlflow==3.6.0 scikit-learn==1.7.2 matplotlib==3.10.7 numpy==2.3.5
+pip install mlflow==3.18.0 scikit-learn==1.9.1 matplotlib==3.11.2 numpy==2.5.5
 ```
 
 - Rode o teste (ignore as mensagens do tipo 'INFO' de criação do banco de dados);
@@ -141,8 +141,11 @@ diferente de acordo com cada modelo).
 
 ```bash
 (env) user:/teste/mlruns/1/1a67156e63444d6e886fab7c8459bb8b/artifacts$ dir
-artefato.pkl  estimator.html  model  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
+artefato.pkl  estimator.html  training_confusion_matrix.png  training_precision_recall_curve.png  training_roc_curve.png
 ```
+
+O modelo em si (arquivos 'MLmodel', 'model.pkl', 'requirements.txt', etc.) não fica mais na pasta de artefatos da execução: o MLflow 3
+o grava em '**mlruns/1/models/**_id-do-modelo_**/artifacts**'.
 
 Dentro da pasta criada para testes também foi gerado um arquivo chamado '**teste_mlflow.db**', que é um pequeno banco
 de dados [SQlite](https://www.sqlite.org), que serve para armazenar os modelos que foram registrados.
@@ -161,15 +164,17 @@ conseguirá rodar o código e já observar os resultados sem ter que parar o ser
 mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 5000 --allowed-hosts="*" --default-artifact-root mlruns
 ```
 
-- Verifique se o experimento foi criado. Acesse o MLFlow: [http://localhost:5000](http://localhost:5000) e procure
-  pelo experimento/execução '**Teste_sklearn**' na seção **Experiments** (se o experimento não estiver listado, verifique
-  se o servidor foi iniciado de dentro da pasta correta);
+- Verifique se o experimento foi criado. Acesse o MLflow: [http://localhost:5000](http://localhost:5000) e, na lista
+  de experimentos, clique em '**Teste_sklearn**' (se o experimento não estiver listado, verifique se o servidor foi
+  iniciado de dentro da pasta correta);
 
-- Clique na execução do experimento que se encontra na coluna '**Run Name**' (destaque em verde);
+- No menu lateral esquerdo, selecione **'Model training'** e depois **'Runs'**. Na coluna '**Run Name**' (destaque em
+  verde) está a execução '**t1**'; na coluna '**Models**' está o link do modelo que foi registrado pelo _autolog_ do MLflow;
 
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/experiments-mlflow.png?raw=true)
 
-- Verifique se os artefatos foram gravados;
+- Clique na execução '**t1**' e abra a aba '**Artifacts**' (destaque em verde) para verificar se os artefatos foram
+  gravados. Clique em um dos arquivos para visualizá-lo;
 
 ![](https://github.com/prodest/mllibprodest/blob/main/docs/artifacts-mlflow.png?raw=true)
 
@@ -204,13 +209,17 @@ mlflow server --backend-store-uri sqlite:///teste_mlflow.db --host 0.0.0.0 -p 50
 
 - Acesse o MLflow ([http://localhost:5000](http://localhost:5000)) e clique no experimento que foi criado por você (se
   o experimento não estiver listado, verifique se o servidor do MLflow foi iniciado de dentro da pasta correta);
-- Clique no link (que está na coluna **'Models'**) para a rodada do experimento que deseja registrar;
-- Clique no botão **'Register Model'** e escolha a opção **'Create New Model'**;
-- Dê um nome para o modelo e clique em **'Register'**;
-- Na barra lateral esquerda clique em **'Models'**;
-- Clique no link do modelo registrado que está em **'Registered Models'**;
-- Na opção **'Aliases'**, clique em **'Add'**;
-- Digite **_production_** e clique em **'Save aliases'**.
+- No menu lateral esquerdo, selecione **'Model training'** e depois **'Runs'**;
+- Na coluna **'Models'**, clique no link **'model'** da rodada do experimento que deseja registrar (a página do modelo
+  mostra a etiqueta **'Not registered'**);
+- Clique no botão **'Register model'** (canto superior direito);
+- Na janela que abrir, clique na lista **'Model'** e escolha a opção **'Create New Model'**;
+- Digite o nome do modelo em **'Model Name'** e clique em **'Register'**;
+- No menu lateral esquerdo clique em **'Model registry'**;
+- Clique no nome do modelo registrado que está em **'Registered Models'**;
+- Na tabela **'Versions'**, clique em **'Add'** na coluna **'Aliases'** da versão registrada (se a versão já tiver um
+  alias, clique no ícone de lápis ao lado dele);
+- Digite **_production_**, pressione **ENTER** e clique em **'Save aliases'**.
 
 Quando for testar a implementação dos _workers_ (passo 3), lembre de deixar o servidor do MLflow rodando para que seja
 possível carregar o modelo.

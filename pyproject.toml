@@ -1,10 +1,10 @@
 [build-system]
-requires = ['setuptools>=83.0.0']
+requires = ['setuptools>=84.2.1']
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "mllibprodest"
-version = "1.8.13"
+version = "1.8.14"
 license = "GPL-3.0-or-later"
 authors = [
   { name="Instituto de Tecnologia da Informação e Comunicação do Espírito Santo (PRODEST)", email="prodest@prodest.es.gov.br" },
@@ -18,7 +18,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: Portuguese (Brazilian)"
 ]
-dependencies = ['minio==7.2.20', 'python-dotenv==1.2.2', 'mlflow==3.15.0', 'boto3==1.43.61']
+dependencies = ['minio==7.2.20', 'python-dotenv==1.2.4', 'mlflow==3.18.0', 'boto3==1.44.12']
 keywords = ['Prodest', 'ML', 'lib', 'stack']
 
 [project.urls]
